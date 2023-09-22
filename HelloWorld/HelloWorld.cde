@@ -1,0 +1,182 @@
+__tool_info__ ("tecsgen") {
+    "tecscde_version"     : "0.5.1.0",
+    "cde_format_version"  : "0.5.0.0",
+    "save_date"           : "2017-07-31T18:04:14+00:00",
+    "base_dir" : [
+        "C:/cygwin64/home/oyama/TECS/tecsgen/HelloWorld"
+    ],
+    "define_macro" : [
+
+    ],
+   "import_path" : [
+        ".",
+        "../test/cygwin/"
+    ],
+    "direct_import" : [
+        "HelloWorld.cdl"
+    ]
+}
+
+cell ::tHelloWorld HelloWorld0 {
+};
+cell ::tTask Task2 {
+
+    /*** call ports ***/
+    cBody = HelloWorld0.eMain;
+
+    /*** attributes ***/
+    priority = 11;
+    stackSize = 4096;
+    taskAttribute = C_EXP( "TA_STA" );
+};
+
+/*************************************************
+ *         TOOL INFORMATION FOR TECSCDE          *
+ *     This  information is used by tecscde      *
+ *  please don't touch if you are not familiar   *
+ ************************************************/
+__tool_info__ ("tecscde") {
+    "paper" : {
+       "type" : "paper",
+       "size" :  "A3",
+       "orientation" :  "LANDSCAPE"
+    },
+    "cell_list" : [
+        {       /** cell_list[ 0 ] **/
+            "type"     : "cell_location",
+            "name"     : "HelloWorld",
+            "location" : [ 121.0, 10.0, 25.0, 15.0 ],
+            "region"   : "::",
+            "port_location" : [
+                {
+                    "type"      : "port_location",
+                    "port_name" : "eMain",
+                    "edge"      : "EDGE_LEFT",
+                    "offset"    : 4.0
+                }
+            ]
+        },
+        {       /** cell_list[ 1 ] **/
+            "type"     : "cell_location",
+            "name"     : "Task1",
+            "location" : [ 51.0, 10.0, 25.0, 15.0 ],
+            "region"   : "::",
+            "port_location" : [
+                {
+                    "type"      : "port_location",
+                    "port_name" : "cBody",
+                    "edge"      : "EDGE_RIGHT",
+                    "offset"    : 4.0
+                },
+                {
+                    "type"      : "port_location",
+                    "port_name" : "cExceptionBody",
+                    "edge"      : "EDGE_RIGHT",
+                    "offset"    : 8.0
+                },
+                {
+                    "type"      : "port_location",
+                    "port_name" : "eTask",
+                    "edge"      : "EDGE_LEFT",
+                    "offset"    : 4.0
+                }
+            ]
+        },
+        {       /** cell_list[ 2 ] **/
+            "type"     : "cell_location",
+            "name"     : "HelloWorld0",
+            "location" : [ 93.0, 96.0, 20.0, 13.0 ],
+            "region"   : "::",
+            "port_location" : [
+                {
+                    "type"      : "port_location",
+                    "port_name" : "eMain",
+                    "edge"      : "EDGE_TOP",
+                    "offset"    : 4.0
+                }
+            ]
+        },
+        {       /** cell_list[ 3 ] **/
+            "type"     : "cell_location",
+            "name"     : "Task2",
+            "location" : [ 93.0, 39.0, 20.0, 13.0 ],
+            "region"   : "::",
+            "port_location" : [
+                {
+                    "type"      : "port_location",
+                    "port_name" : "cBody",
+                    "edge"      : "EDGE_BOTTOM",
+                    "offset"    : 4.0
+                },
+                {
+                    "type"      : "port_location",
+                    "port_name" : "cExceptionBody",
+                    "edge"      : "EDGE_BOTTOM",
+                    "offset"    : 8.0
+                },
+                {
+                    "type"      : "port_location",
+                    "port_name" : "eTask",
+                    "edge"      : "EDGE_TOP",
+                    "offset"    : 5.0
+                }
+            ]
+        }
+    ],
+    "join_list" : [
+        {       /** join_list[ 0 ] **/
+            "type"        : "join_location",
+            "call_cell"   : "Task1",
+            "call_region" : "::",
+            "call_port"   : "cBody",
+            "entry_cell"  : "HelloWorld",
+            "entry_region": "::",
+            "entry_port"  : "eMain",
+            "bar_list"    : [
+                {
+                     "type"     : "HBar",
+                     "position" : 99.0
+                },                {
+                     "type"     : "VBar",
+                     "position" : 14.0
+                },                {
+                     "type"     : "HBar",
+                     "position" : 111.0
+                },                {
+                     "type"     : "VBar",
+                     "position" : 14.0
+                },                {
+                     "type"     : "HBar",
+                     "position" : 121.0
+                }
+            ]
+        },
+        {       /** join_list[ 1 ] **/
+            "type"        : "join_location",
+            "call_cell"   : "Task2",
+            "call_region" : "::",
+            "call_port"   : "cBody",
+            "entry_cell"  : "HelloWorld0",
+            "entry_region": "::",
+            "entry_port"  : "eMain",
+            "bar_list"    : [
+                {
+                     "type"     : "VBar",
+                     "position" : 62.0
+                },                {
+                     "type"     : "HBar",
+                     "position" : 78.0
+                },                {
+                     "type"     : "VBar",
+                     "position" : 75.0
+                },                {
+                     "type"     : "HBar",
+                     "position" : 97.0
+                },                {
+                     "type"     : "VBar",
+                     "position" : 96.0
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,53 @@
+//import( <cygwin_kernel.cdl> );
+
+//[deviate]
+//signature sAllocator {
+//   void  alloc( [in]int32_t size, [out]void **buf );
+//   void  dealloc( [in]const void *buf );
+//};
+
+//celltype tAllocator {
+//    entry  sAllocator eAlloc;
+//};
+
+//cell tAllocator Allocator {};
+
+//cell tAllocator Allocator2 {};
+
+
+[generate( RustGenPlugin, "")]
+signature sSample {
+    void  print ( [in]int8_t varin, [out]int32_t *varout, [out]int32_t *varout2);
+};
+
+[generate( RustGenPlugin, "")]
+celltype tSample {
+	call sSample cPrint1;
+//	call sSample cPrint2;
+};
+
+[generate( RustGenPlugin, "")]
+celltype tPrint {
+	entry sSample ePrint;
+	attr{
+        int16_t attribute = 1;
+    };
+    var {
+		int16_t variable = 0;
+	};
+};
+
+//[generate( RustGenPlugin, "")]
+//[allocator(ePrint.print.varsend=Allocator.eAlloc)]
+cell tPrint PrintA {
+};
+
+//[generate( RustGenPlugin, "")]
+//cell tPrint PrintB {
+//};
+
+[generate( RustGenPlugin, "")]
+cell tSample Sample {
+	cPrint1 = PrintA.ePrint;
+//	cPrint2 = PrintB.ePrint;
+};

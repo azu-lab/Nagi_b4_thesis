@@ -1,0 +1,68 @@
+/* POSIX 用の簡単なテスト環境のコンポーネント記述を取り込む */
+import( <cygwin_kernel.cdl> );
+
+/*--------  シグニチャ記述  --------*/
+
+/* sPutString シグニチャ (インタフェースの型) */
+signature sPutString {
+  void  putString( [in,string]const char_t *string );
+};
+
+/*--------  セルタイプ記述  --------*/
+
+/* tPutStringStdio セルタイプ */
+celltype tPutStringStdio {
+  entry  sPutString ePutString;
+};
+
+/* tHelloWorld セルタイプ */
+celltype tHelloWorld {
+	entry sTaskBody  eMain;
+	call  sPutString cPutString;
+  attr {
+      char_t *message = "Hello World!\n";
+  };
+};
+
+[active]
+composite tHelloWorldTask {
+    call  sPutString  cPutString;
+    entry	sTask	      eTask;
+    attr {
+        char_t *message;
+    };
+
+    /* HelloWorld セル */
+    cell tHelloWorld HelloWorld {
+        cPutString => composite.cPutString;
+        message = composite.message;
+    };
+
+    /* Task1 セル */
+    cell tTask Task1 {
+        cBody = HelloWorld.eMain;
+        priority = 11;		/* この値は使われていない */
+        stackSize = 4096;	/* この値は使われていない */
+        taskAttribute = C_EXP( "TA_ACT");
+    };
+    composite.eTask => Task1.eTask;
+};
+
+/*--------  組上げ(セル)記述  --------*/
+
+/* PutStringStdio セル */
+cell tPutStringStdio PutStringStdio {
+};
+
+/* HelloWorldTask セル */
+cell tHelloWorldTask HelloWorldTask{
+    message = "Good luck with TECS!\n";
+    cPutString = PutStringStdio.ePutString;
+};
+
+/* HelloWorldTask2 セル */
+cell tHelloWorldTask HelloWorldTask2{
+    message = "Have a nice dream!\n";
+    cPutString = PutStringStdio.ePutString;
+};
+

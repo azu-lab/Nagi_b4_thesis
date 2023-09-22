@@ -1,0 +1,88 @@
+/* POSIX 用の簡単なテスト環境のコンポーネント記述を取り込む */
+import( <cygwin_kernel.cdl> );
+
+/*--------  シグニチャ記述  --------*/
+
+/* sGetMessage シグニチャ  */
+signature sGetMessage {
+    void getMessage( [out, size_is(len)]char_t *buf, [in]int32_t len );
+};
+
+/* sPutString シグニチャ  */
+signature sPutString {
+    void  putString( [in,string]const char_t *string );
+};
+
+/*--------  セルタイプ記述  --------*/
+
+/* tPutStringStdio セルタイプ */
+celltype tPutStringStdio {
+  entry  sPutString ePutString;
+  call   sSemaphore cSemaphore;
+  attr {
+      int  bufSize = 256;
+  };
+  var {
+      [size_is(bufSize)]
+          char_t *buf;
+  };
+};
+
+/* tMessageHolder セルタイプ */
+celltype tMessageHolder {
+	entry sGetMessage eGetMessage;
+  attr {
+      char_t *message = "Hello World!";
+  };
+};
+
+/* tGetAndPutMessage セルタイプ */
+celltype tGetAndPutMessage {
+    call sGetMessage cGetMessage[];
+    call sPutString  cPutString;
+    entry sTaskBody  eMain;
+};
+
+/*--------  組上げ(セル)記述  --------*/
+
+/* GetAndPutMessage セル */
+cell tGetAndPutMessage GetAndPutMessage {
+    cGetMessage[0] = HelloWorldMessage.eGetMessage;
+    cGetMessage[1] = GoodLuckMessage.eGetMessage;
+    cGetMessage[2] = HaveDreamMessage.eGetMessage;
+    cPutString = PutStringStdio.ePutString;
+};
+
+/* HelloWorldMessage セル */
+cell tMessageHolder HelloWorldMessage {
+    message = "Hello World!\n";
+};
+
+/* GoodLuckMessage セル */
+cell tMessageHolder GoodLuckMessage {
+    message = "Good luck with TECS!\n";
+};
+
+/* HaveDreamMessage セル */
+cell tMessageHolder HaveDreamMessage {
+    message = "Have a nice dream!\n";
+};
+
+/* PutStringStdio セル */
+cell tPutStringStdio PutStringStdio {
+    cSemaphore = PutStringStdioSemaphore.eSemaphore;
+};
+
+/* PutStringStdioSemaphore セル */
+cell tSemaphore PutStringStdioSemaphore {
+    count = 0;
+    attribute = C_EXP( "TA_NULL" );
+};
+
+/* Task1 セル */
+cell tTask Task1 {
+    cBody = GetAndPutMessage.eMain;
+    priority = 11;		/* この値は使われていない */
+    stackSize = 4096;	/* この値は使われていない */
+    taskAttribute = C_EXP( "TA_ACT");
+};

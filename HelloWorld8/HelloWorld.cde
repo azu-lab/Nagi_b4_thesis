@@ -1,0 +1,350 @@
+__tool_info__ ("tecsgen") {
+    "tecscde_version"     : "0.5.1.0",
+    "cde_format_version"  : "0.5.0.0",
+    "save_date"           : "2017-08-15T11:48:30+00:00",
+    "base_dir" : [
+        "C:/cygwin64/home/oyama/TECS/tecsgen/HelloWorld8"
+    ],
+    "define_macro" : [
+
+    ],
+   "import_path" : [
+        ".",
+        "../test/cygwin/"
+    ],
+    "direct_import" : [
+        "HelloWorld.cdl"
+    ]
+}
+
+
+/*************************************************
+ *         TOOL INFORMATION FOR TECSCDE          *
+ *     This  information is used by tecscde      *
+ *  please don't touch if you are not familiar   *
+ ************************************************/
+__tool_info__ ("tecscde") {
+    "paper" : {
+       "type" : "paper",
+       "size" :  "A3",
+       "orientation" :  "LANDSCAPE"
+    },
+    "cell_list" : [
+        {       /** cell_list[ 0 ] **/
+            "type"     : "cell_location",
+            "name"     : "GetAndPutMessage",
+            "location" : [ 116.0, 79.0, 28.0, 15.0 ],
+            "region"   : "::",
+            "port_location" : [
+                {
+                    "type"      : "port_location",
+                    "port_name" : "cGetMessage",
+                    "subscript" : 0,
+                    "edge"      : "EDGE_BOTTOM",
+                    "offset"    : 7.0
+                },
+                {
+                    "type"      : "port_location",
+                    "port_name" : "cGetMessage",
+                    "subscript" : 1,
+                    "edge"      : "EDGE_BOTTOM",
+                    "offset"    : 12
+                },
+                {
+                    "type"      : "port_location",
+                    "port_name" : "cGetMessage",
+                    "subscript" : 2,
+                    "edge"      : "EDGE_BOTTOM",
+                    "offset"    : 16
+                },
+                {
+                    "type"      : "port_location",
+                    "port_name" : "cPutString",
+                    "edge"      : "EDGE_BOTTOM",
+                    "offset"    : 3.0
+                },
+                {
+                    "type"      : "port_location",
+                    "port_name" : "eMain",
+                    "edge"      : "EDGE_TOP",
+                    "offset"    : 22.0
+                }
+            ]
+        },
+        {       /** cell_list[ 1 ] **/
+            "type"     : "cell_location",
+            "name"     : "HelloWorldMessage",
+            "location" : [ 97.0, 137.0, 28.0, 15.0 ],
+            "region"   : "::",
+            "port_location" : [
+                {
+                    "type"      : "port_location",
+                    "port_name" : "eGetMessage",
+                    "edge"      : "EDGE_TOP",
+                    "offset"    : 4
+                }
+            ]
+        },
+        {       /** cell_list[ 2 ] **/
+            "type"     : "cell_location",
+            "name"     : "GoodLuckMessage",
+            "location" : [ 134.0, 137.0, 26.0, 15.0 ],
+            "region"   : "::",
+            "port_location" : [
+                {
+                    "type"      : "port_location",
+                    "port_name" : "eGetMessage",
+                    "edge"      : "EDGE_TOP",
+                    "offset"    : 4
+                }
+            ]
+        },
+        {       /** cell_list[ 3 ] **/
+            "type"     : "cell_location",
+            "name"     : "HaveDreamMessage",
+            "location" : [ 166.0, 137.0, 29.0, 15.0 ],
+            "region"   : "::",
+            "port_location" : [
+                {
+                    "type"      : "port_location",
+                    "port_name" : "eGetMessage",
+                    "edge"      : "EDGE_TOP",
+                    "offset"    : 4
+                }
+            ]
+        },
+        {       /** cell_list[ 4 ] **/
+            "type"     : "cell_location",
+            "name"     : "PutStringStdio",
+            "location" : [ 60.0, 138.0, 25.0, 15.0 ],
+            "region"   : "::",
+            "port_location" : [
+                {
+                    "type"      : "port_location",
+                    "port_name" : "cSemaphore",
+                    "edge"      : "EDGE_BOTTOM",
+                    "offset"    : 21.0
+                },
+                {
+                    "type"      : "port_location",
+                    "port_name" : "ePutString",
+                    "edge"      : "EDGE_TOP",
+                    "offset"    : 4
+                }
+            ]
+        },
+        {       /** cell_list[ 5 ] **/
+            "type"     : "cell_location",
+            "name"     : "PutStringStdioSemaphore",
+            "location" : [ 55.0, 190.0, 35.0, 15.0 ],
+            "region"   : "::",
+            "port_location" : [
+                {
+                    "type"      : "port_location",
+                    "port_name" : "eSemaphore",
+                    "edge"      : "EDGE_TOP",
+                    "offset"    : 4
+                },
+                {
+                    "type"      : "port_location",
+                    "port_name" : "eiSemaphore",
+                    "edge"      : "EDGE_TOP",
+                    "offset"    : 8
+                }
+            ]
+        },
+        {       /** cell_list[ 6 ] **/
+            "type"     : "cell_location",
+            "name"     : "Task1",
+            "location" : [ 114.0, 31.0, 25.0, 15.0 ],
+            "region"   : "::",
+            "port_location" : [
+                {
+                    "type"      : "port_location",
+                    "port_name" : "cBody",
+                    "edge"      : "EDGE_BOTTOM",
+                    "offset"    : 3.0
+                },
+                {
+                    "type"      : "port_location",
+                    "port_name" : "cExceptionBody",
+                    "edge"      : "EDGE_BOTTOM",
+                    "offset"    : 8
+                },
+                {
+                    "type"      : "port_location",
+                    "port_name" : "eTask",
+                    "edge"      : "EDGE_TOP",
+                    "offset"    : 4
+                }
+            ]
+        }
+    ],
+    "join_list" : [
+        {       /** join_list[ 0 ] **/
+            "type"        : "join_location",
+            "call_cell"   : "GetAndPutMessage",
+            "call_region" : "::",
+            "call_port"   : "cGetMessage",
+            "call_port_subscript" : 0,
+            "entry_cell"  : "HelloWorldMessage",
+            "entry_region": "::",
+            "entry_port"  : "eGetMessage",
+            "bar_list"    : [
+                {
+                     "type"     : "VBar",
+                     "position" : 114.0
+                },                {
+                     "type"     : "HBar",
+                     "position" : 121.0
+                },                {
+                     "type"     : "VBar",
+                     "position" : 114.0
+                },                {
+                     "type"     : "HBar",
+                     "position" : 101.0
+                },                {
+                     "type"     : "VBar",
+                     "position" : 137.0
+                }
+            ]
+        },
+        {       /** join_list[ 1 ] **/
+            "type"        : "join_location",
+            "call_cell"   : "GetAndPutMessage",
+            "call_region" : "::",
+            "call_port"   : "cGetMessage",
+            "call_port_subscript" : 1,
+            "entry_cell"  : "GoodLuckMessage",
+            "entry_region": "::",
+            "entry_port"  : "eGetMessage",
+            "bar_list"    : [
+                {
+                     "type"     : "VBar",
+                     "position" : 115.0
+                },                {
+                     "type"     : "HBar",
+                     "position" : 131.0
+                },                {
+                     "type"     : "VBar",
+                     "position" : 115.0
+                },                {
+                     "type"     : "HBar",
+                     "position" : 138.0
+                },                {
+                     "type"     : "VBar",
+                     "position" : 137.0
+                }
+            ]
+        },
+        {       /** join_list[ 2 ] **/
+            "type"        : "join_location",
+            "call_cell"   : "GetAndPutMessage",
+            "call_region" : "::",
+            "call_port"   : "cGetMessage",
+            "call_port_subscript" : 2,
+            "entry_cell"  : "HaveDreamMessage",
+            "entry_region": "::",
+            "entry_port"  : "eGetMessage",
+            "bar_list"    : [
+                {
+                     "type"     : "VBar",
+                     "position" : 108.0
+                },                {
+                     "type"     : "HBar",
+                     "position" : 161.0
+                },                {
+                     "type"     : "VBar",
+                     "position" : 108.0
+                },                {
+                     "type"     : "HBar",
+                     "position" : 170.0
+                },                {
+                     "type"     : "VBar",
+                     "position" : 137.0
+                }
+            ]
+        },
+        {       /** join_list[ 3 ] **/
+            "type"        : "join_location",
+            "call_cell"   : "GetAndPutMessage",
+            "call_region" : "::",
+            "call_port"   : "cPutString",
+            "entry_cell"  : "PutStringStdio",
+            "entry_region": "::",
+            "entry_port"  : "ePutString",
+            "bar_list"    : [
+                {
+                     "type"     : "VBar",
+                     "position" : 108.0
+                },                {
+                     "type"     : "HBar",
+                     "position" : 87.0
+                },                {
+                     "type"     : "VBar",
+                     "position" : 108.0
+                },                {
+                     "type"     : "HBar",
+                     "position" : 64.0
+                },                {
+                     "type"     : "VBar",
+                     "position" : 138.0
+                }
+            ]
+        },
+        {       /** join_list[ 4 ] **/
+            "type"        : "join_location",
+            "call_cell"   : "PutStringStdio",
+            "call_region" : "::",
+            "call_port"   : "cSemaphore",
+            "entry_cell"  : "PutStringStdioSemaphore",
+            "entry_region": "::",
+            "entry_port"  : "eSemaphore",
+            "bar_list"    : [
+                {
+                     "type"     : "VBar",
+                     "position" : 166.0
+                },                {
+                     "type"     : "HBar",
+                     "position" : 81.0
+                },                {
+                     "type"     : "VBar",
+                     "position" : 171.0
+                },                {
+                     "type"     : "HBar",
+                     "position" : 59.0
+                },                {
+                     "type"     : "VBar",
+                     "position" : 190.0
+                }
+            ]
+        },
+        {       /** join_list[ 5 ] **/
+            "type"        : "join_location",
+            "call_cell"   : "Task1",
+            "call_region" : "::",
+            "call_port"   : "cBody",
+            "entry_cell"  : "GetAndPutMessage",
+            "entry_region": "::",
+            "entry_port"  : "eMain",
+            "bar_list"    : [
+                {
+                     "type"     : "VBar",
+                     "position" : 66.0
+                },                {
+                     "type"     : "HBar",
+                     "position" : 119.0
+                },                {
+                     "type"     : "VBar",
+                     "position" : 66.0
+                },                {
+                     "type"     : "HBar",
+                     "position" : 138.0
+                },                {
+                     "type"     : "VBar",
+                     "position" : 79.0
+                }
+            ]
+        }
+    ]
+}

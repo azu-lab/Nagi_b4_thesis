@@ -1,0 +1,146 @@
+__tool_info__ ("tecsgen") {
+    "tecscde_version"     : "0.5.1.0",
+    "cde_format_version"  : "0.5.0.0",
+    "save_date"           : "2017-08-12T23:09:12+00:00",
+    "base_dir" : [
+        "C:/cygwin64/home/oyama/TECS/tecsgen/HelloWorld5",
+        "C:/cygwin64/home/oyama/TECS/tecsgen/HelloWorld2",
+        "C:/cygwin64/home/oyama/TECS/tecsgen/HelloWorld"
+    ],
+    "define_macro" : [
+
+    ],
+   "import_path" : [
+        ".",
+        "../test/cygwin/"
+    ],
+    "direct_import" : [
+        "HelloWorld.cdl"
+    ]
+}
+
+
+/*************************************************
+ *         TOOL INFORMATION FOR TECSCDE          *
+ *     This  information is used by tecscde      *
+ *  please don't touch if you are not familiar   *
+ ************************************************/
+__tool_info__ ("tecscde") {
+    "paper" : {
+       "type" : "paper",
+       "size" :  "A3",
+       "orientation" :  "LANDSCAPE"
+    },
+    "cell_list" : [
+        {       /** cell_list[ 0 ] **/
+            "type"     : "cell_location",
+            "name"     : "PutStringStdio",
+            "location" : [ 91.0, 18.0, 25.0, 15.0 ],
+            "region"   : "::",
+            "port_location" : [
+                {
+                    "type"      : "port_location",
+                    "port_name" : "ePutString",
+                    "edge"      : "EDGE_LEFT",
+                    "offset"    : 4.0
+                }
+            ]
+        },
+        {       /** cell_list[ 1 ] **/
+            "type"     : "cell_location",
+            "name"     : "HelloWorldTask",
+            "location" : [ 18.0, 10.0, 25.0, 15.0 ],
+            "region"   : "::",
+            "port_location" : [
+                {
+                    "type"      : "port_location",
+                    "port_name" : "cPutString",
+                    "edge"      : "EDGE_RIGHT",
+                    "offset"    : 4
+                },
+                {
+                    "type"      : "port_location",
+                    "port_name" : "eTask",
+                    "edge"      : "EDGE_LEFT",
+                    "offset"    : 4
+                }
+            ]
+        },
+        {       /** cell_list[ 2 ] **/
+            "type"     : "cell_location",
+            "name"     : "HelloWorldTask2",
+            "location" : [ 19.0, 33.0, 25.0, 15.0 ],
+            "region"   : "::",
+            "port_location" : [
+                {
+                    "type"      : "port_location",
+                    "port_name" : "cPutString",
+                    "edge"      : "EDGE_RIGHT",
+                    "offset"    : 4
+                },
+                {
+                    "type"      : "port_location",
+                    "port_name" : "eTask",
+                    "edge"      : "EDGE_LEFT",
+                    "offset"    : 4
+                }
+            ]
+        }
+    ],
+    "join_list" : [
+        {       /** join_list[ 0 ] **/
+            "type"        : "join_location",
+            "call_cell"   : "HelloWorldTask",
+            "call_region" : "::",
+            "call_port"   : "cPutString",
+            "entry_cell"  : "PutStringStdio",
+            "entry_region": "::",
+            "entry_port"  : "ePutString",
+            "bar_list"    : [
+                {
+                     "type"     : "HBar",
+                     "position" : 58.0
+                },                {
+                     "type"     : "VBar",
+                     "position" : 22.0
+                },                {
+                     "type"     : "HBar",
+                     "position" : 81.0
+                },                {
+                     "type"     : "VBar",
+                     "position" : 22.0
+                },                {
+                     "type"     : "HBar",
+                     "position" : 91.0
+                }
+            ]
+        },
+        {       /** join_list[ 1 ] **/
+            "type"        : "join_location",
+            "call_cell"   : "HelloWorldTask2",
+            "call_region" : "::",
+            "call_port"   : "cPutString",
+            "entry_cell"  : "PutStringStdio",
+            "entry_region": "::",
+            "entry_port"  : "ePutString",
+            "bar_list"    : [
+                {
+                     "type"     : "HBar",
+                     "position" : 58.0
+                },                {
+                     "type"     : "VBar",
+                     "position" : 22.0
+                },                {
+                     "type"     : "HBar",
+                     "position" : 81.0
+                },                {
+                     "type"     : "VBar",
+                     "position" : 22.0
+                },                {
+                     "type"     : "HBar",
+                     "position" : 91.0
+                }
+            ]
+        }
+    ]
+}
