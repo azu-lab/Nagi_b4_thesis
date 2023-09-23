@@ -14,8 +14,8 @@ impl<'a, T: SSample<<ClientPrint<'a, T>>> ClientPrint<'a, T> {
 		}
 	}
 
-	pub fn print(&mut self, varin: &i8, varsend: mut unknown, varout: &mut unknown, varout2: &mut unknown) {
-		self.call.unwrap().print(self, varin, varsend, varout, varout2);
+	pub fn print(&mut self, varin: &i8, varout: &mut unknown, varout2: &mut unknown) {
+		self.call.unwrap().print(self, varin, varout, varout2);
 	}
 
 }

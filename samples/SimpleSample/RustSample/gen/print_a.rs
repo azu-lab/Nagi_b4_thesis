@@ -10,7 +10,7 @@ pub const PRINTA: PrintA = PrintA {
 
 impl<'a, T> SSample<ClientPrint<'a, T>> for PrintA {
 
-	fn print(&self, var: &mut ClientPrint<T>, varin: &i8, varsend: mut unknown, varout: &mut unknown, varout2: &mut unknown){
+	fn print(&self, var: &mut ClientPrint<T>, varin: &i8, varout: &mut unknown, varout2: &mut unknown){
 
 	}
 

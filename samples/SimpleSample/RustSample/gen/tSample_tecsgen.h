@@ -22,7 +22,6 @@
 
 /* signature header #_ISH_# */
 #include "sSample_tecsgen.h"
-#include "sAllocator_tecsgen.h"
 
 #ifndef TOPPERS_MACRO_ONLY
 
@@ -48,7 +47,6 @@ typedef int   tSample_IDX;
 #define TOPPERS_CB_TYPE_ONLY
 #endif  /* TOPPERS_CB_TYPE_ONLY */
 #include "tPrint_tecsgen.h"
-#include "tAllocator_tecsgen.h"
 #ifdef  tSample_CB_TYPE_ONLY
 #undef TOPPERS_CB_TYPE_ONLY
 #endif /* tSample_CB_TYPE_ONLY */
@@ -65,26 +63,14 @@ typedef int   tSample_IDX;
 #define tSample_GET_CELLCB(idx) ((void *)0)
 #ifndef TECSFLOW
  /* call port function macro #_CPM_# */
-#define tSample_cPrint1_print( p_that, varin, varsend, length, varout, varout2 ) \
+#define tSample_cPrint1_print( p_that, varin, varout, varout2 ) \
 	  tPrint_ePrint_print( \
-	   &tPrint_CB_tab[0], (varin), (varsend), (length), (varout), (varout2) )
-#define tSample_cPrint1_print_varsend_alloc( p_that, size, buf ) \
-	  tAllocator_eAlloc_alloc( \
-	   (tAllocator_IDX)0, (size), (buf) )
-#define tSample_cPrint1_print_varsend_dealloc( p_that, buf ) \
-	  tAllocator_eAlloc_dealloc( \
-	   (tAllocator_IDX)0, (buf) )
+	   &tPrint_CB_tab[0], (varin), (varout), (varout2) )
 
 #else  /* TECSFLOW */
-#define tSample_cPrint1_print( p_that, varin, varsend, length, varout, varout2 ) \
+#define tSample_cPrint1_print( p_that, varin, varout, varout2 ) \
 	  (p_that)->cPrint1.print__T( \
- (varin), (varsend), (length), (varout), (varout2) )
-#define tSample_cPrint1_print_varsend_alloc( p_that, size, buf ) \
-	  (p_that)->cPrint1_print_varsend.alloc__T( \
- (size), (buf) )
-#define tSample_cPrint1_print_varsend_dealloc( p_that, buf ) \
-	  (p_that)->cPrint1_print_varsend.dealloc__T( \
- (buf) )
+ (varin), (varout), (varout2) )
 
 #endif /* TECSFLOW */
 #endif /* TOPPERS_CB_TYPE_ONLY */
@@ -120,12 +106,8 @@ extern "C" {
 #define CELLIDX	tSample_IDX
 
 /* call port function macro (abbrev) #_CPMA_# */
-#define cPrint1_print( varin, varsend, length, varout, varout2 ) \
-          ((void)p_cellcb, tSample_cPrint1_print( p_cellcb, varin, varsend, length, varout, varout2 ))
-#define cPrint1_print_varsend_alloc( size, buf ) \
-          ((void)p_cellcb, tSample_cPrint1_print_varsend_alloc( p_cellcb, size, buf ))
-#define cPrint1_print_varsend_dealloc( buf ) \
-          ((void)p_cellcb, tSample_cPrint1_print_varsend_dealloc( p_cellcb, buf ))
+#define cPrint1_print( varin, varout, varout2 ) \
+          ((void)p_cellcb, tSample_cPrint1_print( p_cellcb, varin, varout, varout2 ))
 
 
 
@@ -136,16 +118,6 @@ extern "C" {
 #define END_FOREACH_CELL   }
 
 /* CB initialize macro #_CIM_# */
-
-/* deallocate macro #_DAL_#   */
-#define CPRINT1_PRINT_VARSEND_DEALLOC(varsend) \
-	  cPrint1_print_varsend_dealloc( (varsend) ); 
-
-/* deallocate macro #_DAL_#  _RESET */
-#define CPRINT1_PRINT_VARSEND_DEALLOC_RESET(varsend) \
-	  if( (varsend) ){ \
-	    cPrint1_print_varsend_dealloc( (varsend) );  \
-	  }
 #endif /* TOPPERS_CB_TYPE_ONLY */
 
 #ifndef TOPPERS_MACRO_ONLY

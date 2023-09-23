@@ -125,14 +125,16 @@ class RustGenCelltypePlugin < CelltypePlugin
             case param_decl.get_direction
             when :IN, :INOUT, :OUT
                 param_list.push(param_decl)
+            # send, receive の実装は保留.以下は没版
+            # TODO:send, receive の実装
             when :SEND
-                param_list.push(param_decl)
-                param_list_diff.push(param_decl.get_size.to_s)
+                # param_list.push(param_decl)
+                # param_list_diff.push(param_decl.get_size.to_s)
             when :RECEIVE
                 # recieve のときは，return として扱うことで，要素をずらさないようにする
-                param_list.push("return")
-                param_return.push(param_decl)
-                param_list_diff.push(param_decl.get_size.to_s)
+                # param_list.push("return")
+                # param_return.push(param_decl)
+                # param_list_diff.push(param_decl.get_size.to_s)
             end
         }
         # lengthlength2
@@ -157,9 +159,9 @@ class RustGenCelltypePlugin < CelltypePlugin
                 when :OUT
                     param_list_str.push(", #{param_decl.get_name}: &mut #{c_type_to_rust_type(param_decl.get_type)}")
                 when :SEND
-                    param_list_str.push(", #{param_decl.get_name}: mut #{c_type_to_rust_type(param_decl.get_type)}")
+                    # param_list_str.push(", #{param_decl.get_name}: mut #{c_type_to_rust_type(param_decl.get_type)}")
                 when :RECEIVE
-                    param_return_str.push(" -> #{c_type_to_rust_type(param_decl.get_type)}")
+                    # param_return_str.push(" -> #{c_type_to_rust_type(param_decl.get_type)}")
                 end
             end
         }

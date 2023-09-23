@@ -10,10 +10,7 @@
  *
  * call port function #_TCPF_#
  * call port: cPrint1 signature: sSample context:task
- *   void           cPrint1_print( int8_t varin, int8_t* varsend, int16_t length, int32_t* varout, int32_t* varout2 );
- * allocator port for call port:cPrint1 func:print param: varsend
- *   void           cPrint1_print_varsend_alloc( int32_t size, void** buf );
- *   void           cPrint1_print_varsend_dealloc( const void* buf );
+ *   void           cPrint1_print( int8_t varin, int32_t* varout, int32_t* varout2 );
  *
  * #[</PREAMBLE>]# */
 

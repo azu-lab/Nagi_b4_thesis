@@ -15,7 +15,7 @@
 //cell tAllocator Allocator2 {};
 
 
-[generate( RustGenPlugin, "")]
+//[generate( RustGenPlugin, "")]
 signature sSample {
     void  print ( [in]int8_t varin, [out]int32_t *varout, [out]int32_t *varout2);
 };
@@ -46,7 +46,7 @@ cell tPrint PrintA {
 //cell tPrint PrintB {
 //};
 
-[generate( RustGenPlugin, "")]
+//[generate( RustGenPlugin, "")]
 cell tSample Sample {
 	cPrint1 = PrintA.ePrint;
 //	cPrint2 = PrintB.ePrint;

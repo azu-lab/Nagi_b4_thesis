@@ -104,9 +104,6 @@ $(GEN_DIR)/tcflow.rbdmp : $(CELLTYPE_SRCS) $(PLUGIN_CELLTYPE_SRCS)
 $(_TECS_OBJ_DIR)%.o : %.c
 	$(CC) -c $(CFLAGS) -o $@ $<
 
-$(_TECS_OBJ_DIR)tAllocator.o : tAllocator.c
-	$(CC) -c $(CFLAGS) -o $@ $<
- 
 $(_TECS_OBJ_DIR)tSample.o : tSample.c
 	$(CC) -c $(CFLAGS) -o $@ $<
  

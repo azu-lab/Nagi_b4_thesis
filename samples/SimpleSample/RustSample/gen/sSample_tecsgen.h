@@ -20,7 +20,7 @@ struct tag_sSample_VDES {
 
 /* signature function table #_SFT_# */
 struct tag_sSample_VMT {
-    void           (*print__T)( const struct tag_sSample_VDES *edp, int8_t varin, int8_t* varsend, int16_t length, int32_t* varout, int32_t* varout2 );
+    void           (*print__T)( const struct tag_sSample_VDES *edp, int8_t varin, int32_t* varout, int32_t* varout2 );
 };
 
 /* signature descriptor #_SDES_# for dynamic join */

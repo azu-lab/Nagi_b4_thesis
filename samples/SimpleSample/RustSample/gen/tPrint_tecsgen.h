@@ -22,7 +22,6 @@
 
 /* signature header #_ISH_# */
 #include "sSample_tecsgen.h"
-#include "sAllocator_tecsgen.h"
 
 #ifndef TOPPERS_MACRO_ONLY
 
@@ -31,7 +30,6 @@ extern "C" {
 #endif /* __cplusplus */
 /* cell INIB type definition #_CIP_# */
 typedef const struct tag_tPrint_INIB {
-    /* call port #_TCP_# */
     /* call port #_NEP_# */ 
     /* attribute(RO) #_ATO_# */ 
     int16_t        attribute;
@@ -39,7 +37,6 @@ typedef const struct tag_tPrint_INIB {
 /* cell CB type definition #_CCTPA_# */
 typedef struct tag_tPrint_CB {
     tPrint_INIB  *_inib;
-    /* call port #_TCP_# */
     /* call port #_NEP_# */ 
     /* var #_VA_# */ 
     int16_t        variable;
@@ -52,21 +49,12 @@ typedef struct tag_tPrint_CB *tPrint_IDX;
 
 /* prototype declaration of entry port function #_EPP_# */
 /* sSample */
-void         tPrint_ePrint_print(tPrint_IDX idx, int8_t varin, int8_t* varsend, int16_t length, int32_t* varout, int32_t* varout2);
+void         tPrint_ePrint_print(tPrint_IDX idx, int8_t varin, int32_t* varout, int32_t* varout2);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 #endif /* TOPPERS_MACRO_ONLY */
 
-/* to get the definition of CB type of referenced celltype for optimization #_ICT_# */
-#ifndef  TOPPERS_CB_TYPE_ONLY
-#define  tPrint_CB_TYPE_ONLY
-#define TOPPERS_CB_TYPE_ONLY
-#endif  /* TOPPERS_CB_TYPE_ONLY */
-#include "tAllocator_tecsgen.h"
-#ifdef  tPrint_CB_TYPE_ONLY
-#undef TOPPERS_CB_TYPE_ONLY
-#endif /* tPrint_CB_TYPE_ONLY */
 #ifndef TOPPERS_CB_TYPE_ONLY
 
 #define tPrint_ID_BASE              (1)  /* ID Base  #_NIDB_# */
@@ -92,22 +80,7 @@ void         tPrint_ePrint_print(tPrint_IDX idx, int8_t varin, int8_t* varsend, 
 #define tPrint_SET_variable(p_that,val)	((p_that)->variable=(val))
 
 #ifndef TECSFLOW
- /* call port function macro #_CPM_# */
-#define tPrint_ePrint_print_varsend_alloc( p_that, size, buf ) \
-	  tAllocator_eAlloc_alloc( \
-	   (tAllocator_IDX)0, (size), (buf) )
-#define tPrint_ePrint_print_varsend_dealloc( p_that, buf ) \
-	  tAllocator_eAlloc_dealloc( \
-	   (tAllocator_IDX)0, (buf) )
-
 #else  /* TECSFLOW */
-#define tPrint_ePrint_print_varsend_alloc( p_that, size, buf ) \
-	  (p_that)->ePrint_print_varsend.alloc__T( \
- (size), (buf) )
-#define tPrint_ePrint_print_varsend_dealloc( p_that, buf ) \
-	  (p_that)->ePrint_print_varsend.dealloc__T( \
- (buf) )
-
 #endif /* TECSFLOW */
 #endif /* TOPPERS_CB_TYPE_ONLY */
 
@@ -151,12 +124,6 @@ extern "C" {
 /* var access macro (abbrev) #_VAMA_# */
 #define VAR_variable         tPrint_VAR_variable( p_cellcb )
 
-/* call port function macro (abbrev) #_CPMA_# */
-#define ePrint_print_varsend_alloc( size, buf ) \
-          ((void)p_cellcb, tPrint_ePrint_print_varsend_alloc( p_cellcb, size, buf ))
-#define ePrint_print_varsend_dealloc( buf ) \
-          ((void)p_cellcb, tPrint_ePrint_print_varsend_dealloc( p_cellcb, buf ))
-
 
 
 
@@ -176,16 +143,6 @@ extern "C" {
 #define SET_CB_INIB_POINTER(i,p_that)\
 	(p_that)->_inib = &tPrint_INIB_tab[(i)];
 
-
-/* deallocate macro #_DAL_#   */
-#define EPRINT_PRINT_VARSEND_DEALLOC(varsend) \
-	  ePrint_print_varsend_dealloc( (varsend) ); 
-
-/* deallocate macro #_DAL_#  _RESET */
-#define EPRINT_PRINT_VARSEND_DEALLOC_RESET(varsend) \
-	  if( (varsend) ){ \
-	    ePrint_print_varsend_dealloc( (varsend) );  \
-	  }
 #endif /* TOPPERS_CB_TYPE_ONLY */
 
 #ifndef TOPPERS_MACRO_ONLY

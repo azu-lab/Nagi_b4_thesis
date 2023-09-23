@@ -12,11 +12,6 @@
  * attribute        int16_t          ATTR_attribute  
  * variable         int16_t          VAR_variable    
  *
- * call port function #_TCPF_#
- * allocator port for call port:ePrint func:print param: varsend
- *   void           ePrint_print_varsend_alloc( int32_t size, void** buf );
- *   void           ePrint_print_varsend_dealloc( const void* buf );
- *
  * #[</PREAMBLE>]# */
 
 /* Put prototype declaration and/or variale definition here #_PAC_# */
@@ -40,7 +35,7 @@
  * oneway:       false
  * #[</ENTRY_FUNC>]# */
 void
-ePrint_print(CELLIDX idx, int8_t varin, int8_t* varsend, int16_t length, int32_t* varout, int32_t* varout2)
+ePrint_print(CELLIDX idx, int8_t varin, int32_t* varout, int32_t* varout2)
 {
 	CELLCB	*p_cellcb = GET_CELLCB(idx);
 
