@@ -267,9 +267,14 @@ EOT
             @use_string_list = []
             # セルタイプに受け口がある場合，use 文を生成する
             @celltype.get_port_list.each{ |port|
+                @use_string_list.push(snake_case(port.get_signature.get_global_name.to_s))
                 if port.get_port_type == :ENTRY then
-                    @use_string_list.push(snake_case(port.get_signature.get_name.to_s))
-                    @use_string_list.push("client_#{snake_case(@celltype.get_global_name.to_s[1..-1])}")
+                    # @use_string_list.push("#{snake_case(@celltype.get_global_name.to_s[1..-1])}_des")
+                else
+                    call_celltype_name = port.get_real_callee_port.get_celltype.get_global_name.to_s
+                    # call_cell_name = port.get_real_callee_cell.get_global_name.to_s
+                    # @use_string_list.push("#{snake_case(call_cell_name)}")
+                    @use_string_list.push("#{snake_case(call_celltype_name[1..-1])}_des")
                 end
             }
             # @use_string_list.uniq!
@@ -306,12 +311,110 @@ EOT
                 else
                 end
             }
-            if @@module_generated != true then
-                file.print <<EOT
-fn main() {
-                                
+
+            # セルの構造体の定義を生成
+            # TODO: ジェネリクスのTやUの選び方の検討
+            file.print <<EOT
+pub struct #{camel_case(snake_case(cell.get_global_name.to_s))}<'a, T>
 EOT
-            end
+            # ジェネリクスの where 句を生成
+            @where_flag = true
+            @celltype.get_port_list.each{ |port|
+                if port.get_port_type == :CALL then
+                    if @where_flag then
+                        file.print "where\n"
+                        @where_flag = false
+                    end
+                    file.print "\tT: #{camel_case(snake_case(port.get_signature.get_global_name.to_s))},\n"
+                end
+            }
+
+            file.print "{\n"
+
+            # 呼び口フィールドの定義を生成
+            # TODO: ジェネリクスのTやUの選び方の検討
+            @celltype.get_port_list.each{ |port|
+                if port.get_port_type == :CALL then
+                    file.print "\tpub #{snake_case(port.get_name.to_s)}: &'a T,\n"
+                end
+            }
+
+            # 属性フィールドの定義を生成
+            @celltype.get_attribute_list.each{ |attr|
+                file.print "\tpub #{attr.get_name.to_s}: #{c_type_to_rust_type(attr.get_type)},\n"
+            }
+
+            # 変数フィールドの定義を生成
+            file.print "\tvariable: &'a mut #{camel_case(snake_case(cell.get_global_name.to_s))}Var,\n"
+
+            file.print "}\n\n"
+
+            # 変数構造体の定義を生成
+            file.print "pub struct #{camel_case(snake_case(cell.get_global_name.to_s))}Var {\n"
+
+            # 変数構造体のフィールドの定義を生成
+            @celltype.get_var_list.each{ |var|
+                file.print "\t#{var.get_name}: #{c_type_to_rust_type(var.get_type)},\n"
+            }
+
+            file.print "}\n\n"
+
+            # セルの構造体の初期化を生成
+            file.print "pub static #{cell.get_global_name.to_s.upcase}: #{camel_case(snake_case(cell.get_global_name.to_s))}"
+
+            jenerics_flag = true
+            # ジェネリクスを代入
+            @celltype.get_port_list.each_with_index do |port, index|
+                if port.get_port_type == :CALL
+                    if jenerics_flag then
+                        file.print "<"
+                    end
+                    entryport_name = camel_case(snake_case(port.get_real_callee_port.get_name.to_s))
+                  if index == @celltype.get_port_list.length - 1
+                    # 最後の要素の処理
+                    file.print "#{entryport_name}>"
+                  else
+                    # 通常の要素の処理
+                    file.print "#{entryport_name}, "
+                  end
+                end
+            end # port_list.each_with_index
+
+            file.print " = #{camel_case(snake_case(cell.get_global_name.to_s))} {\n"
+
+            # セルの構造体の呼び口フィールドの初期化を生成
+            @celltype.get_port_list.each{ |port|
+                if port.get_port_type == :CALL then
+                    entryport_name = camel_case(snake_case(port.get_real_callee_port.get_name.to_s))
+                    file.print "\t#{snake_case(port.get_name.to_s)}: &#{entryport_name.upcase},\n"
+                end
+            }
+
+            # セルの構造体の属性フィールドの初期化を生成
+            @celltype.get_attribute_list.each{ |attr|
+                file.print "\t#{attr.get_name.to_s}: #{attr.get_initializer},\n"
+            }
+
+            # セルの構造体の変数フィールドの初期化を生成
+            file.print "\tvariable: &#{cell.get_global_name.to_s.upcase}VAR,\n"
+            file.print "};\n\n"
+
+            # 変数構造体の初期化を生成
+            file.print "pub static #{cell.get_global_name.to_s.upcase}VAR: #{camel_case(snake_case(cell.get_global_name.to_s))}Var = #{camel_case(snake_case(cell.get_global_name.to_s))}Var {\n"
+
+            # 変数構造体のフィールドの初期化を生成
+            @celltype.get_var_list.each{ |var|
+                file.print "\t#{var.get_name}: #{var.get_initializer},\n"
+            }
+
+            file.print "};\n\n"
+
+#             if @@module_generated != true then
+#                 file.print <<EOT
+# fn main() {
+                                
+# EOT
+#             end
 
             # 結合先のセル名の配列（スネークケース）
             snake_case_call_cell_name = []
