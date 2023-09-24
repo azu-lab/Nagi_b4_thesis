@@ -128,9 +128,10 @@ class RustGenCelltypePlugin < CelltypePlugin
             # send, receive の実装は保留.以下は没版
             # TODO:send, receive の実装
             when :SEND
-                # param_list.push(param_decl)
+                param_list.push(param_decl)
                 # param_list_diff.push(param_decl.get_size.to_s)
             when :RECEIVE
+                param_list.push(param_decl)
                 # recieve のときは，return として扱うことで，要素をずらさないようにする
                 # param_list.push("return")
                 # param_return.push(param_decl)
@@ -159,13 +160,15 @@ class RustGenCelltypePlugin < CelltypePlugin
                 when :OUT
                     param_list_str.push(", #{param_decl.get_name}: &mut #{c_type_to_rust_type(param_decl.get_type)}")
                 when :SEND
+                    param_list_str.push("ignore")
                     # param_list_str.push(", #{param_decl.get_name}: mut #{c_type_to_rust_type(param_decl.get_type)}")
                 when :RECEIVE
+                    param_list_str.push("ignore")
                     # param_return_str.push(" -> #{c_type_to_rust_type(param_decl.get_type)}")
                 end
             end
         }
-        return param_list_str, param_return_str
+        return param_list_str , param_return_str
     end
     
     def gen_use_header file
@@ -293,51 +296,45 @@ EOT
             @use_string_list.uniq!
             gen_use_header file
 
-            # セルタイプに受け口がある場合，構造体の定義と初期化を生成する
+            callport_list = []
+
             @celltype.get_port_list.each{ |port|
-                if port.get_port_type == :ENTRY then
-                    cell_name = cell.get_global_name.to_s
-                    file.print "pub struct #{cell_name} {\n"
-                    @celltype.get_attribute_list.each{ |attr|
-                        file.print "\tpub #{attr.get_name}: #{c_type_to_rust_type(attr.get_type)},\n"
-                    }
-                    file.print "}\n\n"
-                    file.print "pub const #{cell_name.upcase}: #{cell_name} = #{cell_name} {\n"
-                    @celltype.get_attribute_list.each{ |attr|
-                        file.print "\t#{attr.get_name}: #{attr.get_initializer},\n"
-                    }
-                    file.print "};\n"
-                    break
-                else
+                if port.get_port_type == :CALL then
+                    callport_list.push(port)
                 end
             }
 
+            jenerics_alphabet = ('T'..'Z').to_a + ('A'..'S').to_a
+            use_jenerics_alphabet = []
+            if callport_list.length != 0 then
+                use_jenerics_alphabet = jenerics_alphabet[0..callport_list.length-1]
+            end
+
             # セルの構造体の定義を生成
-            # TODO: ジェネリクスのTやUの選び方の検討
-            file.print <<EOT
-pub struct #{camel_case(snake_case(cell.get_global_name.to_s))}<'a, T>
-EOT
-            # ジェネリクスの where 句を生成
-            @where_flag = true
-            @celltype.get_port_list.each{ |port|
-                if port.get_port_type == :CALL then
-                    if @where_flag then
-                        file.print "where\n"
-                        @where_flag = false
-                    end
-                    file.print "\tT: #{camel_case(snake_case(port.get_signature.get_global_name.to_s))},\n"
-                end
+            file.print "pub struct #{camel_case(snake_case(cell.get_global_name.to_s))}<'a"
+
+            use_jenerics_alphabet.each{ |alphabet|
+                file.print ", #{alphabet}"
             }
+            file.print ">\n"
+
+
+            # ジェネリクスの where 句を生成
+            where_flag = true
+            callport_list.zip(use_jenerics_alphabet).each do |callport, alphabet|
+                if where_flag then
+                    file.print "where\n"
+                    where_flag = false
+                end
+                file.print "\t#{alphabet}: #{camel_case(snake_case(callport.get_signature.get_global_name.to_s))},\n"
+            end
 
             file.print "{\n"
 
             # 呼び口フィールドの定義を生成
-            # TODO: ジェネリクスのTやUの選び方の検討
-            @celltype.get_port_list.each{ |port|
-                if port.get_port_type == :CALL then
-                    file.print "\tpub #{snake_case(port.get_name.to_s)}: &'a T,\n"
-                end
-            }
+            callport_list.zip(use_jenerics_alphabet).each do |callport, alphabet|
+                file.print "\tput #{snake_case(callport.get_name.to_s)}: &'a #{alphabet},\n"
+            end
 
             # 属性フィールドの定義を生成
             @celltype.get_attribute_list.each{ |attr|
@@ -364,19 +361,18 @@ EOT
 
             jenerics_flag = true
             # ジェネリクスを代入
-            @celltype.get_port_list.each_with_index do |port, index|
-                if port.get_port_type == :CALL
-                    if jenerics_flag then
-                        file.print "<"
-                    end
-                    entryport_name = camel_case(snake_case(port.get_real_callee_port.get_name.to_s))
-                  if index == @celltype.get_port_list.length - 1
-                    # 最後の要素の処理
+            callport_list.each_with_index do |callport, index|
+                if jenerics_flag then
+                    file.print "<"
+                    jenerics_flag = false
+                end
+                entryport_name = camel_case(snake_case(callport.get_real_callee_port.get_name.to_s))
+                if index == @celltype.get_port_list.length - 1
+                # 最後の要素の処理
                     file.print "#{entryport_name}>"
-                  else
-                    # 通常の要素の処理
+                else
+                # 通常の要素の処理
                     file.print "#{entryport_name}, "
-                  end
                 end
             end # port_list.each_with_index
 
@@ -409,57 +405,6 @@ EOT
 
             file.print "};\n\n"
 
-#             if @@module_generated != true then
-#                 file.print <<EOT
-# fn main() {
-                                
-# EOT
-#             end
-
-            # 結合先のセル名の配列（スネークケース）
-            snake_case_call_cell_name = []
-            # 結合先のセルタイプ名（キャメルケース）
-            camel_case_call_celltype_name = ""
-            # 結合先のセル名の配列
-            call_cell_name = []
-
-            @celltype.get_port_list.each{ |port|
-                if port.get_port_type == :ENTRY then
-                else
-            # セルタイプに呼び口がある場合，一度だけ呼び出す
-                    port2 = port.get_real_callee_port
-                    port2_celltype = port2.get_celltype
-                    port2_celltype_name = port2_celltype.get_global_name.to_s
-                    camel_case_call_celltype_name = camel_case(port2_celltype_name[1..-1])
-                # 以下の each は，結合先のセルタイプに関する記述 
-                    port2_celltype.get_cell_list.each{ |cell|
-                        cell_name = cell.get_global_name.to_s
-                        snake_case_call_cell_name.push(snake_case(cell_name))
-                        call_cell_name.push(cell_name)
-                    }
-                    break
-                end
-            }
-
-            # 結合先のセルタイプのセルの数だけ set 関数で初期化する
-            call_cell_name.each_with_index do |call_cell_name, index|
-                port_list = @celltype.get_port_list
-                if port_list[index].get_port_type == :ENTRY then
-                    break
-                else
-             #     let mut client_print_a = ClientPrint::new_printa_set_cprint(&PRINTA);
-                    file.print "\tlet mut client_#{snake_case(call_cell_name)} = Client#{camel_case_call_celltype_name}::new_#{call_cell_name.downcase}_set_#{port_list[index].get_name.downcase}(&#{call_cell_name.upcase});\n"
-                end
-            end
-            
-            if @@module_generated != true then
-                @@module_generated = true
-                file.print <<EOT
-
-}
-EOT
-            end
-
             # セルタイプに受け口がある場合，impl を生成する
             # TODO:複数の受け口に異なるシグニチャが設定されている場合，それぞれに対して impl を生成する必要がある
             @celltype.get_port_list.each{ |port|
@@ -467,42 +412,48 @@ EOT
                     cell_name = cell.get_global_name.to_s
                     sig = port.get_signature
                     signature_name = sig.get_global_name.to_s
-                    file.print <<EOT
 
-impl<'a, T> #{camel_case(snake_case(signature_name))}<Client#{camel_case(@celltype.get_global_name.to_s[1..-1])}<'a, T>> for #{cell_name} {
+                    file.print "impl #{camel_case(snake_case(port.get_signature.get_global_name.to_s))} for #{camel_case(snake_case(cell.get_global_name.to_s))}<'_"
 
-EOT
-                    # シグニチャの引数の文字列を取得する
-                    param_list_str, param_return_str = get_sig_param_str sig
+                    if callport_list.length != 0 then
+                        file.print ", "
+                    end
+
+                    # ジェネリクスを代入
+                    callport_list.each_with_index do |callport, index|
+                        entryport_name = camel_case(snake_case(callport.get_real_callee_port.get_name.to_s))
+                        if index == @celltype.get_port_list.length - 1
+                            # 最後の要素の処理
+                            file.print "#{entryport_name}"
+                        else
+                            # 通常の要素の処理
+                            file.print "#{entryport_name}, "
+                        end
+                    end # port_list.each_with_index
+
+                    file.print "> {\n\n"
+
+                    sig_param_str_list , _ = get_sig_param_str sig
 
                     sig.get_function_head_array.each{ |func_head|
-                        return_flag = false
-                        file.print "\tfn #{func_head.get_name}(&self, var: &mut Client#{camel_case(@celltype.get_global_name.to_s[1..-1])}<T>"
-                        param_list_item = func_head.get_paramlist.get_items
-                        num = param_list_item.size
-                        num.times do
-                            temp = param_list_str.shift
+                        file.print "\tfn #{func_head.get_name}( &self"
+                        param_num = func_head.get_paramlist.get_items.size
+                        param_num.times do
+                            temp = sig_param_str_list.shift
                             if temp == "ignore" then
                                 next
-                            elsif temp == "return" then
-                            # TODO: recieve が複数の時にどうするか検討する必要がある
-                                return_flag = true
-                            else
-                                file.print "#{temp}"
                             end
+                            file.print "#{temp}"
                         end
-                        if return_flag then
-                            temp = param_return_str.shift
-                            file.print ")#{temp}"
-                        else
-                            file.print ")"
-                        end
-                        file.print "{\n\n\t}\n\n"
+                        file.print ") {\n\n\t}\n\n"
                     }
-                    file.print "}"
+
+                    file.print "}\n\n"
+
                 else
                 end
             }
+
 
         } # celltype.get_cell_list.each
 

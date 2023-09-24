@@ -22,6 +22,7 @@
 
 /* signature header #_ISH_# */
 #include "sSample_tecsgen.h"
+#include "sSample2_tecsgen.h"
 
 #ifndef TOPPERS_MACRO_ONLY
 
@@ -50,6 +51,8 @@ typedef struct tag_tPrint_CB *tPrint_IDX;
 /* prototype declaration of entry port function #_EPP_# */
 /* sSample */
 void         tPrint_ePrint_print(tPrint_IDX idx, int8_t varin, int32_t* varout, int32_t* varout2);
+/* sSample2 */
+void         tPrint_ePrint2_print(tPrint_IDX idx);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
@@ -129,6 +132,7 @@ extern "C" {
 
 /* entry port function macro (abbrev) #_EPM_# */
 #define ePrint_print     tPrint_ePrint_print
+#define ePrint2_print    tPrint_ePrint2_print
 
 /* iteration code (FOREACH_CELL) #_FEC_# */
 #define FOREACH_CELL(i,p_cb)   \

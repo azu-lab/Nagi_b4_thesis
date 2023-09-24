@@ -44,6 +44,27 @@ ePrint_print(CELLIDX idx, int8_t varin, int32_t* varout, int32_t* varout2)
 
 }
 
+/* #[<ENTRY_PORT>]# ePrint2
+ * entry port: ePrint2
+ * signature:  sSample2
+ * context:    task
+ * #[</ENTRY_PORT>]# */
+
+/* #[<ENTRY_FUNC>]# ePrint2_print
+ * name:         ePrint2_print
+ * global_name:  tPrint_ePrint2_print
+ * oneway:       false
+ * #[</ENTRY_FUNC>]# */
+void
+ePrint2_print(CELLIDX idx)
+{
+	CELLCB	*p_cellcb = GET_CELLCB(idx);
+
+	/* Put statements here #_TEFB_# */
+#warning "'ePrint2_print' needs to be edited."   /* delete this line after edit */
+
+}
+
 /* #[<POSTAMBLE>]#
  *   Put non-entry functions below.
  * #[</POSTAMBLE>]#*/

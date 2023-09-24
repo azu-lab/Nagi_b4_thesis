@@ -8,11 +8,15 @@
 /* entry port descriptor type #_EDT_# */
 /* ePrint : omitted by entry port optimize */
 
+/* ePrint2 : omitted by entry port optimize */
+
 /* entry port skelton function #_EPSF_# */
 /* ePrint : omitted by entry port optimize */
+/* ePrint2 : omitted by entry port optimize */
 
 /* entry port skelton function table #_EPSFT_# */
 /* ePrint : omitted by entry port optimize */
+/* ePrint2 : omitted by entry port optimize */
 
 /* entry port descriptor referenced by call port (differ from actual definition) #_CPEPD_# */
 
@@ -42,3 +46,4 @@ struct tag_tPrint_CB tPrint_CB_tab[] = {
 
 /* entry port descriptor #_EPD_# */
 /* ePrint : omitted by entry port optimize */
+/* ePrint2 : omitted by entry port optimize */

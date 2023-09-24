@@ -20,15 +20,21 @@ signature sSample {
     void  print ( [in]int8_t varin, [out]int32_t *varout, [out]int32_t *varout2);
 };
 
+signature sSample2 {
+	void print (void);
+};
+
 [generate( RustGenPlugin, "")]
 celltype tSample {
-	call sSample cPrint1;
+	call sSample cPrint;
+	call sSample2 cPrint2;
 //	call sSample cPrint2;
 };
 
 [generate( RustGenPlugin, "")]
 celltype tPrint {
 	entry sSample ePrint;
+	entry sSample2 ePrint2;
 	attr{
         int16_t attribute = 1;
     };
@@ -48,6 +54,7 @@ cell tPrint PrintA {
 
 //[generate( RustGenPlugin, "")]
 cell tSample Sample {
-	cPrint1 = PrintA.ePrint;
+	cPrint = PrintA.ePrint;
+	cPrint2 = PrintA.ePrint2;
 //	cPrint2 = PrintB.ePrint;
 };

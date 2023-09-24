@@ -9,8 +9,10 @@
  * These comment are used by tecsmerege when merging.
  *
  * call port function #_TCPF_#
- * call port: cPrint1 signature: sSample context:task
- *   void           cPrint1_print( int8_t varin, int32_t* varout, int32_t* varout2 );
+ * call port: cPrint signature: sSample context:task
+ *   void           cPrint_print( int8_t varin, int32_t* varout, int32_t* varout2 );
+ * call port: cPrint2 signature: sSample2 context:task
+ *   void           cPrint2_print( );
  *
  * #[</PREAMBLE>]# */
 

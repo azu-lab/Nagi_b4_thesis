@@ -1,28 +1,30 @@
 mod s_sample;
+mod s_sample2;
 mod sample;
 mod print_a;
 mod client_print;
-use crate::{s_sample::*, print_des::*, sample::*, print_a::*, client_print::*};
+mod client_print;
+use crate::{s_sample::*, print_des::*, s_sample2::*, sample::*, print_a::*, client_print::*};
 
-pub struct Sample<'a, T>
+pub struct Sample<'a, T, U>
 where
 	T: SSample,
+	U: SSample2,
 {
-	pub c_print1: &'a T,
+	put c_print: &'a T,
+	put c_print2: &'a U,
 	variable: &'a mut SampleVar,
 }
 
 pub struct SampleVar {
 }
 
-pub static SAMPLE: Sample<EPrint> = Sample {
-	c_print1: &EPRINT,
+pub static SAMPLE: Sample<EPrint, EPrint2> = Sample {
+	c_print: &EPRINT,
+	c_print2: &EPRINT2,
 	variable: &SAMPLEVAR,
 };
 
 pub static SAMPLEVAR: SampleVar = SampleVar {
 };
 
-	let mut client_print_a = ClientPrint::new_printa_set_cprint1(&PRINTA);
-
-}

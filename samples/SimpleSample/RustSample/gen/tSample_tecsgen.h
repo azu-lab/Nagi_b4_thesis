@@ -22,6 +22,7 @@
 
 /* signature header #_ISH_# */
 #include "sSample_tecsgen.h"
+#include "sSample2_tecsgen.h"
 
 #ifndef TOPPERS_MACRO_ONLY
 
@@ -63,14 +64,20 @@ typedef int   tSample_IDX;
 #define tSample_GET_CELLCB(idx) ((void *)0)
 #ifndef TECSFLOW
  /* call port function macro #_CPM_# */
-#define tSample_cPrint1_print( p_that, varin, varout, varout2 ) \
+#define tSample_cPrint_print( p_that, varin, varout, varout2 ) \
 	  tPrint_ePrint_print( \
 	   &tPrint_CB_tab[0], (varin), (varout), (varout2) )
+#define tSample_cPrint2_print( p_that ) \
+	  tPrint_ePrint2_print( \
+	   &tPrint_CB_tab[0] )
 
 #else  /* TECSFLOW */
-#define tSample_cPrint1_print( p_that, varin, varout, varout2 ) \
-	  (p_that)->cPrint1.print__T( \
+#define tSample_cPrint_print( p_that, varin, varout, varout2 ) \
+	  (p_that)->cPrint.print__T( \
  (varin), (varout), (varout2) )
+#define tSample_cPrint2_print( p_that ) \
+	  (p_that)->cPrint2.print__T( \
+ )
 
 #endif /* TECSFLOW */
 #endif /* TOPPERS_CB_TYPE_ONLY */
@@ -106,8 +113,10 @@ extern "C" {
 #define CELLIDX	tSample_IDX
 
 /* call port function macro (abbrev) #_CPMA_# */
-#define cPrint1_print( varin, varout, varout2 ) \
-          ((void)p_cellcb, tSample_cPrint1_print( p_cellcb, varin, varout, varout2 ))
+#define cPrint_print( varin, varout, varout2 ) \
+          ((void)p_cellcb, tSample_cPrint_print( p_cellcb, varin, varout, varout2 ))
+#define cPrint2_print( ) \
+          ((void)p_cellcb, tSample_cPrint2_print( p_cellcb ))
 
 
 
