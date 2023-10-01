@@ -188,10 +188,13 @@ class RustGenCelltypePlugin < CelltypePlugin
     def c_type_to_rust_type c_type
         
         if c_type.kind_of?( IntType ) then
+            # TODO: ここで符号付きかどうかを判断する
             if c_type.get_sign == :SIGNED then
                 str = "i#{c_type.get_bit_size}"
             elsif c_type.get_sign == :UNSIGNED then
                 str = "u#{c_type.get_bit_size}"
+            else
+                str = "i#{c_type.get_bit_size}"
             end
         elsif c_type.kind_of?( BoolType ) then
             str = "bool"
