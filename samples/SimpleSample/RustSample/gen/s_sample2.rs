@@ -1,5 +1,5 @@
-pub trait SSample2<T> {
+pub trait SSample2 {
 
-	fn print(&self, var: &mut T );
+	fn print(&self);
 
 }

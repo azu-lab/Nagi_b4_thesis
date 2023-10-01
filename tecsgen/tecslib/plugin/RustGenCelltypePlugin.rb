@@ -188,9 +188,21 @@ class RustGenCelltypePlugin < CelltypePlugin
     def c_type_to_rust_type c_type
         
         if c_type.kind_of?( IntType ) then
-            str = "i#{c_type.get_bit_size}"
+            if c_type.get_sign == :SIGNED then
+                str = "i#{c_type.get_bit_size}"
+            elsif c_type.get_sign == :UNSIGNED then
+                str = "u#{c_type.get_bit_size}"
+            end
         elsif c_type.kind_of?( BoolType ) then
             str = "bool"
+        elsif c_type.kind_of?( FloatType ) then
+            str = "f#{c_type.get_bit_size}"
+        elsif c_type.kind_of?( ArrayType ) then
+            type = c_type_to_rust_type(c_type.get_type)
+            subscript = c_type.get_subscript
+            str = "[#{type}; #{subscript}]"
+        elsif c_type.kind_of?( PtrType ) then
+            str = c_type_to_rust_type(c_type.get_type)
         else
             str = "unknown"
         end
@@ -206,7 +218,7 @@ class RustGenCelltypePlugin < CelltypePlugin
             sig_name = sig.get_global_name.to_s
             file2 = CFile.open( "#{$gen}/#{snake_case(sig_name)}.rs", "w" )
             file2.print <<EOT
-pub trait #{camel_case(snake_case(sig_name))}<T> {
+pub trait #{camel_case(snake_case(sig_name))} {
 
 EOT
             # シグニチャの引数の文字列を取得する
@@ -214,7 +226,7 @@ EOT
 
             sig.get_function_head_array.each{ |func_head|
                 return_flag = false
-                file2.print "\tfn #{func_head.get_name}(&self, var: &mut T "
+                file2.print "\tfn #{func_head.get_name}(&self"
                 param_list_item = func_head.get_paramlist.get_items
                 num = param_list_item.size
                 num.times do
@@ -343,7 +355,7 @@ EOT
             }
 
             # 変数フィールドの定義を生成
-            file.print "\tvariable: &'a mut #{camel_case(snake_case(cell.get_global_name.to_s))}Var,\n"
+            file.print "\tpub variable: &'a mut #{camel_case(snake_case(cell.get_global_name.to_s))}Var,\n"
 
             file.print "}\n\n"
 
@@ -352,7 +364,7 @@ EOT
 
             # 変数構造体のフィールドの定義を生成
             @celltype.get_var_list.each{ |var|
-                file.print "\t#{var.get_name}: #{c_type_to_rust_type(var.get_type)},\n"
+                file.print "\tpub #{var.get_name}: #{c_type_to_rust_type(var.get_type)},\n"
             }
 
             file.print "}\n\n"
@@ -445,7 +457,13 @@ EOT
                             end
                             file.print "#{temp}"
                         end
-                        file.print ") {\n\n\t}\n\n"
+                        file.print ") "
+
+                        if c_type_to_rust_type(func_head.get_return_type) != "unknown" then
+                            file.print "-> #{c_type_to_rust_type(func_head.get_return_type)}"
+                        end
+
+                        file.print "{\n\n\t}\n\n"
                     }
 
                     file.print "}\n\n"

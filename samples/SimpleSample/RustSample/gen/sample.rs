@@ -15,7 +15,7 @@ where
 {
 	pub c_print: &'a T,
 	pub c_print2: &'a U,
-	variable: &'a mut SampleVar,
+	pub variable: &'a mut SampleVar,
 }
 
 pub struct SampleVar {
