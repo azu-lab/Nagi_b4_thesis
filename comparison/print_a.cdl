@@ -1,21 +1,3 @@
-//import( <cygwin_kernel.cdl> );
-
-//[deviate]
-//signature sAllocator {
-//   void  alloc( [in]int32_t size, [out]void **buf );
-//   void  dealloc( [in]const void *buf );
-//};
-
-//celltype tAllocator {
-//    entry  sAllocator eAlloc;
-//};
-
-//cell tAllocator Allocator {};
-
-//cell tAllocator Allocator2 {};
-
-
-//[generate( RustGenPlugin, "")]
 signature sSample {
     void  print ( [in]int8_t varin, [out]int32_t *varout, [out]int32_t *varout2);
 };
@@ -28,7 +10,6 @@ signature sSample2 {
 celltype tSample {
 	call sSample cPrint;
 	call sSample2 cPrint2;
-//	call sSample cPrint2;
 };
 
 [generate( RustGenPlugin, "")]
@@ -58,19 +39,11 @@ celltype tCalculate {
 cell tCalculate Calcu{
 };
 
-//[generate( RustGenPlugin, "")]
-//[allocator(ePrint.print.varsend=Allocator.eAlloc)]
 cell tPrint PrintA {
 	cCalculate = Calcu.eCalculate;
 };
 
-//[generate( RustGenPlugin, "")]
-//cell tPrint PrintB {
-//};
-
-//[generate( RustGenPlugin, "")]
 cell tSample Sample {
 	cPrint = PrintA.ePrint;
 	cPrint2 = PrintA.ePrint2;
-//	cPrint2 = PrintB.ePrint;
 };

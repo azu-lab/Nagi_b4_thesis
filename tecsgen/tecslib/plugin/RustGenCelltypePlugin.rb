@@ -249,6 +249,7 @@ EOT
         end
         # トレイトファイルを生成する
         # これは、最初に呼び出されたときに、一度だけ、すべて生成する
+        # TODO:返り値があるときの生成の記述
         if @@b_signature_header_generated != true then
             @@b_signature_header_generated = true
             ns = Namespace.get_root
@@ -296,14 +297,15 @@ EOT
             @use_string_list.uniq!
             gen_use_header file
 
+            # そのセルタイプの呼び口のリストを取得する
             callport_list = []
-
             @celltype.get_port_list.each{ |port|
                 if port.get_port_type == :CALL then
                     callport_list.push(port)
                 end
             }
 
+            # ジェネリクスに使うアルファベットのリストを生成
             jenerics_alphabet = ('T'..'Z').to_a + ('A'..'S').to_a
             use_jenerics_alphabet = []
             if callport_list.length != 0 then
@@ -312,7 +314,6 @@ EOT
 
             # セルの構造体の定義を生成
             file.print "pub struct #{camel_case(snake_case(cell.get_global_name.to_s))}<'a"
-
             use_jenerics_alphabet.each{ |alphabet|
                 file.print ", #{alphabet}"
             }
@@ -333,7 +334,7 @@ EOT
 
             # 呼び口フィールドの定義を生成
             callport_list.zip(use_jenerics_alphabet).each do |callport, alphabet|
-                file.print "\tput #{snake_case(callport.get_name.to_s)}: &'a #{alphabet},\n"
+                file.print "\tpub #{snake_case(callport.get_name.to_s)}: &'a #{alphabet},\n"
             end
 
             # 属性フィールドの定義を生成
@@ -367,7 +368,7 @@ EOT
                     jenerics_flag = false
                 end
                 entryport_name = camel_case(snake_case(callport.get_real_callee_port.get_name.to_s))
-                if index == @celltype.get_port_list.length - 1
+                if index == callport_list.length - 1
                 # 最後の要素の処理
                     file.print "#{entryport_name}>"
                 else
@@ -406,28 +407,27 @@ EOT
             file.print "};\n\n"
 
             # セルタイプに受け口がある場合，impl を生成する
-            # TODO:複数の受け口に異なるシグニチャが設定されている場合，それぞれに対して impl を生成する必要がある
             @celltype.get_port_list.each{ |port|
                 if port.get_port_type == :ENTRY then
                     cell_name = cell.get_global_name.to_s
                     sig = port.get_signature
                     signature_name = sig.get_global_name.to_s
 
-                    file.print "impl #{camel_case(snake_case(port.get_signature.get_global_name.to_s))} for #{camel_case(snake_case(cell.get_global_name.to_s))}<'_"
+                    file.print "impl #{camel_case(snake_case(port.get_signature.get_global_name.to_s))} for #{camel_case(snake_case(port.get_name.to_s))}<'_"
 
-                    if callport_list.length != 0 then
-                        file.print ", "
-                    end
+                    # if callport_list.length != 0 then
+                    #     file.print ", "
+                    # end
 
                     # ジェネリクスを代入
                     callport_list.each_with_index do |callport, index|
                         entryport_name = camel_case(snake_case(callport.get_real_callee_port.get_name.to_s))
-                        if index == @celltype.get_port_list.length - 1
+                        if index == callport_list.length - 1
                             # 最後の要素の処理
-                            file.print "#{entryport_name}"
+                            file.print ", #{entryport_name}"
                         else
                             # 通常の要素の処理
-                            file.print "#{entryport_name}, "
+                            file.print ", #{entryport_name}"
                         end
                     end # port_list.each_with_index
 
@@ -436,7 +436,7 @@ EOT
                     sig_param_str_list , _ = get_sig_param_str sig
 
                     sig.get_function_head_array.each{ |func_head|
-                        file.print "\tfn #{func_head.get_name}( &self"
+                        file.print "\tfn #{func_head.get_name}(&self"
                         param_num = func_head.get_paramlist.get_items.size
                         param_num.times do
                             temp = sig_param_str_list.shift
@@ -454,105 +454,94 @@ EOT
                 end
             }
 
+            @celltype.get_port_list.each{ |port|
+                # TODO:セルが複数あるときに，受け口構造体のフィールドをどうするか
+                if port.get_port_type == :ENTRY then
+                    file.print"pub struct #{camel_case(snake_case(port.get_name.to_s))}<'a>{\n"
+                    @celltype.get_cell_list.each{ |cell|
+                        file.print "\tpub cell: &'a #{camel_case(snake_case(cell.get_global_name.to_s))}<'a"
+                        @celltype.get_port_list.each{ |port|
+                            if port.get_port_type == :CALL then
+                                entryport_name = camel_case(snake_case(port.get_real_callee_port.get_name.to_s))
+                                file.print ", #{entryport_name}<'a>"
+                            end
+                        }
+                        file.print ">,\n"
+                    }
+                    file.print "}\n\n"
+
+                    # TODO:セルが複数あるときに，受け口構造体のフィールドをどうするか
+                    # TODO:一つの受け口構造体がもつセルは１つ
+                    file.print "pub static #{port.get_name.to_s.upcase}: #{camel_case(snake_case(port.get_name.to_s))} = #{camel_case(snake_case(port.get_name.to_s))} {\n"
+                    @celltype.get_cell_list.each{ |cell|
+                        file.print "\tcell: &#{cell.get_global_name.to_s.upcase},\n"
+                    }
+                    file.print "};\n\n"
+                    
+                end
+            }
+
 
         } # celltype.get_cell_list.each
 
-        # client_celltype.rs ファイルを生成する
-        # セルタイプの呼び口につながっているシグニチャの数だけ生成する
-        # TODO:ことなるセルタイプのセルから同一のセルにつながる場合の，set関数の定義を考える必要がある
-        # TODO:トレイト関数の引数に関する生成が必要
-        # TODO:トレイト関数の返り値に関する生成が必要
-        # TODO:返り値があるときの記述に関して，; をつけるかどうかの判断が必要
-        @celltype.get_port_list.each{ |port|
-            if port.get_port_type == :CALL then
-                port2 = port.get_real_callee_port
-                port2_celltype = port2.get_celltype
-                port2_celltype_name = port2_celltype.get_global_name.to_s
-                client_name = "Client#{camel_case(port2_celltype_name[1..-1])}"
-                sig_name = snake_case(port.get_signature.get_global_name.to_s)
-                if File.exist?("#{$gen}/client_#{snake_case(port2_celltype_name[1..-1])}.rs") then
-                else
-                    file3 = CFile.open( "#{$gen}/client_#{snake_case(port2_celltype_name[1..-1])}.rs", "w" )
-                    file3.print <<EOT
-use crate::#{sig_name}::*;
+        # 受け口ディスクリプタファイルを生成する
+        # 受け口を持つセルタイプの数だけ生成する
+        # @celltype.get_port_list.each{ |port|
+        #     if port.get_port_type == :ENTRY then
 
-pub struct #{client_name}<'a, T> {
-    pub call : Option<&'a, T>,
-EOT
-                    port2_celltype.get_var_list.each{ |var|
-                        file3.print "\tpub #{var.get_name}: #{c_type_to_rust_type(var.get_type)},\n"
-                    }
-                    file3.print "}\n\n"
-                    file3.print <<EOT
-impl<'a, T: #{camel_case(sig_name)}<<#{client_name}<'a, T>>> #{client_name}<'a, T> {
+        #         file3 = CFile.open( "#{$gen}/#{snake_case(@celltype.get_global_name.to_s[1..-1])}_des.rs", "w" )
 
-EOT
-                    port2_celltype.get_cell_list.each{ |cell|
-                        file3.print <<EOT
-    pub fn new_#{cell.get_global_name.to_s.downcase}_set_#{port.get_name.downcase}(component: &'a T) -> #{client_name}<'a, T> {
-        #{client_name} {
-            call: Some(component),
-EOT
-                        port2_celltype.get_var_list.each{ |var|
-                            file3.print "\t\t\t#{var.get_name}: #{var.get_initializer},\n"
-                        }
-                        file3.print "\t\t}\n\t}\n\n"
-                    } # port2_celltype.get_cell_list.each
+                
 
-                    # シグニチャの引数の文字列を取得する
-                    sig = port.get_signature
-                    param_list_str, param_return_str = get_sig_param_str sig
+        #         @celltype.get_port_list.each{ |port|
+        #             # TODO:セルが複数あるときに，受け口構造体のフィールドをどうするか
+        #             # TODO:一つの受け口構造体がもつセルは１つ
+        #             if port.get_port_type == :ENTRY then
+        #                 file3.print"pub struct #{camel_case(snake_case(port.get_name.to_s))}<'a>{\n"
+        #                 @celltype.get_cell_list.each{ |cell|
+        #                     file3.print "\tpub cell: &'a #{camel_case(snake_case(cell.get_global_name.to_s))}<'a>,\n"
+        #                 }
+        #                 file3.print "}\n\n"
 
-                    actual_param_list_str = []
+        #                 file3.print "impl #{camel_case(snake_case(port.get_signature.get_global_name.to_s))} for #{camel_case(snake_case(port.get_name.to_s))}<'_> {\n\n"
 
-                    sig.get_function_head_array.each{ |func_head|
-                        return_flag = false
-                        file3.print "\tpub fn #{func_head.get_name}(&mut self"
-                        param_list_item = func_head.get_paramlist.get_items
-                        num = param_list_item.size
-                        num.times do |i|
-                            temp = param_list_str.shift
-                            if temp == "ignore" then
-                                actual_param_list_str.push("ignore")
-                                next
-                            elsif temp == "return" then
-                                actual_param_list_str.push("return")
-                                return_flag = true
-                            else
-                                file3.print "#{temp}"
-                                actual_param_list_str.push(param_list_item[i].get_name.to_s)
-                            end
-                        end
-                        if return_flag then
-                            temp = param_return_str.shift
-                            file3.print ")#{temp}"
-                        else
-                            file3.print ")"
-                        end
+        #                 sig = port.get_signature
+        #                 sig_param_str_list , _ = get_sig_param_str sig
 
-                        file3.print " {\n"
-                        file3.print "\t\tself.call.unwrap().#{func_head.get_name}(self"
-                        num.times do
-                            temp = actual_param_list_str.shift
-                            if temp == "ignore" then
-                                next
-                            elsif temp == "return" then
-                                next
-                            else
-                                file3.print ", #{temp}"
-                            end
-                        end
-                        if return_flag then
-                            file3.print ")\n\t}\n\n"
-                        else
-                            file3.print ");\n\t}\n\n"
-                        end
+        #                 sig.get_function_head_array.each{ |func_head|
+        #                     file3.print "\tfn #{func_head.get_name}(&self"
+        #                     sig_param_str_list.each_with_index do |sig_param_str, index|
+        #                         if sig_param_str == "ignore" then
+        #                             next
+        #                         end
+        #                         file3.print "#{sig_param_str}"
+        #                     end
+        #                     file3.print ") {\n"
+        #                     file3.print "\t\t#{camel_case(snake_case(port.get_signature.get_global_name.to_s))}::#{func_head.get_name}(self.entry"
+        #                     sig.each_param{ |func_decl, param_decl|
+        #                         case param_decl.get_direction
+        #                         when :IN, :INOUT, :OUT
+        #                             file3.print ", #{param_decl.get_name.to_s}"
+        #                         when :SEND, :RECEIVE
 
-                    } # sig.get_function_head_array.each
-                    file3.print "}\n"
-                end # if File.exist?("#{$gen}/client_#{snake_case(port2_celltype_name[1..-1])}.rs") then
-            end # if port.get_port_type == :CALL then
-        } # celltype.get_port_list.each
+        #                         end
+        #                     }
+        #                     file3.print ");\n\t}\n\n"
+        #                 }
+
+        #                 file3.print "}\n\n"
+        #                 # TODO:セルが複数あるときに，受け口構造体のフィールドをどうするか
+        #                 # TODO:一つの受け口構造体がもつセルは１つ
+        #                 file3.print "pub static #{port.get_name.to_s.upcase}: #{camel_case(snake_case(port.get_name.to_s))} = #{camel_case(snake_case(port.get_name.to_s))} {\n"
+        #                 @celltype.get_cell_list.each{ |cell|
+        #                     file3.print "\tcell: &#{cell.get_global_name.to_s.upcase},\n"
+        #                 }
+        #                 file3.print "};\n\n"
+                        
+        #             end
+        #         }
+        #     end # if port.get_port_type == :ENTRY then
+        # } # celltype.get_port_list.each
     end # gen_factory
 
 end

@@ -12,6 +12,10 @@
  * attribute        int16_t          ATTR_attribute  
  * variable         int16_t          VAR_variable    
  *
+ * call port function #_TCPF_#
+ * call port: cCalculate signature: sSample context:task
+ *   void           cCalculate_print( int8_t varin, int32_t* varout, int32_t* varout2 );
+ *
  * #[</PREAMBLE>]# */
 
 /* Put prototype declaration and/or variale definition here #_PAC_# */

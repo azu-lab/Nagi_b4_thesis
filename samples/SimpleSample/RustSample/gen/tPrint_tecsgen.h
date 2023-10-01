@@ -31,6 +31,7 @@ extern "C" {
 #endif /* __cplusplus */
 /* cell INIB type definition #_CIP_# */
 typedef const struct tag_tPrint_INIB {
+    /* call port #_TCP_# */
     /* call port #_NEP_# */ 
     /* attribute(RO) #_ATO_# */ 
     int16_t        attribute;
@@ -38,6 +39,7 @@ typedef const struct tag_tPrint_INIB {
 /* cell CB type definition #_CCTPA_# */
 typedef struct tag_tPrint_CB {
     tPrint_INIB  *_inib;
+    /* call port #_TCP_# */
     /* call port #_NEP_# */ 
     /* var #_VA_# */ 
     int16_t        variable;
@@ -58,6 +60,15 @@ void         tPrint_ePrint2_print(tPrint_IDX idx);
 #endif /* __cplusplus */
 #endif /* TOPPERS_MACRO_ONLY */
 
+/* to get the definition of CB type of referenced celltype for optimization #_ICT_# */
+#ifndef  TOPPERS_CB_TYPE_ONLY
+#define  tPrint_CB_TYPE_ONLY
+#define TOPPERS_CB_TYPE_ONLY
+#endif  /* TOPPERS_CB_TYPE_ONLY */
+#include "tCalculate_tecsgen.h"
+#ifdef  tPrint_CB_TYPE_ONLY
+#undef TOPPERS_CB_TYPE_ONLY
+#endif /* tPrint_CB_TYPE_ONLY */
 #ifndef TOPPERS_CB_TYPE_ONLY
 
 #define tPrint_ID_BASE              (1)  /* ID Base  #_NIDB_# */
@@ -83,7 +94,16 @@ void         tPrint_ePrint2_print(tPrint_IDX idx);
 #define tPrint_SET_variable(p_that,val)	((p_that)->variable=(val))
 
 #ifndef TECSFLOW
+ /* call port function macro #_CPM_# */
+#define tPrint_cCalculate_print( p_that, varin, varout, varout2 ) \
+	  tCalculate_eCalculate_print( \
+	   &tCalculate_CB_tab[0], (varin), (varout), (varout2) )
+
 #else  /* TECSFLOW */
+#define tPrint_cCalculate_print( p_that, varin, varout, varout2 ) \
+	  (p_that)->cCalculate.print__T( \
+ (varin), (varout), (varout2) )
+
 #endif /* TECSFLOW */
 #endif /* TOPPERS_CB_TYPE_ONLY */
 
@@ -126,6 +146,10 @@ extern "C" {
 
 /* var access macro (abbrev) #_VAMA_# */
 #define VAR_variable         tPrint_VAR_variable( p_cellcb )
+
+/* call port function macro (abbrev) #_CPMA_# */
+#define cCalculate_print( varin, varout, varout2 ) \
+          ((void)p_cellcb, tPrint_cCalculate_print( p_cellcb, varin, varout, varout2 ))
 
 
 

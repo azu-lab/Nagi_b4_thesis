@@ -1,0 +1,3 @@
+signature sSample {
+    void  print ( [in]int8_t varin, [out]int32_t *varout, [out]int32_t *varout2);
+};

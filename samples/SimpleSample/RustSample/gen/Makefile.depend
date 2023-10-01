@@ -1,10 +1,15 @@
 # Celltype: tSample  #_MDEP_#
-$(_TECS_OBJ_DIR)tSample_tecsgen.o : tSample_tecsgen.c  $(GEN_DIR)/tPrint_tecsgen.h $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sSample2_tecsgen.h $(GEN_DIR)/sSample_tecsgen.h $(GEN_DIR)/tSample_factory.h $(GEN_DIR)/tSample_tecsgen.h
-$(_TECS_OBJ_DIR)tSample_templ.o : tSample_templ.c  $(GEN_DIR)/tPrint_tecsgen.h $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sSample2_tecsgen.h $(GEN_DIR)/sSample_tecsgen.h $(GEN_DIR)/tSample_factory.h $(GEN_DIR)/tSample_tecsgen.h
-$(_TECS_OBJ_DIR)tSample.o : tSample.c  $(GEN_DIR)/tPrint_tecsgen.h $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sSample2_tecsgen.h $(GEN_DIR)/sSample_tecsgen.h $(GEN_DIR)/tSample_factory.h $(GEN_DIR)/tSample_tecsgen.h
+$(_TECS_OBJ_DIR)tSample_tecsgen.o : tSample_tecsgen.c  $(GEN_DIR)/tCalculate_tecsgen.h  $(GEN_DIR)/tPrint_tecsgen.h $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sSample2_tecsgen.h $(GEN_DIR)/sSample_tecsgen.h $(GEN_DIR)/tSample_factory.h $(GEN_DIR)/tSample_tecsgen.h
+$(_TECS_OBJ_DIR)tSample_templ.o : tSample_templ.c  $(GEN_DIR)/tCalculate_tecsgen.h  $(GEN_DIR)/tPrint_tecsgen.h $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sSample2_tecsgen.h $(GEN_DIR)/sSample_tecsgen.h $(GEN_DIR)/tSample_factory.h $(GEN_DIR)/tSample_tecsgen.h
+$(_TECS_OBJ_DIR)tSample.o : tSample.c  $(GEN_DIR)/tCalculate_tecsgen.h  $(GEN_DIR)/tPrint_tecsgen.h $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sSample2_tecsgen.h $(GEN_DIR)/sSample_tecsgen.h $(GEN_DIR)/tSample_factory.h $(GEN_DIR)/tSample_tecsgen.h
 
 # Celltype: tPrint  #_MDEP_#
-$(_TECS_OBJ_DIR)tPrint_tecsgen.o : tPrint_tecsgen.c $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sSample2_tecsgen.h $(GEN_DIR)/sSample_tecsgen.h $(GEN_DIR)/tPrint_factory.h $(GEN_DIR)/tPrint_tecsgen.h
-$(_TECS_OBJ_DIR)tPrint_templ.o : tPrint_templ.c $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sSample2_tecsgen.h $(GEN_DIR)/sSample_tecsgen.h $(GEN_DIR)/tPrint_factory.h $(GEN_DIR)/tPrint_tecsgen.h
-$(_TECS_OBJ_DIR)tPrint.o : tPrint.c $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sSample2_tecsgen.h $(GEN_DIR)/sSample_tecsgen.h $(GEN_DIR)/tPrint_factory.h $(GEN_DIR)/tPrint_tecsgen.h
+$(_TECS_OBJ_DIR)tPrint_tecsgen.o : tPrint_tecsgen.c  $(GEN_DIR)/tCalculate_tecsgen.h $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sSample2_tecsgen.h $(GEN_DIR)/sSample_tecsgen.h $(GEN_DIR)/tPrint_factory.h $(GEN_DIR)/tPrint_tecsgen.h
+$(_TECS_OBJ_DIR)tPrint_templ.o : tPrint_templ.c  $(GEN_DIR)/tCalculate_tecsgen.h $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sSample2_tecsgen.h $(GEN_DIR)/sSample_tecsgen.h $(GEN_DIR)/tPrint_factory.h $(GEN_DIR)/tPrint_tecsgen.h
+$(_TECS_OBJ_DIR)tPrint.o : tPrint.c  $(GEN_DIR)/tCalculate_tecsgen.h $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sSample2_tecsgen.h $(GEN_DIR)/sSample_tecsgen.h $(GEN_DIR)/tPrint_factory.h $(GEN_DIR)/tPrint_tecsgen.h
+
+# Celltype: tCalculate  #_MDEP_#
+$(_TECS_OBJ_DIR)tCalculate_tecsgen.o : tCalculate_tecsgen.c $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sSample_tecsgen.h $(GEN_DIR)/tCalculate_factory.h $(GEN_DIR)/tCalculate_tecsgen.h
+$(_TECS_OBJ_DIR)tCalculate_templ.o : tCalculate_templ.c $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sSample_tecsgen.h $(GEN_DIR)/tCalculate_factory.h $(GEN_DIR)/tCalculate_tecsgen.h
+$(_TECS_OBJ_DIR)tCalculate.o : tCalculate.c $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sSample_tecsgen.h $(GEN_DIR)/tCalculate_factory.h $(GEN_DIR)/tCalculate_tecsgen.h
 
