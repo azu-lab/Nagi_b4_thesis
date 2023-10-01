@@ -10,12 +10,12 @@ use crate::{s_sample::*, sample::*, print_a::*, client_print::*, calcu::*, clien
 
 pub struct Calcu<'a>
 {
-	pub attribute: ,
+	pub attribute: i32,
 	pub variable: &'a mut CalcuVar,
 }
 
 pub struct CalcuVar {
-	pub variable: ,
+	pub variable: i32,
 }
 
 pub static CALCU: Calcu = Calcu {
@@ -29,7 +29,7 @@ pub static CALCUVAR: CalcuVar = CalcuVar {
 
 impl SSample for ECalculate<'_> {
 
-	fn print(&self, varin: &, varout: &mut , varout2: &mut ) {
+	fn print(&self, varin: &i8, varout: &mut i32, varout2: &mut i32) {
 
 	}
 

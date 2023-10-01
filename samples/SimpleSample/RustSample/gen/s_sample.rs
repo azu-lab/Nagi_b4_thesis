@@ -1,5 +1,5 @@
 pub trait SSample {
 
-	fn print(&self, varin: &, varout: &mut , varout2: &mut );
+	fn print(&self, varin: &i8, varout: &mut i32, varout2: &mut i32);
 
 }

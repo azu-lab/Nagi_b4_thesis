@@ -13,12 +13,12 @@ where
 	T: SSample,
 {
 	pub c_calculate: &'a T,
-	pub attribute: ,
+	pub attribute: i16,
 	pub variable: &'a mut PrintAVar,
 }
 
 pub struct PrintAVar {
-	pub variable: ,
+	pub variable: i16,
 }
 
 pub static PRINTA: PrintA<ECalculate> = PrintA {
@@ -33,7 +33,7 @@ pub static PRINTAVAR: PrintAVar = PrintAVar {
 
 impl SSample for EPrint<'_, ECalculate> {
 
-	fn print(&self, varin: &, varout: &mut , varout2: &mut ) {
+	fn print(&self, varin: &i8, varout: &mut i32, varout2: &mut i32) {
 
 	}
 
