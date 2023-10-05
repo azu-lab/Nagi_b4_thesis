@@ -54,7 +54,7 @@ typedef struct tag_tPrint_CB *tPrint_IDX;
 /* sSample */
 void         tPrint_ePrint_print(tPrint_IDX idx, int8_t varin, int32_t* varout, int32_t* varout2);
 /* sSample2 */
-void         tPrint_ePrint2_print(tPrint_IDX idx);
+void         tPrint_ePrint2_print(tPrint_IDX idx, char_t* buf, int32_t len);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

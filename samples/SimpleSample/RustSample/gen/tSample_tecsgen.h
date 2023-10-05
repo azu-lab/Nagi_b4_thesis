@@ -67,17 +67,17 @@ typedef int   tSample_IDX;
 #define tSample_cPrint_print( p_that, varin, varout, varout2 ) \
 	  tPrint_ePrint_print( \
 	   &tPrint_CB_tab[0], (varin), (varout), (varout2) )
-#define tSample_cPrint2_print( p_that ) \
+#define tSample_cPrint2_print( p_that, buf, len ) \
 	  tPrint_ePrint2_print( \
-	   &tPrint_CB_tab[0] )
+	   &tPrint_CB_tab[0], (buf), (len) )
 
 #else  /* TECSFLOW */
 #define tSample_cPrint_print( p_that, varin, varout, varout2 ) \
 	  (p_that)->cPrint.print__T( \
  (varin), (varout), (varout2) )
-#define tSample_cPrint2_print( p_that ) \
+#define tSample_cPrint2_print( p_that, buf, len ) \
 	  (p_that)->cPrint2.print__T( \
- )
+ (buf), (len) )
 
 #endif /* TECSFLOW */
 #endif /* TOPPERS_CB_TYPE_ONLY */
@@ -115,8 +115,8 @@ extern "C" {
 /* call port function macro (abbrev) #_CPMA_# */
 #define cPrint_print( varin, varout, varout2 ) \
           ((void)p_cellcb, tSample_cPrint_print( p_cellcb, varin, varout, varout2 ))
-#define cPrint2_print( ) \
-          ((void)p_cellcb, tSample_cPrint2_print( p_cellcb ))
+#define cPrint2_print( buf, len ) \
+          ((void)p_cellcb, tSample_cPrint2_print( p_cellcb, buf, len ))
 
 
 

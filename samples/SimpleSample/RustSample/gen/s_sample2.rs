@@ -1,5 +1,5 @@
 pub trait SSample2 {
 
-	fn print(&self);
+	fn print(&self, buf: &mut i-1, len: &i32);
 
 }

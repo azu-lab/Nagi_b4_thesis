@@ -1,9 +1,10 @@
+use spin::Mutex;
 use crate::{s_sample::*};
 
 pub struct Calcu<'a>
 {
 	pub attribute: i32,
-	pub variable: &'a mut CalcuVar,
+	pub variable: &'a Mutex<CalcuVar>,
 }
 
 pub struct CalcuVar {
@@ -15,9 +16,9 @@ pub static CALCU: Calcu = Calcu {
 	variable: &CALCUVAR,
 };
 
-pub static CALCUVAR: CalcuVar = CalcuVar {
+pub static CALCUVAR: Mutex<CalcuVar> = Mutex::new(CalcuVar {
 	variable: 3,
-};
+});
 
 pub struct ECalculate<'a>{
 	pub cell: &'a Calcu<'a>,
@@ -37,9 +38,9 @@ impl SSample for ECalculate<'_> {
 
 }
 
-impl<> Calcu<'_> {
+impl Calcu<'_> {
 	pub fn get_cell_ref(&self) -> (&attribute, &Mutex<CalcuVar>) {
-		(&self.attribute, &self.variable)
+		(&self.attribute, self.variable)
 	}
 }
 

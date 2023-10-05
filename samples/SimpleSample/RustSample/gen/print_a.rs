@@ -1,3 +1,4 @@
+use spin::Mutex;
 use crate::{s_sample::*, s_sample2::*, calcu::*};
 
 pub struct PrintA<'a, T>
@@ -6,7 +7,7 @@ where
 {
 	pub c_calculate: &'a T,
 	pub attribute: i16,
-	pub variable: &'a mut PrintAVar,
+	pub variable: &'a Mutex<PrintAVar>,
 }
 
 pub struct PrintAVar {
@@ -19,9 +20,9 @@ pub static PRINTA: PrintA<ECalculate> = PrintA {
 	variable: &PRINTAVAR,
 };
 
-pub static PRINTAVAR: PrintAVar = PrintAVar {
+pub static PRINTAVAR: Mutex<PrintAVar> = Mutex::new(PrintAVar {
 	variable: 0,
-};
+});
 
 pub struct EPrint<'a>{
 	pub cell: &'a PrintA<'a, ECalculate<'a>>,
@@ -51,7 +52,7 @@ impl SSample for EPrint<'_, ECalculate> {
 
 impl SSample2 for EPrint2<'_, ECalculate> {
 
-	fn print(&self) {
+	fn print(&self, buf: &mut i-1, len: &i32) {
 
 		let cell_ref = self.cell.get_cell_ref();
 
@@ -61,7 +62,7 @@ impl SSample2 for EPrint2<'_, ECalculate> {
 
 impl<T: SSample> PrintA<'_, T> {
 	pub fn get_cell_ref(&self) -> (&T, &attribute, &Mutex<PrintAVar>) {
-		(&self.c_calculate, &self.attribute, &self.variable)
+		(&self.c_calculate, &self.attribute, self.variable)
 	}
 }
 

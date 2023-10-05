@@ -21,7 +21,7 @@ signature sSample {
 };
 
 signature sSample2 {
-	void print (void);
+	void print ([out,string(len)]char_t *buf, [in]int32_t len );
 };
 
 [generate( RustGenPlugin, "")]

@@ -60,7 +60,7 @@ ePrint_print(CELLIDX idx, int8_t varin, int32_t* varout, int32_t* varout2)
  * oneway:       false
  * #[</ENTRY_FUNC>]# */
 void
-ePrint2_print(CELLIDX idx)
+ePrint2_print(CELLIDX idx, char_t* buf, int32_t len)
 {
 	CELLCB	*p_cellcb = GET_CELLCB(idx);
 

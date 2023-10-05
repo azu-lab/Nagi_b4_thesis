@@ -12,7 +12,7 @@
  * call port: cPrint signature: sSample context:task
  *   void           cPrint_print( int8_t varin, int32_t* varout, int32_t* varout2 );
  * call port: cPrint2 signature: sSample2 context:task
- *   void           cPrint2_print( );
+ *   void           cPrint2_print( char_t* buf, int32_t len );
  *
  * #[</PREAMBLE>]# */
 
