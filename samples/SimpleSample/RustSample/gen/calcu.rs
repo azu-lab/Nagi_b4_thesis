@@ -1,12 +1,4 @@
-mod s_sample;
-mod s_sample2;
-mod sample;
-mod print_a;
-mod client_print;
-mod client_print;
-mod calcu;
-mod client_calculate;
-use crate::{s_sample::*, sample::*, print_a::*, client_print::*, calcu::*, client_calculate::*};
+use crate::{s_sample::*};
 
 pub struct Calcu<'a>
 {
@@ -27,14 +19,6 @@ pub static CALCUVAR: CalcuVar = CalcuVar {
 	variable: 3,
 };
 
-impl SSample for ECalculate<'_> {
-
-	fn print(&self, varin: &i8, varout: &mut i32, varout2: &mut i32) {
-
-	}
-
-}
-
 pub struct ECalculate<'a>{
 	pub cell: &'a Calcu<'a>,
 }
@@ -42,4 +26,20 @@ pub struct ECalculate<'a>{
 pub static ECALCULATE: ECalculate = ECalculate {
 	cell: &CALCU,
 };
+
+impl SSample for ECalculate<'_> {
+
+	fn print(&self, varin: &i8, varout: &mut i32, varout2: &mut i32) {
+
+		let cell_ref = self.cell.get_cell_ref();
+
+	}
+
+}
+
+impl<> Calcu<'_> {
+	pub fn get_cell_ref(&self) -> (&attribute, &Mutex<CalcuVar>) {
+		(&self.attribute, &self.variable)
+	}
+}
 

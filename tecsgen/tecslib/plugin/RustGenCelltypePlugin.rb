@@ -98,7 +98,7 @@ class RustGenCelltypePlugin < CelltypePlugin
                 global_cell_name = global_cell_name.to_s
                 global_cell_name = snake_case(global_cell_name)
                 file.print "mod #{global_cell_name};\n"
-                @use_string_list.push(global_cell_name)
+                # @use_string_list.push(global_cell_name)
             }
             # すべてのセルタイプ名を mod する．また，受け口を持たないセルタイプは mod しない.
             celltype.get_port_list.each{ |port|
@@ -108,7 +108,6 @@ class RustGenCelltypePlugin < CelltypePlugin
                     global_celltype_name = global_celltype_name[1..-1]
                     global_celltype_name = snake_case(global_celltype_name)
                     file.print "mod client_#{global_celltype_name};\n"
-                    @use_string_list.push("client_#{global_celltype_name}")
                 else
                 end
             }
@@ -205,6 +204,7 @@ class RustGenCelltypePlugin < CelltypePlugin
             subscript = c_type.get_subscript
             str = "[#{type}; #{subscript}]"
         elsif c_type.kind_of?( PtrType ) then
+            # TODO:@string @count などを確認して heapless::String などを返す
             str = c_type_to_rust_type(c_type.get_type)
         else
             str = "unknown"
@@ -291,9 +291,9 @@ EOT
                     # @use_string_list.push("#{snake_case(@celltype.get_global_name.to_s[1..-1])}_des")
                 else
                     call_celltype_name = port.get_real_callee_port.get_celltype.get_global_name.to_s
-                    # call_cell_name = port.get_real_callee_cell.get_global_name.to_s
-                    # @use_string_list.push("#{snake_case(call_cell_name)}")
-                    @use_string_list.push("#{snake_case(call_celltype_name[1..-1])}_des")
+                    call_cell_name = port.get_real_callee_cell.get_global_name.to_s
+                    @use_string_list.push("#{snake_case(call_cell_name)}")
+                    # @use_string_list.push("#{snake_case(call_celltype_name[1..-1])}_des")
                 end
             }
             # @use_string_list.uniq!
@@ -302,7 +302,7 @@ EOT
             # TODO:将来的にはこの if 文を entry の cell のみに生成する必要がある
             # 現状先頭のセルであるかどうかは，受け口の有無で判断している
             if @@module_generated != true then
-                # @@module_generated = true
+                @@module_generated = true
                 gen_module_header file
                 # gen_use_header file
             else
@@ -421,6 +421,33 @@ EOT
 
             file.print "};\n\n"
 
+            @celltype.get_port_list.each{ |port|
+                # TODO:セルが複数あるときに，受け口構造体のフィールドをどうするか
+                if port.get_port_type == :ENTRY then
+                    file.print"pub struct #{camel_case(snake_case(port.get_name.to_s))}<'a>{\n"
+                    @celltype.get_cell_list.each{ |cell|
+                        file.print "\tpub cell: &'a #{camel_case(snake_case(cell.get_global_name.to_s))}<'a"
+                        @celltype.get_port_list.each{ |port|
+                            if port.get_port_type == :CALL then
+                                entryport_name = camel_case(snake_case(port.get_real_callee_port.get_name.to_s))
+                                file.print ", #{entryport_name}<'a>"
+                            end
+                        }
+                        file.print ">,\n"
+                    }
+                    file.print "}\n\n"
+
+                    # TODO:セルが複数あるときに，受け口構造体のフィールドをどうするか
+                    # TODO:一つの受け口構造体がもつセルは１つ
+                    file.print "pub static #{port.get_name.to_s.upcase}: #{camel_case(snake_case(port.get_name.to_s))} = #{camel_case(snake_case(port.get_name.to_s))} {\n"
+                    @celltype.get_cell_list.each{ |cell|
+                        file.print "\tcell: &#{cell.get_global_name.to_s.upcase},\n"
+                    }
+                    file.print "};\n\n"
+                    
+                end
+            }
+
             # セルタイプに受け口がある場合，impl を生成する
             @celltype.get_port_list.each{ |port|
                 if port.get_port_type == :ENTRY then
@@ -466,7 +493,10 @@ EOT
                             file.print "-> #{c_type_to_rust_type(func_head.get_return_type)}"
                         end
 
-                        file.print "{\n\n\t}\n\n"
+                        file.print "{\n\n"
+# let cell = self.entry.get_cell_ref();
+                        file.print "\t\tlet cell_ref = self.cell.get_cell_ref();\n\n"
+                        file.print"\t}\n\n"
                     }
 
                     file.print "}\n\n"
@@ -475,32 +505,75 @@ EOT
                 end
             }
 
-            @celltype.get_port_list.each{ |port|
-                # TODO:セルが複数あるときに，受け口構造体のフィールドをどうするか
-                if port.get_port_type == :ENTRY then
-                    file.print"pub struct #{camel_case(snake_case(port.get_name.to_s))}<'a>{\n"
-                    @celltype.get_cell_list.each{ |cell|
-                        file.print "\tpub cell: &'a #{camel_case(snake_case(cell.get_global_name.to_s))}<'a"
-                        @celltype.get_port_list.each{ |port|
-                            if port.get_port_type == :CALL then
-                                entryport_name = camel_case(snake_case(port.get_real_callee_port.get_name.to_s))
-                                file.print ", #{entryport_name}<'a>"
-                            end
-                        }
-                        file.print ">,\n"
-                    }
-                    file.print "}\n\n"
+            # get_cell_ref 関数を生成する
+            jenerics_flag = true
+            file.print "impl<"
+            callport_list.zip(use_jenerics_alphabet).each do |callport, alphabet|
+                if jenerics_flag then
+                    jenerics_flag = false
+                    file.print "#{alphabet}: #{camel_case(snake_case(callport.get_signature.get_global_name.to_s))}"
+                else
+                    file.print ", #{alphabet}: #{camel_case(snake_case(callport.get_signature.get_global_name.to_s))}"
+                end
+            end
+            file.print ">"
 
-                    # TODO:セルが複数あるときに，受け口構造体のフィールドをどうするか
-                    # TODO:一つの受け口構造体がもつセルは１つ
-                    file.print "pub static #{port.get_name.to_s.upcase}: #{camel_case(snake_case(port.get_name.to_s))} = #{camel_case(snake_case(port.get_name.to_s))} {\n"
-                    @celltype.get_cell_list.each{ |cell|
-                        file.print "\tcell: &#{cell.get_global_name.to_s.upcase},\n"
-                    }
-                    file.print "};\n\n"
-                    
+            file.print " #{camel_case(snake_case(cell.get_global_name.to_s))}<'_"
+            use_jenerics_alphabet.each{ |alphabet|
+                file.print ", #{alphabet}"
+            }
+            file.print "> {\n"
+            file.print "\tpub fn get_cell_ref(&self) -> ("
+            use_jenerics_alphabet.each_with_index{ |alphabet, index|
+                if index == 0 then
+                    file.print "&#{alphabet}"
+                else
+                    file.print ", &#{alphabet}"
                 end
             }
+
+            @celltype.get_attribute_list.each{ |attr|
+                if callport_list.length == 0 then
+                    file.print "&#{attr.get_name.to_s}"
+                else
+                    file.print ", &#{attr.get_name.to_s}"
+                end
+            }
+            if callport_list.length == 0 && @celltype.get_attribute_list.length == 0 then
+                file.print "&Mutex<#{camel_case(snake_case(cell.get_global_name.to_s))}Var>) {\n"
+            else
+                file.print ", &Mutex<#{camel_case(snake_case(cell.get_global_name.to_s))}Var>) {\n"
+            end
+
+            file.print "\t\t("
+
+            callport_list.each_with_index do |callport, index|
+                if index == 0 then
+                    file.print "&self.#{snake_case(callport.get_name.to_s)}"
+                else
+                    file.print ", &self.#{snake_case(callport.get_name.to_s)}"
+                end
+            end
+
+            @celltype.get_attribute_list.each{ |attr|
+                if callport_list.length == 0 then
+                    file.print "&self.#{attr.get_name.to_s}"
+                else
+                    file.print ", &self.#{attr.get_name.to_s}"
+                end
+            }
+
+            if callport_list.length == 0 && @celltype.get_attribute_list.length == 0 then
+                file.print "&self.variable)\n\t}\n}\n\n"
+            else
+                file.print ", &self.variable)\n\t}\n}\n\n"
+            end
+
+# impl<T:SSample> PrintA1<'_, T> {
+#     pub fn get_cell_ref(&self) -> (&T, &PrintAttrs, &Mutex<PrintAVar>){
+#         (&self.c_print1, &self.attributes, self.variable)
+#     }
+# }
 
 
         } # celltype.get_cell_list.each

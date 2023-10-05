@@ -1,12 +1,4 @@
-mod s_sample;
-mod s_sample2;
-mod sample;
-mod print_a;
-mod client_print;
-mod client_print;
-mod calcu;
-mod client_calculate;
-use crate::{s_sample::*, s_sample2::*, calculate_des::*, sample::*, print_a::*, client_print::*, calcu::*, client_calculate::*};
+use crate::{s_sample::*, s_sample2::*, calcu::*};
 
 pub struct PrintA<'a, T>
 where
@@ -31,22 +23,6 @@ pub static PRINTAVAR: PrintAVar = PrintAVar {
 	variable: 0,
 };
 
-impl SSample for EPrint<'_, ECalculate> {
-
-	fn print(&self, varin: &i8, varout: &mut i32, varout2: &mut i32) {
-
-	}
-
-}
-
-impl SSample2 for EPrint2<'_, ECalculate> {
-
-	fn print(&self) {
-
-	}
-
-}
-
 pub struct EPrint<'a>{
 	pub cell: &'a PrintA<'a, ECalculate<'a>>,
 }
@@ -62,4 +38,30 @@ pub struct EPrint2<'a>{
 pub static EPRINT2: EPrint2 = EPrint2 {
 	cell: &PRINTA,
 };
+
+impl SSample for EPrint<'_, ECalculate> {
+
+	fn print(&self, varin: &i8, varout: &mut i32, varout2: &mut i32) {
+
+		let cell_ref = self.cell.get_cell_ref();
+
+	}
+
+}
+
+impl SSample2 for EPrint2<'_, ECalculate> {
+
+	fn print(&self) {
+
+		let cell_ref = self.cell.get_cell_ref();
+
+	}
+
+}
+
+impl<T: SSample> PrintA<'_, T> {
+	pub fn get_cell_ref(&self) -> (&T, &attribute, &Mutex<PrintAVar>) {
+		(&self.c_calculate, &self.attribute, &self.variable)
+	}
+}
 
