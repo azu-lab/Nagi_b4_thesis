@@ -220,7 +220,6 @@ class RustGenCelltypePlugin < CelltypePlugin
             subscript = c_type.get_subscript
             str = "[#{type}; #{subscript}]"
         elsif c_type.kind_of?( PtrType ) then
-            # TODO:@string @count などを確認して heapless::String などを返す
             if c_type.get_count != nil then
                 str = "#{c_type.get_count}"
             elsif c_type.get_size != nil then
@@ -235,6 +234,9 @@ class RustGenCelltypePlugin < CelltypePlugin
                 # c_type.get_stringが数字かどうかを判断する
                 if c_type.get_string.to_s.match?(/^\d+$/)
                     size = c_type.get_string.to_s.to_i
+                    if size <= 0 then
+                        size = 256
+                    end
                 else
                     size = 256
                 end
@@ -291,7 +293,7 @@ class RustGenCelltypePlugin < CelltypePlugin
                 end
 
                 file2.print ";\n\n"
-                
+
             }
             file2.print "}\n"
         }
@@ -308,7 +310,6 @@ class RustGenCelltypePlugin < CelltypePlugin
         end
         # トレイトファイルを生成する
         # これは、最初に呼び出されたときに、一度だけ、すべて生成する
-        # TODO:返り値があるときの生成の記述
         if @@b_signature_header_generated != true then
             @@b_signature_header_generated = true
             ns = Namespace.get_root
@@ -446,7 +447,8 @@ class RustGenCelltypePlugin < CelltypePlugin
             @celltype.get_port_list.each{ |port|
                 if port.get_port_type == :CALL then
                     entryport_name = camel_case(snake_case(port.get_real_callee_port.get_name.to_s))
-                    file.print "\t#{snake_case(port.get_name.to_s)}: &#{entryport_name.upcase},\n"
+                    call_cell_name = port.get_real_callee_cell.get_global_name.to_s
+                    file.print "\t#{snake_case(port.get_name.to_s)}: &#{entryport_name.upcase}FOR#{call_cell_name.upcase},\n"
                 end
             }
 
@@ -478,7 +480,7 @@ class RustGenCelltypePlugin < CelltypePlugin
             @celltype.get_port_list.each{ |port|
                 if port.get_port_type == :ENTRY then
                     # 受け口構造体の定義を生成
-                    file.print"pub struct #{camel_case(snake_case(port.get_name.to_s))}<'a>{\n"
+                    file.print"pub struct #{camel_case(snake_case(port.get_name.to_s))}For#{camel_case(snake_case(cell.get_global_name.to_s))}<'a>{\n"
                     @celltype.get_cell_list.each{ |cell|
                         # 受け口を持っているセルの参照をフィールドとして生成
                         file.print "\tpub cell: &'a #{camel_case(snake_case(cell.get_global_name.to_s))}<'a"
@@ -486,7 +488,8 @@ class RustGenCelltypePlugin < CelltypePlugin
                             # ジェネリクスの代入を生成
                             if port.get_port_type == :CALL then
                                 entryport_name = camel_case(snake_case(port.get_real_callee_port.get_name.to_s))
-                                file.print ", #{entryport_name}<'a>"
+                                call_cell_name = camel_case(snake_case(port.get_real_callee_cell.get_global_name.to_s))
+                                file.print ", #{entryport_name}For#{call_cell_name}<'a>"
                             end
                         }
                         file.print ">,\n"
@@ -494,9 +497,8 @@ class RustGenCelltypePlugin < CelltypePlugin
                     file.print "}\n\n"
 
                     # 受け口構造体の初期化を生成
-                    # TODO:セルが複数あるときに，受け口構造体の名前をどうするか．現状だと，同じ名前になるため，おそらくコンパイルエラーになる
                     # 一つの受け口構造体がもつセルは１つ
-                    file.print "pub static #{port.get_name.to_s.upcase}: #{camel_case(snake_case(port.get_name.to_s))} = #{camel_case(snake_case(port.get_name.to_s))} {\n"
+                    file.print "pub static #{port.get_name.to_s.upcase}FOR#{cell.get_global_name.to_s.upcase}: #{camel_case(snake_case(port.get_name.to_s))}For#{camel_case(snake_case(cell.get_global_name.to_s))} = #{camel_case(snake_case(port.get_name.to_s))}For#{camel_case(snake_case(cell.get_global_name.to_s))} {\n"
                     @celltype.get_cell_list.each{ |cell|
                         file.print "\tcell: &#{cell.get_global_name.to_s.upcase},\n"
                     }
@@ -512,7 +514,7 @@ class RustGenCelltypePlugin < CelltypePlugin
                     sig = port.get_signature
                     signature_name = sig.get_global_name.to_s
 
-                    file.print "impl #{camel_case(snake_case(port.get_signature.get_global_name.to_s))} for #{camel_case(snake_case(port.get_name.to_s))}<'_"
+                    file.print "impl #{camel_case(snake_case(port.get_signature.get_global_name.to_s))} for #{camel_case(snake_case(port.get_name.to_s))}For#{camel_case(snake_case(cell.get_global_name.to_s))}<'_"
 
                     # if callport_list.length != 0 then
                     #     file.print ", "
@@ -521,12 +523,13 @@ class RustGenCelltypePlugin < CelltypePlugin
                     # ジェネリクスを代入
                     callport_list.each_with_index do |callport, index|
                         entryport_name = camel_case(snake_case(callport.get_real_callee_port.get_name.to_s))
+                        call_cell_name = camel_case(snake_case(callport.get_real_callee_cell.get_global_name.to_s))
                         if index == callport_list.length - 1
                             # 最後の要素の処理
-                            file.print ", #{entryport_name}"
+                            file.print ", #{entryport_name}For#{call_cell_name}"
                         else
                             # 通常の要素の処理
-                            file.print ", #{entryport_name}"
+                            file.print ", #{entryport_name}For#{call_cell_name}"
                         end
                     end # port_list.each_with_index
 

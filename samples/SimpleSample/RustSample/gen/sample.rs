@@ -18,7 +18,7 @@ where
 }
 
 pub static SAMPLE: Sample<EPrint, EPrint2> = Sample {
-	c_print: &EPRINT,
-	c_print2: &EPRINT2,
+	c_print: &EPRINTFORPRINTA,
+	c_print2: &EPRINT2FORPRINTA,
 };
 

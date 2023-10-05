@@ -15,7 +15,7 @@ pub struct PrintAVar {
 }
 
 pub static PRINTA: PrintA<ECalculate> = PrintA {
-	c_calculate: &ECALCULATE,
+	c_calculate: &ECALCULATEFORCALCU,
 	attribute: 1,
 	variable: &PRINTAVAR,
 };
@@ -24,23 +24,23 @@ pub static PRINTAVAR: Mutex<PrintAVar> = Mutex::new(PrintAVar {
 	variable: 0,
 });
 
-pub struct EPrint<'a>{
-	pub cell: &'a PrintA<'a, ECalculate<'a>>,
+pub struct EPrintForPrintA<'a>{
+	pub cell: &'a PrintA<'a, ECalculateForCalcu<'a>>,
 }
 
-pub static EPRINT: EPrint = EPrint {
+pub static EPRINTFORPRINTA: EPrintForPrintA = EPrintForPrintA {
 	cell: &PRINTA,
 };
 
-pub struct EPrint2<'a>{
-	pub cell: &'a PrintA<'a, ECalculate<'a>>,
+pub struct EPrint2ForPrintA<'a>{
+	pub cell: &'a PrintA<'a, ECalculateForCalcu<'a>>,
 }
 
-pub static EPRINT2: EPrint2 = EPrint2 {
+pub static EPRINT2FORPRINTA: EPrint2ForPrintA = EPrint2ForPrintA {
 	cell: &PRINTA,
 };
 
-impl SSample for EPrint<'_, ECalculate> {
+impl SSample for EPrintForPrintA<'_, ECalculateForCalcu> {
 
 	fn print(&self, varin: &i8, varout: &mut i32, varout2: &mut i32) {
 
@@ -50,7 +50,7 @@ impl SSample for EPrint<'_, ECalculate> {
 
 }
 
-impl SSample2 for EPrint2<'_, ECalculate> {
+impl SSample2 for EPrint2ForPrintA<'_, ECalculateForCalcu> {
 
 	fn print(&self, buf_in: &heapless::String<256>, buf_out: &mut heapless::String<256>) {
 

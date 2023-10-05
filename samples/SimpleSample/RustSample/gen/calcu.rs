@@ -20,15 +20,15 @@ pub static CALCUVAR: Mutex<CalcuVar> = Mutex::new(CalcuVar {
 	variable: 3,
 });
 
-pub struct ECalculate<'a>{
+pub struct ECalculateForCalcu<'a>{
 	pub cell: &'a Calcu<'a>,
 }
 
-pub static ECALCULATE: ECalculate = ECalculate {
+pub static ECALCULATEFORCALCU: ECalculateForCalcu = ECalculateForCalcu {
 	cell: &CALCU,
 };
 
-impl SSample for ECalculate<'_> {
+impl SSample for ECalculateForCalcu<'_> {
 
 	fn print(&self, varin: &i8, varout: &mut i32, varout2: &mut i32) {
 
