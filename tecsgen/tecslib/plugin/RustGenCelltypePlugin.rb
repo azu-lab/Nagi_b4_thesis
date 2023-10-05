@@ -137,10 +137,23 @@ class RustGenCelltypePlugin < CelltypePlugin
                 # param_list_diff.push(param_decl.get_size.to_s)
             end
         }
+
         # lengthlength2
         # param_list_diff.each{ |diff|
         #     file2.print "#{diff}"
         # }
+
+        # [out,string(len)]などのlenを削除する
+        param_list.each{ |param_decl|
+            if param_decl.get_type.kind_of?( PtrType ) && param_decl.get_type.get_string != nil then
+                param_list.each_with_index{ |param_decl2, index|
+                    if param_decl2.get_name.to_s == param_decl.get_type.get_string.to_s then
+                        param_list.delete_at(index)
+                    end
+                }
+            end
+        }
+
         # param_decl を文字列にする
         param_list_str =[]
         param_return_str =[]
@@ -208,7 +221,28 @@ class RustGenCelltypePlugin < CelltypePlugin
             str = "[#{type}; #{subscript}]"
         elsif c_type.kind_of?( PtrType ) then
             # TODO:@string @count などを確認して heapless::String などを返す
-            str = c_type_to_rust_type(c_type.get_type)
+            if c_type.get_count != nil then
+                str = "#{c_type.get_count}"
+            elsif c_type.get_size != nil then
+                str = "#{c_type.get_size}"
+            elsif c_type.get_string != nil then
+                # str = "#{c_type.has_sized_pointer?}"
+                # str = "#{c_type.get_max}"
+                # [out,string(len)]の場合は，ここでlenが返ってくる
+                # [out,string(256)]の場合は，256が返ってくる
+                # [in, string]の場合は，-1が返ってくる
+                # str = "#{c_type.get_string}"
+                # c_type.get_stringが数字かどうかを判断する
+                if c_type.get_string.to_s.match?(/^\d+$/)
+                    size = c_type.get_string.to_s.to_i
+                else
+                    size = 256
+                end
+
+                str = "heapless::String<#{size}>"
+            else
+                str = c_type_to_rust_type(c_type.get_type)
+            end
         else
             str = "unknown"
         end
@@ -243,12 +277,21 @@ class RustGenCelltypePlugin < CelltypePlugin
                         file2.print "#{temp}"
                     end
                 end
-                if return_flag then
-                    temp = param_return_str.shift
-                    file2.print ")#{temp};\n\n"
-                else
-                    file2.print ");\n\n"
+                # if return_flag then
+                #     temp = param_return_str.shift
+                #     file2.print ")#{temp};\n\n"
+                # else
+                #     file2.print ");\n\n"
+                # end
+                file2.print ")"
+
+                # 返り値の型がunknown,つまりvoidのときは，-> を生成しない
+                if c_type_to_rust_type(func_head.get_return_type) != "unknown" then
+                    file2.print "-> #{c_type_to_rust_type(func_head.get_return_type)}"
                 end
+
+                file2.print ";\n\n"
+                
             }
             file2.print "}\n"
         }

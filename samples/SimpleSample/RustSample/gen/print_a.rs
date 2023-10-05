@@ -52,7 +52,7 @@ impl SSample for EPrint<'_, ECalculate> {
 
 impl SSample2 for EPrint2<'_, ECalculate> {
 
-	fn print(&self, buf: &mut i-1, len: &i32) {
+	fn print(&self, buf_in: &heapless::String<256>, buf_out: &mut heapless::String<256>) {
 
 		let cell_ref = self.cell.get_cell_ref();
 
