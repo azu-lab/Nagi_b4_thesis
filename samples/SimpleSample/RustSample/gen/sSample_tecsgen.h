@@ -21,6 +21,7 @@ struct tag_sSample_VDES {
 /* signature function table #_SFT_# */
 struct tag_sSample_VMT {
     void           (*print__T)( const struct tag_sSample_VDES *edp, int8_t varin, int32_t* varout, int32_t* varout2 );
+    void           (*test__T)( const struct tag_sSample_VDES *edp, const char_t** test_in, char_t* test_out );
 };
 
 /* signature descriptor #_SDES_# for dynamic join */
@@ -32,5 +33,6 @@ typedef struct { struct tag_sSample_VDES *vdes; } Descriptor( sSample );
 
 /* function id */
 #define	FUNCID_SSAMPLE_PRINT                   (1)
+#define	FUNCID_SSAMPLE_TEST                    (2)
 
 #endif /* sSample_TECSGEN_H */

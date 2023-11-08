@@ -1,0 +1,3 @@
+/* apply CppIfGenCelltypePlugin to celltype 'tCalculate' (celltype of cell 'Calcu') */
+generate( RustGenPlugin, ::tCalculate, "" ); 
+

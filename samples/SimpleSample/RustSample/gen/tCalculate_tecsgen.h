@@ -50,6 +50,7 @@ typedef struct tag_tCalculate_CB *tCalculate_IDX;
 /* prototype declaration of entry port function #_EPP_# */
 /* sSample */
 void         tCalculate_eCalculate_print(tCalculate_IDX idx, int8_t varin, int32_t* varout, int32_t* varout2);
+void         tCalculate_eCalculate_test(tCalculate_IDX idx, const char_t** test_in, char_t* test_out);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
@@ -129,6 +130,7 @@ extern "C" {
 
 /* entry port function macro (abbrev) #_EPM_# */
 #define eCalculate_print tCalculate_eCalculate_print
+#define eCalculate_test  tCalculate_eCalculate_test
 
 /* iteration code (FOREACH_CELL) #_FEC_# */
 #define FOREACH_CELL(i,p_cb)   \

@@ -21,7 +21,7 @@ pub static PRINTA: PrintA<ECalculate> = PrintA {
 };
 
 pub static PRINTAVAR: Mutex<PrintAVar> = Mutex::new(PrintAVar {
-	variable: 0,
+	variable: 2,
 });
 
 pub struct EPrintForPrintA<'a>{
@@ -42,9 +42,15 @@ pub static EPRINT2FORPRINTA: EPrint2ForPrintA = EPrint2ForPrintA {
 
 impl SSample for EPrintForPrintA<'_, ECalculateForCalcu> {
 
-	fn print(&self, varin: &i8, varout: &mut i32, varout2: &mut i32) {
+	fn print(&self, varin: &i8, varout: &mut , varout2: &mut ) {
 
-		let cell_ref = self.cell.get_cell_ref();
+		let mut cell_ref = self.cell.get_cell_ref();
+
+	}
+
+	fn test(&self, test_in: &heapless::String<256>, test_out: &mut i-1) {
+
+		let mut cell_ref = self.cell.get_cell_ref();
 
 	}
 
@@ -54,14 +60,14 @@ impl SSample2 for EPrint2ForPrintA<'_, ECalculateForCalcu> {
 
 	fn print(&self, buf_in: &heapless::String<256>, buf_out: &mut heapless::String<256>) {
 
-		let cell_ref = self.cell.get_cell_ref();
+		let mut cell_ref = self.cell.get_cell_ref();
 
 	}
 
 }
 
 impl<T: SSample> PrintA<'_, T> {
-	pub fn get_cell_ref(&self) -> (&T, &attribute, &Mutex<PrintAVar>) {
+	pub fn get_cell_ref(&self) -> (&T, &i16, &Mutex<PrintAVar>) {
 		(&self.c_calculate, &self.attribute, self.variable)
 	}
 }

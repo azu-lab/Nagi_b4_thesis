@@ -220,11 +220,7 @@ class RustGenCelltypePlugin < CelltypePlugin
             subscript = c_type.get_subscript
             str = "[#{type}; #{subscript}]"
         elsif c_type.kind_of?( PtrType ) then
-            if c_type.get_count != nil then
-                str = "#{c_type.get_count}"
-            elsif c_type.get_size != nil then
-                str = "#{c_type.get_size}"
-            elsif c_type.get_string != nil then
+            if c_type.get_string != nil then
                 # str = "#{c_type.has_sized_pointer?}"
                 # str = "#{c_type.get_max}"
                 # [out,string(len)]の場合は，ここでlenが返ってくる
@@ -233,17 +229,31 @@ class RustGenCelltypePlugin < CelltypePlugin
                 # str = "#{c_type.get_string}"
                 # c_type.get_stringが数字かどうかを判断する
                 if c_type.get_string.to_s.match?(/^\d+$/)
-                    size = c_type.get_string.to_s.to_i
-                    if size <= 0 then
-                        size = 256
+                    string = c_type.get_string.to_s.to_i
+                    if string <= 0 then
+                        string = 256
                     end
                 else
-                    size = 256
+                    string = 256
                 end
 
-                str = "heapless::String<#{size}>"
-            else
+                str = "heapless::String<#{string}>"
+
+                if c_type.get_size != nil then
+                    size = c_type.get_size.to_s.to_i
+                    str.prepend("heapless::Vec::<")
+                    str.concat(", #{size}>")
+                end
+            elsif c_type.get_size != nil then
+                # TODO: size_is指定子のときの処理
+                type = c_type_to_rust_type(c_type.get_type)
+                str = "[#{type}; #{c_type.get_size}]"
                 str = c_type_to_rust_type(c_type.get_type)
+            elsif c_type.get_count != nil then
+                type = c_type_to_rust_type(c_type.get_type)
+                str = "[#{type}; #{c_type.get_size}]"
+            elsif c_type.get_max != nil then
+                str = "check_max"
             end
         else
             str = "unknown"
@@ -258,7 +268,11 @@ class RustGenCelltypePlugin < CelltypePlugin
         ns.get_signature_list.each{ |sig|
             # next if sig.is_allocator? == true
             sig_name = sig.get_global_name.to_s
-            file2 = CFile.open( "#{$gen}/#{snake_case(sig_name)}.rs", "w" )
+            if File.exist?("#{$gen}/#{snake_case(sig_name)}.rs") then
+                return
+            else
+                file2 = CFile.open( "#{$gen}/#{snake_case(sig_name)}.rs", "w" )
+            end
 
             file2.print "pub trait #{camel_case(snake_case(sig_name))} {\n\n"
             # シグニチャの引数の文字列を取得する
@@ -326,7 +340,11 @@ class RustGenCelltypePlugin < CelltypePlugin
                 # new_string = global_file_name[1..-1]
                 global_file_name = snake_case(global_file_name)
             end
-            file = CFile.open( "#{$gen}/#{global_file_name}.rs", "w" )
+            if File.exist?("#{$gen}/#{global_file_name}.rs") then
+                return
+            else
+                file = CFile.open( "#{$gen}/#{global_file_name}.rs", "w" )
+            end
 
             @use_string_list = []
             # セルタイプに受け口がある場合，use 文を生成する
@@ -558,7 +576,7 @@ class RustGenCelltypePlugin < CelltypePlugin
                         file.print "{\n\n"
 
                         # get_cell_ref 関数の呼び出しを生成
-                        file.print "\t\tlet cell_ref = self.cell.get_cell_ref();\n\n"
+                        file.print "\t\tlet mut cell_ref = self.cell.get_cell_ref();\n\n"
 
                         file.print"\t}\n\n"
                     }
@@ -607,9 +625,9 @@ class RustGenCelltypePlugin < CelltypePlugin
                     }
                     @celltype.get_attribute_list.each{ |attr|
                         if callport_list.length == 0 then
-                            file.print "&#{attr.get_name.to_s}"
+                            file.print "&#{c_type_to_rust_type(attr.get_type)}"
                         else
-                            file.print ", &#{attr.get_name.to_s}"
+                            file.print ", &#{c_type_to_rust_type(attr.get_type)}"
                         end
                     }
                     if callport_list.length == 0 && @celltype.get_attribute_list.length == 0 then

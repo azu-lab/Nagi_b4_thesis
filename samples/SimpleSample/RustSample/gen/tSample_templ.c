@@ -11,6 +11,7 @@
  * call port function #_TCPF_#
  * call port: cPrint signature: sSample context:task
  *   void           cPrint_print( int8_t varin, int32_t* varout, int32_t* varout2 );
+ *   void           cPrint_test( const char_t** test_in, char_t* test_out );
  * call port: cPrint2 signature: sSample2 context:task
  *   void           cPrint2_print( const char_t* buf_in, char_t* buf_out, int32_t len );
  *

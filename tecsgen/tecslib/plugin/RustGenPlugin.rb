@@ -47,8 +47,8 @@ class RustGenPlugin < MultiPlugin
       require_tecsgen_lib "tecslib/plugin/RustGenCelltypePlugin.rb"
       return RustGenCelltypePlugin
     elsif superClass == CellPlugin then
-      # require_tecsgen_lib "tecslib/plugin/RustGenCellPlugin.rb"
-      return nil
+      require_tecsgen_lib "tecslib/plugin/RustGenCellPlugin.rb"
+      return RustGenCellPlugin
     elsif superClass == ThroughPlugin then
       return nil
     elsif superClass == DomainPlugin then

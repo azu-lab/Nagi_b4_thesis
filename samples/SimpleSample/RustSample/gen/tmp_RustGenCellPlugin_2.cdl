@@ -1,0 +1,3 @@
+/* apply CppIfGenCelltypePlugin to celltype 'tSample' (celltype of cell 'Sample') */
+generate( RustGenPlugin, ::tSample, "" ); 
+

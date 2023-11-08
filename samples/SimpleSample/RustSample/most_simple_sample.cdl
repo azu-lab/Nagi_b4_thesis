@@ -1,0 +1,35 @@
+signature sSample {
+	void print ([in] int32_t time, [out] int32_t* temp);
+};
+
+[generate( RustGenPlugin, "")]
+celltype tSample {
+	call sSample cPrint;
+	attr{
+		int32_t sampleattr = 0;
+	};
+	var{
+		int32_t samplevar = 5;
+	};
+};
+
+[generate( RustGenPlugin, "")]
+celltype tPrint {
+	entry sSample ePrint;
+	attr{
+		int32_t printattr = 1;
+	};
+	var{
+		int32_t printvar = 10;
+	};
+};
+
+//[generate( RustGenPlugin, "")]
+cell tPrint PrintA {
+
+};
+
+//[generate( RustGenPlugin, "")]
+cell tSample Sample {
+	cPrint = PrintA.ePrint;
+};

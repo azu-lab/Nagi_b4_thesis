@@ -53,6 +53,7 @@ typedef struct tag_tPrint_CB *tPrint_IDX;
 /* prototype declaration of entry port function #_EPP_# */
 /* sSample */
 void         tPrint_ePrint_print(tPrint_IDX idx, int8_t varin, int32_t* varout, int32_t* varout2);
+void         tPrint_ePrint_test(tPrint_IDX idx, const char_t** test_in, char_t* test_out);
 /* sSample2 */
 void         tPrint_ePrint2_print(tPrint_IDX idx, const char_t* buf_in, char_t* buf_out, int32_t len);
 #ifdef __cplusplus
@@ -98,11 +99,17 @@ void         tPrint_ePrint2_print(tPrint_IDX idx, const char_t* buf_in, char_t* 
 #define tPrint_cCalculate_print( p_that, varin, varout, varout2 ) \
 	  tCalculate_eCalculate_print( \
 	   &tCalculate_CB_tab[0], (varin), (varout), (varout2) )
+#define tPrint_cCalculate_test( p_that, test_in, test_out ) \
+	  tCalculate_eCalculate_test( \
+	   &tCalculate_CB_tab[0], (test_in), (test_out) )
 
 #else  /* TECSFLOW */
 #define tPrint_cCalculate_print( p_that, varin, varout, varout2 ) \
 	  (p_that)->cCalculate.print__T( \
  (varin), (varout), (varout2) )
+#define tPrint_cCalculate_test( p_that, test_in, test_out ) \
+	  (p_that)->cCalculate.test__T( \
+ (test_in), (test_out) )
 
 #endif /* TECSFLOW */
 #endif /* TOPPERS_CB_TYPE_ONLY */
@@ -150,12 +157,15 @@ extern "C" {
 /* call port function macro (abbrev) #_CPMA_# */
 #define cCalculate_print( varin, varout, varout2 ) \
           ((void)p_cellcb, tPrint_cCalculate_print( p_cellcb, varin, varout, varout2 ))
+#define cCalculate_test( test_in, test_out ) \
+          ((void)p_cellcb, tPrint_cCalculate_test( p_cellcb, test_in, test_out ))
 
 
 
 
 /* entry port function macro (abbrev) #_EPM_# */
 #define ePrint_print     tPrint_ePrint_print
+#define ePrint_test      tPrint_ePrint_test
 #define ePrint2_print    tPrint_ePrint2_print
 
 /* iteration code (FOREACH_CELL) #_FEC_# */
@@ -167,7 +177,7 @@ extern "C" {
 
 /* CB initialize macro #_CIM_# */
 #define INITIALIZE_CB(p_that)\
-	(p_that)->variable = 0;
+	(p_that)->variable = 2;
 #define SET_CB_INIB_POINTER(i,p_that)\
 	(p_that)->_inib = &tPrint_INIB_tab[(i)];
 

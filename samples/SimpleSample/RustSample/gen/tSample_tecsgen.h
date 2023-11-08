@@ -67,6 +67,9 @@ typedef int   tSample_IDX;
 #define tSample_cPrint_print( p_that, varin, varout, varout2 ) \
 	  tPrint_ePrint_print( \
 	   &tPrint_CB_tab[0], (varin), (varout), (varout2) )
+#define tSample_cPrint_test( p_that, test_in, test_out ) \
+	  tPrint_ePrint_test( \
+	   &tPrint_CB_tab[0], (test_in), (test_out) )
 #define tSample_cPrint2_print( p_that, buf_in, buf_out, len ) \
 	  tPrint_ePrint2_print( \
 	   &tPrint_CB_tab[0], (buf_in), (buf_out), (len) )
@@ -75,6 +78,9 @@ typedef int   tSample_IDX;
 #define tSample_cPrint_print( p_that, varin, varout, varout2 ) \
 	  (p_that)->cPrint.print__T( \
  (varin), (varout), (varout2) )
+#define tSample_cPrint_test( p_that, test_in, test_out ) \
+	  (p_that)->cPrint.test__T( \
+ (test_in), (test_out) )
 #define tSample_cPrint2_print( p_that, buf_in, buf_out, len ) \
 	  (p_that)->cPrint2.print__T( \
  (buf_in), (buf_out), (len) )
@@ -115,6 +121,8 @@ extern "C" {
 /* call port function macro (abbrev) #_CPMA_# */
 #define cPrint_print( varin, varout, varout2 ) \
           ((void)p_cellcb, tSample_cPrint_print( p_cellcb, varin, varout, varout2 ))
+#define cPrint_test( test_in, test_out ) \
+          ((void)p_cellcb, tSample_cPrint_test( p_cellcb, test_in, test_out ))
 #define cPrint2_print( buf_in, buf_out, len ) \
           ((void)p_cellcb, tSample_cPrint2_print( p_cellcb, buf_in, buf_out, len ))
 

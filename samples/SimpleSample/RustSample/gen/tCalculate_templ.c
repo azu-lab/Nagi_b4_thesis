@@ -44,6 +44,21 @@ eCalculate_print(CELLIDX idx, int8_t varin, int32_t* varout, int32_t* varout2)
 
 }
 
+/* #[<ENTRY_FUNC>]# eCalculate_test
+ * name:         eCalculate_test
+ * global_name:  tCalculate_eCalculate_test
+ * oneway:       false
+ * #[</ENTRY_FUNC>]# */
+void
+eCalculate_test(CELLIDX idx, const char_t** test_in, char_t* test_out)
+{
+	CELLCB	*p_cellcb = GET_CELLCB(idx);
+
+	/* Put statements here #_TEFB_# */
+#warning "'eCalculate_test' needs to be edited."   /* delete this line after edit */
+
+}
+
 /* #[<POSTAMBLE>]#
  *   Put non-entry functions below.
  * #[</POSTAMBLE>]#*/

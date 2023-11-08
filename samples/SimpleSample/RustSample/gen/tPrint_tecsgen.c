@@ -40,7 +40,7 @@ struct tag_tPrint_CB tPrint_CB_tab[] = {
         &tPrint_INIB_tab[0],                     /* _inib */
         /* entry port #_EP_# */ 
         /* var */ 
-        0,                                       /* variable */
+        2,                                       /* variable */
     },
 };
 

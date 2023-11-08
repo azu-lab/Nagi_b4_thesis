@@ -1,26 +1,31 @@
 //import( <cygwin_kernel.cdl> );
 
-//[deviate]
-//signature sAllocator {
-//   void  alloc( [in]int32_t size, [out]void **buf );
-//   void  dealloc( [in]const void *buf );
-//};
-
-//celltype tAllocator {
-//    entry  sAllocator eAlloc;
-//};
-
-//cell tAllocator Allocator {};
-
-//cell tAllocator Allocator2 {};
-
-
 //[generate( RustGenPlugin, "")]
 signature sSample {
     void  print ( [in]int8_t varin, [out]int32_t *varout, [out]int32_t *varout2);
+	void  test ([in, string(256), size_is(128)]const char_t **test_in, [out, size_is(32)]char_t *test_out);
 };
 
 signature sSample2 {
+// max_is を指定できる
+// heaplessがコピーの場合，引数を渡した場合256が何段もコピーされてしまい，ヒープを圧迫してしまう
+// 256なのに10しか使っていないと，無駄な部分が膨大になる
+// コピーでない場合，どこかに文字列本体があり，それを共有している（変更しない限り共有する）
+// 関数の引数に渡した場合，などコピーが発生する
+// おそらく，&がついていればコピーなしで利用する．&なしの場合，コピーを行う
+// String型は文字列の連結などの操作をする前提の型
+// Rustにおいてstr型は文字列リテラルのような形は，Stringとは違い操作されない前提のもの
+// u8のVec型ならいける？
+// println!はstrでもStringでもいけるように設計されている
+// [in]ならstr（操作されないから），[out]ならString（mutable）でもいけるかも
+// ユースケースによって，strを使うかStringを使うかが変わってくるため，上手くやる必要がある
+// TECSでは文字列を扱うケースがそこまでない．そのため，優先度は低い
+// エラーメッセージを出すために文字列を使うケース，文字列を操作して新しい文字列を作りたいケース
+// [in]はstrでもheapless::Stringでも使えるようにする
+// aspは引数に文字列を扱う機能が無い
+// outでconst文字列を使うのはTECSにおいて逸脱
+
+
 	void print ([in,string(256)]const char_t *buf_in, [out,string(len)]char_t *buf_out, [in]int32_t len );
 };
 
@@ -40,7 +45,7 @@ celltype tPrint {
         int16_t attribute = 1;
     };
     var {
-		int16_t variable = 0;
+		int16_t variable = 2;
 	};
 };
 
@@ -55,22 +60,45 @@ celltype tCalculate {
 	};
 };
 
+[generate( RustGenPlugin, "")]
 cell tCalculate Calcu{
 };
 
-//[generate( RustGenPlugin, "")]
-//[allocator(ePrint.print.varsend=Allocator.eAlloc)]
+[generate( RustGenPlugin, "")]
 cell tPrint PrintA {
 	cCalculate = Calcu.eCalculate;
+	attribute = 1;
+//	variable = 0;
 };
 
 //[generate( RustGenPlugin, "")]
 //cell tPrint PrintB {
 //};
 
-//[generate( RustGenPlugin, "")]
+[generate( RustGenPlugin, "")]
 cell tSample Sample {
 	cPrint = PrintA.ePrint;
 	cPrint2 = PrintA.ePrint2;
 //	cPrint2 = PrintB.ePrint;
 };
+
+// [string]終端が0の配列
+// TECSに対応する型を用意する
+// 終端有り無しを別々
+// CStr型が終端あり　サイズ指定が無い場合終端あり　独自のものを自作する必要がある
+// サイズ指定がある場合終端なし
+// 独自の型
+// ・終端があるかどうかを判別する機能
+// ・終端がある場合はCStr，無ければエラーを返す機能
+// ・上記の機能を使うかどうかはプログラマ次第とする
+// ・同じサイズの配列の型であればそのまま渡せる機能
+// 　　・サイズが違う場合どうするか，を考える
+// ・配列をふくむ配列なども，型として考える必要がある
+// ・型に機能を実装して，プログラマが使うかどうかを判断する設計にする
+// 終端有り無しに関わらず，終端の存在を必要としない設計
+// string
+
+// ユーザコードから変数をアクセスできるよう関数を提供する
+// デッドロックが現状だと発生しうる．この形式は，ユーザの意図とは異なるかもしれない
+// 変数まとめてロックするのではなく，1つ1つ包む方がユーザの意図に近くなるかもしれない
+// このunsafeの安全性を，Rustプラグインが保証する

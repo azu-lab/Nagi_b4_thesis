@@ -15,6 +15,7 @@
  * call port function #_TCPF_#
  * call port: cCalculate signature: sSample context:task
  *   void           cCalculate_print( int8_t varin, int32_t* varout, int32_t* varout2 );
+ *   void           cCalculate_test( const char_t** test_in, char_t* test_out );
  *
  * #[</PREAMBLE>]# */
 
@@ -45,6 +46,21 @@ ePrint_print(CELLIDX idx, int8_t varin, int32_t* varout, int32_t* varout2)
 
 	/* Put statements here #_TEFB_# */
 #warning "'ePrint_print' needs to be edited."   /* delete this line after edit */
+
+}
+
+/* #[<ENTRY_FUNC>]# ePrint_test
+ * name:         ePrint_test
+ * global_name:  tPrint_ePrint_test
+ * oneway:       false
+ * #[</ENTRY_FUNC>]# */
+void
+ePrint_test(CELLIDX idx, const char_t** test_in, char_t* test_out)
+{
+	CELLCB	*p_cellcb = GET_CELLCB(idx);
+
+	/* Put statements here #_TEFB_# */
+#warning "'ePrint_test' needs to be edited."   /* delete this line after edit */
 
 }
 
