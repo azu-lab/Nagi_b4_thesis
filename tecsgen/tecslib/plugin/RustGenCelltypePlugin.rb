@@ -256,7 +256,7 @@ class RustGenCelltypePlugin < CelltypePlugin
                 str = "check_max"
             end
         else
-            str = "unknown"
+            str = c_type.get_type_str
         end
         return str
     end
@@ -313,6 +313,7 @@ class RustGenCelltypePlugin < CelltypePlugin
         }
     end
 
+    # セルタイプに呼び口がある場合，その呼び口につながっているシグニチャのトレイトファイルを生成する
     def gen_trait_files
 
         @celltype.get_port_list.each{ |port|
@@ -427,7 +428,7 @@ class RustGenCelltypePlugin < CelltypePlugin
             # 現状先頭のセルであるかどうかは，受け口の有無で判断している
             if @@module_generated != true then
                 @@module_generated = true
-                gen_module_header file
+                # gen_module_header file
                 # gen_use_header file
             else
                 # gen_use_header file
@@ -478,7 +479,11 @@ class RustGenCelltypePlugin < CelltypePlugin
 
             # 属性フィールドの定義を生成
             @celltype.get_attribute_list.each{ |attr|
-                file.print "\tpub #{attr.get_name.to_s}: #{c_type_to_rust_type(attr.get_type)},\n"
+                if attr.is_omit? then
+                    next
+                else
+                    file.print "\tpub #{attr.get_name.to_s}: #{c_type_to_rust_type(attr.get_type)},\n"
+                end
             }
 
             # 変数フィールドの定義を生成
@@ -532,7 +537,10 @@ class RustGenCelltypePlugin < CelltypePlugin
 
             # セルの構造体の属性フィールドの初期化を生成
             @celltype.get_attribute_list.each{ |attr|
-                file.print "\t#{attr.get_name.to_s}: #{attr.get_initializer},\n"
+                if attr.is_omit? then
+                else
+                    file.print "\t#{attr.get_name.to_s}: #{attr.get_initializer},\n"
+                end
             }
 
             # セルの構造体の変数フィールドの初期化を生成

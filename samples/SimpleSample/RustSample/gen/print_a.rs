@@ -30,7 +30,7 @@ pub static EPRINTFORPRINTA: EPrintForPrintA = EPrintForPrintA {
 
 impl STaskBody for EPrintForPrintA<'_> {
 
-	fn main(&self) {
+	fn main(&self) -> void{
 
 		let mut cell_ref = self.cell.get_cell_ref();
 

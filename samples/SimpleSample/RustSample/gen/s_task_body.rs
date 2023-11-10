@@ -1,5 +1,5 @@
 pub trait STaskBody {
 
-	fn main(&self);
+	fn main(&self)-> void;
 
 }
