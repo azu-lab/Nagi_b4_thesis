@@ -1,0 +1,27 @@
+import(<kernel.cdl>);
+
+[generate( RustGenPlugin, "")]
+celltype tPrint {
+	entry sTaskBody ePrint;
+	attr{
+		int32_t printattr = 1;
+	};
+	var{
+		int32_t printvar = 10;
+	};
+};
+
+[generate( RustGenPlugin, "")]
+cell tPrint PrintA{
+};
+
+[generate( RustGenPlugin, "")]
+cell tTask task{
+    cTaskBody = PrintA.ePrint;
+
+    id = C_EXP("1");
+    attribute = C_EXP("TA_ACT");
+    stackSize = 1024;
+    priority = 42;
+};
+

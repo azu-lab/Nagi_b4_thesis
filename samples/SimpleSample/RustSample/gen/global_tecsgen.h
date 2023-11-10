@@ -5,6 +5,11 @@
 #ifndef GLOBAL_TECSGEN_H
 #define GLOBAL_TECSGEN_H
 
+
+/* header imported by import_C #_IMP_# */
+#include "tecs_kernel.h"
+/**/
+
 #ifndef TOPPERS_MACRO_ONLY
 
 

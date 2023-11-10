@@ -14,8 +14,9 @@ $(TARGET):$(TECSGEN)
 $(TECSGEN):
 	#cd ../../..
 	#source set_env.sh
-	# $(TECSGEN) $(TECSGEN_FLAGS) most_simple_sample.cdl
-	$(TECSGEN) $(TECSGEN_FLAGS) sample.cdl
+	# $(TECSGEN) $(TECSGEN_FLAGS) most_simple_sample.cdl -I ./tecs_kernel
+	# $(TECSGEN) $(TECSGEN_FLAGS) sample.cdl -I ./tecs_kernel
+	$(TECSGEN) $(TECSGEN_FLAGS) use_kernel.cdl -I ./tecs_kernel
 
 # simple: $(TARGET_SIMPLE)
 # $(TARGET_SIMPLE):$(TECSGEN)

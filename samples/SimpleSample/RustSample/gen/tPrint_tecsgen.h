@@ -21,8 +21,7 @@
 #include "global_tecsgen.h"
 
 /* signature header #_ISH_# */
-#include "sSample_tecsgen.h"
-#include "sSample2_tecsgen.h"
+#include "sTaskBody_tecsgen.h"
 
 #ifndef TOPPERS_MACRO_ONLY
 
@@ -31,18 +30,16 @@ extern "C" {
 #endif /* __cplusplus */
 /* cell INIB type definition #_CIP_# */
 typedef const struct tag_tPrint_INIB {
-    /* call port #_TCP_# */
     /* call port #_NEP_# */ 
     /* attribute(RO) #_ATO_# */ 
-    int16_t        attribute;
+    int32_t        printattr;
 }  tPrint_INIB;
 /* cell CB type definition #_CCTPA_# */
 typedef struct tag_tPrint_CB {
     tPrint_INIB  *_inib;
-    /* call port #_TCP_# */
     /* call port #_NEP_# */ 
     /* var #_VA_# */ 
-    int16_t        variable;
+    int32_t        printvar;
 }  tPrint_CB;
 /* singleton cell CB prototype declaration #_MCPB_# */
 extern tPrint_CB  tPrint_CB_tab[];
@@ -51,25 +48,13 @@ extern tPrint_CB  tPrint_CB_tab[];
 typedef struct tag_tPrint_CB *tPrint_IDX;
 
 /* prototype declaration of entry port function #_EPP_# */
-/* sSample */
-void         tPrint_ePrint_print(tPrint_IDX idx, int8_t varin, int32_t* varout, int32_t* varout2);
-void         tPrint_ePrint_test(tPrint_IDX idx, const char_t** test_in, char_t* test_out);
-/* sSample2 */
-void         tPrint_ePrint2_print(tPrint_IDX idx, const char_t* buf_in, char_t* buf_out, int32_t len);
+/* sTaskBody */
+void         tPrint_ePrint_main(tPrint_IDX idx);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 #endif /* TOPPERS_MACRO_ONLY */
 
-/* to get the definition of CB type of referenced celltype for optimization #_ICT_# */
-#ifndef  TOPPERS_CB_TYPE_ONLY
-#define  tPrint_CB_TYPE_ONLY
-#define TOPPERS_CB_TYPE_ONLY
-#endif  /* TOPPERS_CB_TYPE_ONLY */
-#include "tCalculate_tecsgen.h"
-#ifdef  tPrint_CB_TYPE_ONLY
-#undef TOPPERS_CB_TYPE_ONLY
-#endif /* tPrint_CB_TYPE_ONLY */
 #ifndef TOPPERS_CB_TYPE_ONLY
 
 #define tPrint_ID_BASE              (1)  /* ID Base  #_NIDB_# */
@@ -83,34 +68,19 @@ void         tPrint_ePrint2_print(tPrint_IDX idx, const char_t* buf_in, char_t* 
 #define tPrint_GET_CELLCB(idx) (idx)
 
 /* attr access  #_AAM_# */
-#define tPrint_ATTR_attribute( p_that )	((p_that)->_inib->attribute)
+#define tPrint_ATTR_printattr( p_that )	((p_that)->_inib->printattr)
 
-#define tPrint_GET_attribute(p_that)	((p_that)->_inib->attribute)
+#define tPrint_GET_printattr(p_that)	((p_that)->_inib->printattr)
 
 
 /* var access macro #_VAM_# */
-#define tPrint_VAR_variable(p_that)	((p_that)->variable)
+#define tPrint_VAR_printvar(p_that)	((p_that)->printvar)
 
-#define tPrint_GET_variable(p_that)	((p_that)->variable)
-#define tPrint_SET_variable(p_that,val)	((p_that)->variable=(val))
+#define tPrint_GET_printvar(p_that)	((p_that)->printvar)
+#define tPrint_SET_printvar(p_that,val)	((p_that)->printvar=(val))
 
 #ifndef TECSFLOW
- /* call port function macro #_CPM_# */
-#define tPrint_cCalculate_print( p_that, varin, varout, varout2 ) \
-	  tCalculate_eCalculate_print( \
-	   &tCalculate_CB_tab[0], (varin), (varout), (varout2) )
-#define tPrint_cCalculate_test( p_that, test_in, test_out ) \
-	  tCalculate_eCalculate_test( \
-	   &tCalculate_CB_tab[0], (test_in), (test_out) )
-
 #else  /* TECSFLOW */
-#define tPrint_cCalculate_print( p_that, varin, varout, varout2 ) \
-	  (p_that)->cCalculate.print__T( \
- (varin), (varout), (varout2) )
-#define tPrint_cCalculate_test( p_that, test_in, test_out ) \
-	  (p_that)->cCalculate.test__T( \
- (test_in), (test_out) )
-
 #endif /* TECSFLOW */
 #endif /* TOPPERS_CB_TYPE_ONLY */
 
@@ -148,25 +118,17 @@ extern "C" {
 
 
 /* attr access macro (abbrev) #_AAMA_# */
-#define ATTR_attribute       tPrint_ATTR_attribute( p_cellcb )
+#define ATTR_printattr       tPrint_ATTR_printattr( p_cellcb )
 
 
 /* var access macro (abbrev) #_VAMA_# */
-#define VAR_variable         tPrint_VAR_variable( p_cellcb )
-
-/* call port function macro (abbrev) #_CPMA_# */
-#define cCalculate_print( varin, varout, varout2 ) \
-          ((void)p_cellcb, tPrint_cCalculate_print( p_cellcb, varin, varout, varout2 ))
-#define cCalculate_test( test_in, test_out ) \
-          ((void)p_cellcb, tPrint_cCalculate_test( p_cellcb, test_in, test_out ))
+#define VAR_printvar         tPrint_VAR_printvar( p_cellcb )
 
 
 
 
 /* entry port function macro (abbrev) #_EPM_# */
-#define ePrint_print     tPrint_ePrint_print
-#define ePrint_test      tPrint_ePrint_test
-#define ePrint2_print    tPrint_ePrint2_print
+#define ePrint_main      tPrint_ePrint_main
 
 /* iteration code (FOREACH_CELL) #_FEC_# */
 #define FOREACH_CELL(i,p_cb)   \
@@ -177,7 +139,7 @@ extern "C" {
 
 /* CB initialize macro #_CIM_# */
 #define INITIALIZE_CB(p_that)\
-	(p_that)->variable = 2;
+	(p_that)->printvar = 10;
 #define SET_CB_INIB_POINTER(i,p_that)\
 	(p_that)->_inib = &tPrint_INIB_tab[(i)];
 

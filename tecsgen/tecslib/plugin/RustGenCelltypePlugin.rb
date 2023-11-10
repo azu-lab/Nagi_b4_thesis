@@ -312,6 +312,62 @@ class RustGenCelltypePlugin < CelltypePlugin
             file2.print "}\n"
         }
     end
+
+    def gen_trait_files
+
+        @celltype.get_port_list.each{ |port|
+            if port.get_port_type == :CALL then
+
+            sig = port.get_signature
+            sig_name = sig.get_global_name.to_s
+            if File.exist?("#{$gen}/#{snake_case(sig_name)}.rs") then
+                return
+            else
+                file2 = CFile.open( "#{$gen}/#{snake_case(sig_name)}.rs", "w" )
+            end
+
+            file2.print "pub trait #{camel_case(snake_case(sig_name))} {\n\n"
+            # シグニチャの引数の文字列を取得する
+            param_list_str, param_return_str = get_sig_param_str sig
+
+            sig.get_function_head_array.each{ |func_head|
+                return_flag = false
+                file2.print "\tfn #{func_head.get_name}(&self"
+                param_list_item = func_head.get_paramlist.get_items
+                num = param_list_item.size
+                num.times do
+                    temp = param_list_str.shift
+                    if temp == "ignore" then
+                        next
+                    elsif temp == "return" then
+                        return_flag = true
+                    else
+                        file2.print "#{temp}"
+                    end
+                end
+                # if return_flag then
+                #     temp = param_return_str.shift
+                #     file2.print ")#{temp};\n\n"
+                # else
+                #     file2.print ");\n\n"
+                # end
+                file2.print ")"
+
+                # 返り値の型がunknown,つまりvoidのときは，-> を生成しない
+                if c_type_to_rust_type(func_head.get_return_type) != "unknown" then
+                    file2.print "-> #{c_type_to_rust_type(func_head.get_return_type)}"
+                end
+
+                file2.print ";\n\n"
+
+            }
+            file2.print "}\n"
+
+            end
+        }
+
+
+    end
         
     #=== tCelltype_factory.h に挿入するコードを生成する
     # file 以外の他のファイルにファクトリコードを生成してもよい
@@ -323,11 +379,15 @@ class RustGenCelltypePlugin < CelltypePlugin
 
         end
         # トレイトファイルを生成する
-        # これは、最初に呼び出されたときに、一度だけ、すべて生成する
+        # これは，各セルタイプの呼び口につながっているシグニチャに対してのみ，トレイトファイルを生成する
+        gen_trait_files
+
+        
+        # 最初に呼び出されたときに、一度だけ、生成するファイル
         if @@b_signature_header_generated != true then
             @@b_signature_header_generated = true
-            ns = Namespace.get_root
-            gen_namespace_trait_files ns
+            # ns = Namespace.get_root
+            # gen_namespace_trait_files ns
         end
 
         @use_string_list = []

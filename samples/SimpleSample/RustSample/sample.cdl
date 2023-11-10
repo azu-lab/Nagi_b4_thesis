@@ -1,4 +1,6 @@
 //import( <cygwin_kernel.cdl> );
+import(<kernel.cdl>);
+
 
 //[generate( RustGenPlugin, "")]
 signature sSample {

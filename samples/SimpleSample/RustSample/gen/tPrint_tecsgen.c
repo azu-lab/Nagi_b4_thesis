@@ -8,15 +8,11 @@
 /* entry port descriptor type #_EDT_# */
 /* ePrint : omitted by entry port optimize */
 
-/* ePrint2 : omitted by entry port optimize */
-
 /* entry port skelton function #_EPSF_# */
 /* ePrint : omitted by entry port optimize */
-/* ePrint2 : omitted by entry port optimize */
 
 /* entry port skelton function table #_EPSFT_# */
 /* ePrint : omitted by entry port optimize */
-/* ePrint2 : omitted by entry port optimize */
 
 /* entry port descriptor referenced by call port (differ from actual definition) #_CPEPD_# */
 
@@ -29,7 +25,7 @@ tPrint_INIB tPrint_INIB_tab[] = {
     {
         /* entry port #_EP_# */ 
         /* attribute(RO) */ 
-        1,                                       /* attribute */
+        1,                                       /* printattr */
     },
 };
 
@@ -40,10 +36,9 @@ struct tag_tPrint_CB tPrint_CB_tab[] = {
         &tPrint_INIB_tab[0],                     /* _inib */
         /* entry port #_EP_# */ 
         /* var */ 
-        2,                                       /* variable */
+        10,                                      /* printvar */
     },
 };
 
 /* entry port descriptor #_EPD_# */
 /* ePrint : omitted by entry port optimize */
-/* ePrint2 : omitted by entry port optimize */

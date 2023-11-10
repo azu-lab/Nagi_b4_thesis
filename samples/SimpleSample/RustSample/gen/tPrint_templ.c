@@ -9,13 +9,8 @@
  * These comment are used by tecsmerege when merging.
  *
  * attr access macro #_CAAM_#
- * attribute        int16_t          ATTR_attribute  
- * variable         int16_t          VAR_variable    
- *
- * call port function #_TCPF_#
- * call port: cCalculate signature: sSample context:task
- *   void           cCalculate_print( int8_t varin, int32_t* varout, int32_t* varout2 );
- *   void           cCalculate_test( const char_t** test_in, char_t* test_out );
+ * printattr        int32_t          ATTR_printattr  
+ * printvar         int32_t          VAR_printvar    
  *
  * #[</PREAMBLE>]# */
 
@@ -30,58 +25,22 @@
 /* entry port function #_TEPF_# */
 /* #[<ENTRY_PORT>]# ePrint
  * entry port: ePrint
- * signature:  sSample
+ * signature:  sTaskBody
  * context:    task
  * #[</ENTRY_PORT>]# */
 
-/* #[<ENTRY_FUNC>]# ePrint_print
- * name:         ePrint_print
- * global_name:  tPrint_ePrint_print
+/* #[<ENTRY_FUNC>]# ePrint_main
+ * name:         ePrint_main
+ * global_name:  tPrint_ePrint_main
  * oneway:       false
  * #[</ENTRY_FUNC>]# */
 void
-ePrint_print(CELLIDX idx, int8_t varin, int32_t* varout, int32_t* varout2)
+ePrint_main(CELLIDX idx)
 {
 	CELLCB	*p_cellcb = GET_CELLCB(idx);
 
 	/* Put statements here #_TEFB_# */
-#warning "'ePrint_print' needs to be edited."   /* delete this line after edit */
-
-}
-
-/* #[<ENTRY_FUNC>]# ePrint_test
- * name:         ePrint_test
- * global_name:  tPrint_ePrint_test
- * oneway:       false
- * #[</ENTRY_FUNC>]# */
-void
-ePrint_test(CELLIDX idx, const char_t** test_in, char_t* test_out)
-{
-	CELLCB	*p_cellcb = GET_CELLCB(idx);
-
-	/* Put statements here #_TEFB_# */
-#warning "'ePrint_test' needs to be edited."   /* delete this line after edit */
-
-}
-
-/* #[<ENTRY_PORT>]# ePrint2
- * entry port: ePrint2
- * signature:  sSample2
- * context:    task
- * #[</ENTRY_PORT>]# */
-
-/* #[<ENTRY_FUNC>]# ePrint2_print
- * name:         ePrint2_print
- * global_name:  tPrint_ePrint2_print
- * oneway:       false
- * #[</ENTRY_FUNC>]# */
-void
-ePrint2_print(CELLIDX idx, const char_t* buf_in, char_t* buf_out, int32_t len)
-{
-	CELLCB	*p_cellcb = GET_CELLCB(idx);
-
-	/* Put statements here #_TEFB_# */
-#warning "'ePrint2_print' needs to be edited."   /* delete this line after edit */
+#warning "'ePrint_main' needs to be edited."   /* delete this line after edit */
 
 }
 
