@@ -22,6 +22,7 @@
 
 /* signature header #_ISH_# */
 #include "sTaskBody_tecsgen.h"
+#include "sTask_tecsgen.h"
 
 #ifndef TOPPERS_MACRO_ONLY
 
@@ -30,6 +31,7 @@ extern "C" {
 #endif /* __cplusplus */
 /* cell INIB type definition #_CIP_# */
 typedef const struct tag_tPrint_INIB {
+    /* call port #_TCP_# */
     /* call port #_NEP_# */ 
     /* attribute(RO) #_ATO_# */ 
     int32_t        printattr;
@@ -37,6 +39,7 @@ typedef const struct tag_tPrint_INIB {
 /* cell CB type definition #_CCTPA_# */
 typedef struct tag_tPrint_CB {
     tPrint_INIB  *_inib;
+    /* call port #_TCP_# */
     /* call port #_NEP_# */ 
     /* var #_VA_# */ 
     int32_t        printvar;
@@ -55,6 +58,15 @@ void         tPrint_ePrint_main(tPrint_IDX idx);
 #endif /* __cplusplus */
 #endif /* TOPPERS_MACRO_ONLY */
 
+/* to get the definition of CB type of referenced celltype for optimization #_ICT_# */
+#ifndef  TOPPERS_CB_TYPE_ONLY
+#define  tPrint_CB_TYPE_ONLY
+#define TOPPERS_CB_TYPE_ONLY
+#endif  /* TOPPERS_CB_TYPE_ONLY */
+#include "tTask_tecsgen.h"
+#ifdef  tPrint_CB_TYPE_ONLY
+#undef TOPPERS_CB_TYPE_ONLY
+#endif /* tPrint_CB_TYPE_ONLY */
 #ifndef TOPPERS_CB_TYPE_ONLY
 
 #define tPrint_ID_BASE              (1)  /* ID Base  #_NIDB_# */
@@ -80,7 +92,88 @@ void         tPrint_ePrint_main(tPrint_IDX idx);
 #define tPrint_SET_printvar(p_that,val)	((p_that)->printvar=(val))
 
 #ifndef TECSFLOW
+ /* call port function macro #_CPM_# */
+#define tPrint_cTask_activate( p_that ) \
+	  tTask_eTask_activate( \
+	   &tTask_INIB_tab[0] )
+#define tPrint_cTask_cancelActivate( p_that ) \
+	  tTask_eTask_cancelActivate( \
+	   &tTask_INIB_tab[0] )
+#define tPrint_cTask_getTaskState( p_that, p_tskstat ) \
+	  tTask_eTask_getTaskState( \
+	   &tTask_INIB_tab[0], (p_tskstat) )
+#define tPrint_cTask_changePriority( p_that, priority ) \
+	  tTask_eTask_changePriority( \
+	   &tTask_INIB_tab[0], (priority) )
+#define tPrint_cTask_getPriority( p_that, p_priority ) \
+	  tTask_eTask_getPriority( \
+	   &tTask_INIB_tab[0], (p_priority) )
+#define tPrint_cTask_refer( p_that, pk_taskStatus ) \
+	  tTask_eTask_refer( \
+	   &tTask_INIB_tab[0], (pk_taskStatus) )
+#define tPrint_cTask_wakeup( p_that ) \
+	  tTask_eTask_wakeup( \
+	   &tTask_INIB_tab[0] )
+#define tPrint_cTask_cancelWakeup( p_that ) \
+	  tTask_eTask_cancelWakeup( \
+	   &tTask_INIB_tab[0] )
+#define tPrint_cTask_releaseWait( p_that ) \
+	  tTask_eTask_releaseWait( \
+	   &tTask_INIB_tab[0] )
+#define tPrint_cTask_suspend( p_that ) \
+	  tTask_eTask_suspend( \
+	   &tTask_INIB_tab[0] )
+#define tPrint_cTask_resume( p_that ) \
+	  tTask_eTask_resume( \
+	   &tTask_INIB_tab[0] )
+#define tPrint_cTask_raiseTerminate( p_that ) \
+	  tTask_eTask_raiseTerminate( \
+	   &tTask_INIB_tab[0] )
+#define tPrint_cTask_terminate( p_that ) \
+	  tTask_eTask_terminate( \
+	   &tTask_INIB_tab[0] )
+
 #else  /* TECSFLOW */
+#define tPrint_cTask_activate( p_that ) \
+	  (p_that)->cTask.activate__T( \
+ )
+#define tPrint_cTask_cancelActivate( p_that ) \
+	  (p_that)->cTask.cancelActivate__T( \
+ )
+#define tPrint_cTask_getTaskState( p_that, p_tskstat ) \
+	  (p_that)->cTask.getTaskState__T( \
+ (p_tskstat) )
+#define tPrint_cTask_changePriority( p_that, priority ) \
+	  (p_that)->cTask.changePriority__T( \
+ (priority) )
+#define tPrint_cTask_getPriority( p_that, p_priority ) \
+	  (p_that)->cTask.getPriority__T( \
+ (p_priority) )
+#define tPrint_cTask_refer( p_that, pk_taskStatus ) \
+	  (p_that)->cTask.refer__T( \
+ (pk_taskStatus) )
+#define tPrint_cTask_wakeup( p_that ) \
+	  (p_that)->cTask.wakeup__T( \
+ )
+#define tPrint_cTask_cancelWakeup( p_that ) \
+	  (p_that)->cTask.cancelWakeup__T( \
+ )
+#define tPrint_cTask_releaseWait( p_that ) \
+	  (p_that)->cTask.releaseWait__T( \
+ )
+#define tPrint_cTask_suspend( p_that ) \
+	  (p_that)->cTask.suspend__T( \
+ )
+#define tPrint_cTask_resume( p_that ) \
+	  (p_that)->cTask.resume__T( \
+ )
+#define tPrint_cTask_raiseTerminate( p_that ) \
+	  (p_that)->cTask.raiseTerminate__T( \
+ )
+#define tPrint_cTask_terminate( p_that ) \
+	  (p_that)->cTask.terminate__T( \
+ )
+
 #endif /* TECSFLOW */
 #endif /* TOPPERS_CB_TYPE_ONLY */
 
@@ -123,6 +216,34 @@ extern "C" {
 
 /* var access macro (abbrev) #_VAMA_# */
 #define VAR_printvar         tPrint_VAR_printvar( p_cellcb )
+
+/* call port function macro (abbrev) #_CPMA_# */
+#define cTask_activate( ) \
+          ((void)p_cellcb, tPrint_cTask_activate( p_cellcb ))
+#define cTask_cancelActivate( ) \
+          ((void)p_cellcb, tPrint_cTask_cancelActivate( p_cellcb ))
+#define cTask_getTaskState( p_tskstat ) \
+          ((void)p_cellcb, tPrint_cTask_getTaskState( p_cellcb, p_tskstat ))
+#define cTask_changePriority( priority ) \
+          ((void)p_cellcb, tPrint_cTask_changePriority( p_cellcb, priority ))
+#define cTask_getPriority( p_priority ) \
+          ((void)p_cellcb, tPrint_cTask_getPriority( p_cellcb, p_priority ))
+#define cTask_refer( pk_taskStatus ) \
+          ((void)p_cellcb, tPrint_cTask_refer( p_cellcb, pk_taskStatus ))
+#define cTask_wakeup( ) \
+          ((void)p_cellcb, tPrint_cTask_wakeup( p_cellcb ))
+#define cTask_cancelWakeup( ) \
+          ((void)p_cellcb, tPrint_cTask_cancelWakeup( p_cellcb ))
+#define cTask_releaseWait( ) \
+          ((void)p_cellcb, tPrint_cTask_releaseWait( p_cellcb ))
+#define cTask_suspend( ) \
+          ((void)p_cellcb, tPrint_cTask_suspend( p_cellcb ))
+#define cTask_resume( ) \
+          ((void)p_cellcb, tPrint_cTask_resume( p_cellcb ))
+#define cTask_raiseTerminate( ) \
+          ((void)p_cellcb, tPrint_cTask_raiseTerminate( p_cellcb ))
+#define cTask_terminate( ) \
+          ((void)p_cellcb, tPrint_cTask_terminate( p_cellcb ))
 
 
 

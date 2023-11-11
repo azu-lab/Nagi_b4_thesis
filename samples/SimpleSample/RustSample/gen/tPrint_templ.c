@@ -12,6 +12,22 @@
  * printattr        int32_t          ATTR_printattr  
  * printvar         int32_t          VAR_printvar    
  *
+ * call port function #_TCPF_#
+ * call port: cTask signature: sTask context:task
+ *   ER             cTask_activate( );
+ *   ER_UINT        cTask_cancelActivate( );
+ *   ER             cTask_getTaskState( STAT* p_tskstat );
+ *   ER             cTask_changePriority( PRI priority );
+ *   ER             cTask_getPriority( PRI* p_priority );
+ *   ER             cTask_refer( T_RTSK* pk_taskStatus );
+ *   ER             cTask_wakeup( );
+ *   ER_UINT        cTask_cancelWakeup( );
+ *   ER             cTask_releaseWait( );
+ *   ER             cTask_suspend( );
+ *   ER             cTask_resume( );
+ *   ER             cTask_raiseTerminate( );
+ *   ER             cTask_terminate( );
+ *
  * #[</PREAMBLE>]# */
 
 /* Put prototype declaration and/or variale definition here #_PAC_# */

@@ -29,7 +29,7 @@ tTask_INIB tTask_INIB_tab[] = {
     {
         /* entry port #_EP_# */ 
         /* attribute(RO) */ 
-        1,                                       /* id */
+        TASK1_ID,                                /* id */
     },
 };
 

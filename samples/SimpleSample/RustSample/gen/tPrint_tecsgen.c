@@ -25,7 +25,7 @@ tPrint_INIB tPrint_INIB_tab[] = {
     {
         /* entry port #_EP_# */ 
         /* attribute(RO) */ 
-        1,                                       /* printattr */
+        2,                                       /* printattr */
     },
 };
 

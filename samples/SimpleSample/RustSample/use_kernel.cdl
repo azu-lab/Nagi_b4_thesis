@@ -3,6 +3,7 @@ import(<kernel.cdl>);
 [generate( RustGenPlugin, "")]
 celltype tPrint {
 	entry sTaskBody ePrint;
+	call sTask cTask;
 	attr{
 		int32_t printattr = 1;
 	};
@@ -13,13 +14,15 @@ celltype tPrint {
 
 [generate( RustGenPlugin, "")]
 cell tPrint PrintA{
+	cTask = task.eTask;
+	printattr = 2;
 };
 
 [generate( RustGenPlugin, "")]
 cell tTask task{
     cTaskBody = PrintA.ePrint;
 
-    id = C_EXP("1");
+    id = C_EXP("TASK1_ID");
     attribute = C_EXP("TA_ACT");
     stackSize = 1024;
     priority = 42;
