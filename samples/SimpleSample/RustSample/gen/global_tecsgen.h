@@ -12,6 +12,7 @@
 
 #ifndef TOPPERS_MACRO_ONLY
 
+typedef int_t          TaskRef;
 
 #define INITIALIZE_TECS() 
 #define INITIALZE_TECSGEN() INITIALIZE_TECS()  /* for backward compatibility */

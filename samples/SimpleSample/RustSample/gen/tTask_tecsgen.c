@@ -25,11 +25,12 @@
 /* array of attr/var #_AVAI_# */
 /* cell INIB #_INIB_# */
 tTask_INIB tTask_INIB_tab[] = {
-    /* cell: tTask_CB_tab[0]:  task id=1 */
+    /* cell: tTask_CB_tab[0]:  Task id=1 */
     {
         /* entry port #_EP_# */ 
         /* attribute(RO) */ 
-        TASK1_ID,                                /* id */
+        TASK1,                                   /* id */
+        unsafe{TaskRef::from_raw_nonnull(NonZeroI32::new(TASK1).unwrap())}, /* task_ref */
     },
 };
 

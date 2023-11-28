@@ -186,6 +186,7 @@ class RustGenCelltypePlugin < CelltypePlugin
     def gen_use_header file
         if @celltype.get_var_list.length != 0 then
             file.print "use spin::Mutex;\n"
+            # file.print "use crate::kernel_obj_ref::*;\n"
         end
         file.print "use crate::{"
         @use_string_list.each{ |use_string|
@@ -254,6 +255,11 @@ class RustGenCelltypePlugin < CelltypePlugin
                 str = "[#{type}; #{c_type.get_size}]"
             elsif c_type.get_max != nil then
                 str = "check_max"
+            else
+                str = c_type.get_type_str.gsub("*", "")
+                if str == "void" then
+                    str = "unknown"
+                end
             end
         else
             str = c_type.get_type_str
@@ -317,15 +323,16 @@ class RustGenCelltypePlugin < CelltypePlugin
     end
 
     # セルタイプに呼び口がある場合，その呼び口につながっているシグニチャのトレイトファイルを生成する
+    # ↑ 全てのポートに対してトレイトファイルを生成するようにしてみる
     def gen_trait_files
 
         @celltype.get_port_list.each{ |port|
-            if port.get_port_type == :CALL then
+            # if port.get_port_type == :CALL then
 
                 # 呼び先のセルタイプが ITRON オブジェクトの場合は，トレイトファイルを生成しない
-                if check_callee_port_celltype_is_itron_object port then
-                    next
-                end
+                # if check_callee_port_celltype_is_itron_object port then
+                #     # next
+                # end
 
                 sig = port.get_signature
                 sig_name = sig.get_global_name.to_s
@@ -372,7 +379,7 @@ class RustGenCelltypePlugin < CelltypePlugin
                 }
                 file2.print "}\n"
 
-            end
+            # end
         }
 
 
@@ -407,6 +414,37 @@ class RustGenCelltypePlugin < CelltypePlugin
             return "unknown"
         end
     end
+
+    def gen_mod_in_lib_rs cell
+        if @plugin_arg_str == "main" then
+            if File.exist?("#{$gen}/main.rs") then
+                file = CFile.open( "#{$gen}/main.rs", "a" )
+            else
+                file = CFile.open( "#{$gen}/main.rs", "w" )
+            end
+        else
+            if File.exist?("#{$gen}/lib.rs") then
+                file = CFile.open( "#{$gen}/lib.rs", "a" )
+            else
+                file = CFile.open( "#{$gen}/lib.rs", "w" )
+            end
+        end
+        file.print "mod #{snake_case(cell.get_global_name.to_s)};\n"
+    end
+
+    def creat_itron_rs_use cell
+        # 書き込んでいるファイルの行を取得する
+        global_file_name = snake_case(cell.get_global_name.to_s)
+        lines = File.readlines("#{$gen}/#{global_file_name}.rs")
+        # use 文を追加する
+        lines.insert(0, "use crate::kernel_obj_ref::*;  //特別な生成部\n")
+        lines.insert(0, "use itron::task::TaskRef;  //特別な生成部\n")
+        lines.insert(0, "use itron::abi::*;  //特別な生成部\n")
+        File.open("#{$gen}/#{global_file_name}.rs", 'w') do |file|
+            file.puts lines
+        end
+        # file.close
+    end
         
     #=== tCelltype_factory.h に挿入するコードを生成する
     # file 以外の他のファイルにファクトリコードを生成してもよい
@@ -431,10 +469,10 @@ class RustGenCelltypePlugin < CelltypePlugin
         # 現在のセルタイプが ITRON オブジェクトかどうかを判断する
         @itron_flag = false
         @itron_object_list = ["tTask", "tSemaphore", "tEventflag", "tDataqueue", "tMailbox", "tMutex"]
-        celltype_name = @celltype.get_global_name.to_s
-        if @itron_object_list.include?(celltype_name) then
-            @itron_flag = true
-        end
+        # celltype_name = @celltype.get_global_name.to_s
+        # if @itron_object_list.include?(celltype_name) then
+        #     @itron_flag = true
+        # end
 
         # 呼び先に ITRON オブジェクトがあるかどうかを判断する
         # @callee_itron_flag = false
@@ -456,29 +494,37 @@ class RustGenCelltypePlugin < CelltypePlugin
             # そのセルタイプの全てのセルに対して，ファイルを生成する
             @celltype.get_cell_list.each{ |cell|
                 if cell.is_generate? then
+                    # lib.rs に mod を追加する
+                    # gen_mod_in_lib_rs cell
                     global_file_name = cell.get_global_name
                     global_file_name = global_file_name.to_s
                     # new_string = global_file_name[1..-1]
                     global_file_name = snake_case(global_file_name)
                 end
-                # if File.exist?("#{$gen}/#{global_file_name}.rs") then
-                #     return
+                # factoryで既にファイルを生成していた場合，ファイル名を変更し，それに書き込む
+                # if File.exist?("#{$gen}/#{cell.get_global_name.to_s}.rs") then
+                #     File.rename("#{$gen}/#{cell.get_global_name.to_s}.rs", "#{$gen}/#{global_file_name}.rs")
+                #     file = CFile.open( "#{$gen}/#{global_file_name}.rs", "a" )
+                #     file.print "\n"
                 # else
                     file = CFile.open( "#{$gen}/#{global_file_name}.rs", "w" )
                 # end
 
                 @use_string_list = []
+                # @use_string_list.push("kernel_obj_ref")
                 # セルタイプに受け口がある場合，use 文を生成する
                 @celltype.get_port_list.each{ |port|
-                    @use_string_list.push(snake_case(port.get_signature.get_global_name.to_s))
-                    if port.get_port_type == :ENTRY then
-                        # @use_string_list.push("#{snake_case(@celltype.get_global_name.to_s[1..-1])}_des")
-                    else
-                        call_celltype_name = port.get_real_callee_port.get_celltype.get_global_name.to_s
-                        call_cell_name = port.get_real_callee_cell.get_global_name.to_s
-                        @use_string_list.push("#{snake_case(call_cell_name)}")
-                        # @use_string_list.push("#{snake_case(call_celltype_name[1..-1])}_des")
-                    end
+                    # if port.get_real_callee_cell != nil then
+                        @use_string_list.push(snake_case(port.get_signature.get_global_name.to_s))
+                        if port.get_port_type == :ENTRY then
+                            # @use_string_list.push("#{snake_case(@celltype.get_global_name.to_s[1..-1])}_des")
+                        else
+                            call_celltype_name = port.get_real_callee_port.get_celltype.get_global_name.to_s
+                            call_cell_name = port.get_real_callee_cell.get_global_name.to_s
+                            @use_string_list.push("#{snake_case(call_cell_name)}")
+                            # @use_string_list.push("#{snake_case(call_celltype_name[1..-1])}_des")
+                        end
+                    # end
                 }
 
                 # @use_string_list.uniq!
@@ -516,7 +562,8 @@ class RustGenCelltypePlugin < CelltypePlugin
                 file.print "pub struct #{camel_case(snake_case(cell.get_global_name.to_s))}<'a"
                 callport_list.zip(use_jenerics_alphabet).each do |callport, alphabet|
                     if check_callee_port_celltype_is_itron_object callport then
-                        next
+                        file.print ", #{alphabet}"
+                        # next
                     else
                         file.print ", #{alphabet}"
                     end
@@ -528,7 +575,12 @@ class RustGenCelltypePlugin < CelltypePlugin
                 where_flag = true
                 callport_list.zip(use_jenerics_alphabet).each do |callport, alphabet|
                     if check_callee_port_celltype_is_itron_object callport then
-                        next
+                        if where_flag then
+                            file.print "where\n"
+                            where_flag = false
+                        end
+                        file.print "\t#{alphabet}: #{camel_case(snake_case(callport.get_signature.get_global_name.to_s))},\n"
+                        # next
                     else
                         if where_flag then
                             file.print "where\n"
@@ -543,8 +595,9 @@ class RustGenCelltypePlugin < CelltypePlugin
                 # 呼び口フィールドの定義を生成
                 callport_list.zip(use_jenerics_alphabet).each do |callport, alphabet|
                     if check_callee_port_celltype_is_itron_object callport then
-                        itronrs_type = itron_object_to_rust_type callport.get_real_callee_cell.get_celltype 
-                        file.print "\tpub #{snake_case(callport.get_name.to_s)}: &#{itronrs_type},\n"
+                        file.print "\tpub #{snake_case(callport.get_name.to_s)}: &'a #{alphabet},\n"
+                        # itronrs_type = itron_object_to_rust_type callport.get_real_callee_cell.get_celltype 
+                        # file.print "\tpub #{snake_case(callport.get_name.to_s)}: &#{itronrs_type},\n"
                     else
                         file.print "\tpub #{snake_case(callport.get_name.to_s)}: &'a #{alphabet},\n"
                     end
@@ -555,7 +608,22 @@ class RustGenCelltypePlugin < CelltypePlugin
                     if attr.is_omit? then
                         next
                     else
-                        file.print "\tpub #{attr.get_name.to_s}: #{c_type_to_rust_type(attr.get_type)},\n"
+                        file.print "\tpub #{attr.get_name.to_s}: "
+                        # file.print "#{c_type_to_rust_type(attr.get_type)}"
+                        str = c_type_to_rust_type(attr.get_type)
+                        # itron-rsオブジェクトに対する，特別な生成
+                        if str == "TaskRef" then
+                            # ライフタイムを付与
+                            str = "TaskRef<'a>"
+                            file.print "#{str},  //特別な生成部\n"
+                            # 書き込んでいるファイルを一度閉じる
+                            file.close
+                            creat_itron_rs_use cell
+                            global_file_name = snake_case(cell.get_global_name.to_s)
+                            file = CFile.open( "#{$gen}/#{global_file_name}.rs", "a" )
+                        else
+                            file.print "#{str},\n"
+                        end
                     end
                 }
 
@@ -584,7 +652,19 @@ class RustGenCelltypePlugin < CelltypePlugin
                 # ジェネリクスを代入
                 callport_list.each_with_index do |callport, index|
                     if check_callee_port_celltype_is_itron_object callport then
-                        next
+                        if jenerics_flag then
+                            file.print "<"
+                            jenerics_flag = false
+                        end
+                        entryport_name = camel_case(snake_case(callport.get_real_callee_port.get_name.to_s))
+                        if index == callport_list.length - 1
+                        # 最後の要素の処理
+                            file.print "#{entryport_name}>"
+                        else
+                        # 通常の要素の処理
+                            file.print "#{entryport_name}, "
+                        end
+                        # next
                     else
                         if jenerics_flag then
                             file.print "<"
@@ -607,7 +687,10 @@ class RustGenCelltypePlugin < CelltypePlugin
                 @celltype.get_port_list.each{ |port|
                     if port.get_port_type == :CALL then
                         if check_callee_port_celltype_is_itron_object port then
-                            file.print "\t#{snake_case(port.get_name.to_s)}: &#{port.get_real_callee_cell.get_global_name.to_s.upcase}\n"
+                            entryport_name = camel_case(snake_case(port.get_real_callee_port.get_name.to_s))
+                            call_cell_name = port.get_real_callee_cell.get_global_name.to_s
+                            file.print "\t#{snake_case(port.get_name.to_s)}: &#{entryport_name.upcase}FOR#{call_cell_name.upcase},\n"
+                            # file.print "\t#{snake_case(port.get_name.to_s)}: &#{port.get_real_callee_cell.get_global_name.to_s.upcase}\n"
                         else
                             entryport_name = camel_case(snake_case(port.get_real_callee_port.get_name.to_s))
                             call_cell_name = port.get_real_callee_cell.get_global_name.to_s
@@ -657,7 +740,10 @@ class RustGenCelltypePlugin < CelltypePlugin
                                 # ジェネリクスの代入を生成
                                 if port.get_port_type == :CALL then
                                     if check_callee_port_celltype_is_itron_object port then
-                                        next
+                                        entryport_name = camel_case(snake_case(port.get_real_callee_port.get_name.to_s))
+                                        call_cell_name = camel_case(snake_case(port.get_real_callee_cell.get_global_name.to_s))
+                                        file.print ", #{entryport_name}For#{call_cell_name}<'a>"
+                                        # next
                                     else
                                         entryport_name = camel_case(snake_case(port.get_real_callee_port.get_name.to_s))
                                         call_cell_name = camel_case(snake_case(port.get_real_callee_cell.get_global_name.to_s))
@@ -696,7 +782,16 @@ class RustGenCelltypePlugin < CelltypePlugin
                         # ジェネリクスを代入
                         callport_list.each_with_index do |callport, index|
                             if check_callee_port_celltype_is_itron_object callport then
-                                next
+                                entryport_name = camel_case(snake_case(callport.get_real_callee_port.get_name.to_s))
+                                call_cell_name = camel_case(snake_case(callport.get_real_callee_cell.get_global_name.to_s))
+                                if index == callport_list.length - 1
+                                    # 最後の要素の処理
+                                    file.print ", #{entryport_name}For#{call_cell_name}"
+                                else
+                                    # 通常の要素の処理
+                                    file.print ", #{entryport_name}For#{call_cell_name}"
+                                end
+                                # next
                             else
                                 entryport_name = camel_case(snake_case(callport.get_real_callee_port.get_name.to_s))
                                 call_cell_name = camel_case(snake_case(callport.get_real_callee_cell.get_global_name.to_s))
@@ -756,7 +851,13 @@ class RustGenCelltypePlugin < CelltypePlugin
                         # impl のジェネリクスを生成
                         callport_list.zip(use_jenerics_alphabet).each do |callport, alphabet|
                             if check_callee_port_celltype_is_itron_object callport then
-                                next
+                                if jenerics_flag then
+                                    jenerics_flag = false
+                                    file.print "<#{alphabet}: #{camel_case(snake_case(callport.get_signature.get_global_name.to_s))}"
+                                else
+                                    file.print ", #{alphabet}: #{camel_case(snake_case(callport.get_signature.get_global_name.to_s))}"
+                                end
+                                # next
                             else
                                 if jenerics_flag then
                                     jenerics_flag = false
@@ -774,7 +875,8 @@ class RustGenCelltypePlugin < CelltypePlugin
                         file.print " #{camel_case(snake_case(cell.get_global_name.to_s))}<'_"
                         callport_list.zip(use_jenerics_alphabet).each do |callport, alphabet|
                             if check_callee_port_celltype_is_itron_object callport then
-                                next
+                                file.print ", #{alphabet}"
+                                # next
                             else
                                 file.print ", #{alphabet}"
                             end
@@ -783,14 +885,26 @@ class RustGenCelltypePlugin < CelltypePlugin
                         # get_cell_ref 関数の定義を生成
                         file.print "\tpub fn get_cell_ref(&self) -> ("
                         # 返り値のタプル型の定義を生成
-                        use_jenerics_alphabet.each_with_index{ |alphabet, index|
-                            if index == 0 then
-                                file.print "&#{alphabet}"
+                        callport_list.zip(use_jenerics_alphabet).each_with_index do |(callport, alphabet), index|
+                            if check_callee_port_celltype_is_itron_object callport then
+                                if index == 0 then
+                                    file.print "&#{alphabet}"
+                                else
+                                    file.print ", &#{alphabet}"
+                                end
+                                # next
                             else
-                                file.print ", &#{alphabet}"
+                                if index == 0 then
+                                    file.print "&#{alphabet}"
+                                else
+                                    file.print ", &#{alphabet}"
+                                end
                             end
-                        }
+                        end
                         @celltype.get_attribute_list.each{ |attr|
+                            if attr.is_omit? then
+                                next
+                            end
                             if callport_list.length == 0 then
                                 file.print "&#{c_type_to_rust_type(attr.get_type)}"
                             else
@@ -813,6 +927,9 @@ class RustGenCelltypePlugin < CelltypePlugin
                             end
                         end
                         @celltype.get_attribute_list.each{ |attr|
+                            if attr.is_omit? then
+                                next
+                            end
                             if callport_list.length == 0 then
                                 file.print "&self.#{attr.get_name.to_s}"
                             else

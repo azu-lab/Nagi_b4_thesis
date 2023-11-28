@@ -37,34 +37,15 @@
 #  PLUGIN_domain_SRCS       .c files of plugin generated .c files for each domain
 #  CELLTYPE_domain_SRCS     .c files of celltype.c files for each domain
 
-TECS_IMPORT_CDLS = use_kernel.cdl ./tecs_kernel/kernel.cdl gen/tmp_NotifierPlugin_post_code.cdl gen/tmp_RustGenCelltypePlugin_post_code.cdl gen/tmp_RustGenCellPlugin_post_code.cdl
+TECS_IMPORT_CDLS = use_kernel.cdl kernel_rs.cdl gen/tmp_RustGenCelltypePlugin_post_code.cdl gen/tmp_RustGenCellPlugin_post_code.cdl
 TECS_IMPORT_HEADERS = ./tecs_kernel/tecs_kernel.h
 TECS_IMPORTS = $(TECS_IMPORT_CDLS) $(TECS_IMPORT_HEADERS)
 
 SIGNATURE_HEADERS = \
-	$(GEN_DIR)/sKernel_tecsgen.h \
-	$(GEN_DIR)/siKernel_tecsgen.h \
-	$(GEN_DIR)/siNotificationHandler_tecsgen.h \
 	$(GEN_DIR)/sTaskBody_tecsgen.h \
 	$(GEN_DIR)/sTask_tecsgen.h \
 	$(GEN_DIR)/siTask_tecsgen.h \
-	$(GEN_DIR)/sSemaphore_tecsgen.h \
-	$(GEN_DIR)/siSemaphore_tecsgen.h \
-	$(GEN_DIR)/sEventflag_tecsgen.h \
-	$(GEN_DIR)/siEventflag_tecsgen.h \
-	$(GEN_DIR)/sDataqueue_tecsgen.h \
-	$(GEN_DIR)/siDataqueue_tecsgen.h \
-	$(GEN_DIR)/sPriorityDataqueue_tecsgen.h \
-	$(GEN_DIR)/siPriorityDataqueue_tecsgen.h \
-	$(GEN_DIR)/sMutex_tecsgen.h \
-	$(GEN_DIR)/sFixedSizeMemoryPool_tecsgen.h \
-	$(GEN_DIR)/siHandlerBody_tecsgen.h \
-	$(GEN_DIR)/sCyclic_tecsgen.h \
-	$(GEN_DIR)/sAlarm_tecsgen.h \
-	$(GEN_DIR)/siAlarm_tecsgen.h \
-	$(GEN_DIR)/sInterruptRequest_tecsgen.h \
-	$(GEN_DIR)/siCpuExceptionHandlerBody_tecsgen.h \
-	$(GEN_DIR)/sRoutineBody_tecsgen.h \
+	$(GEN_DIR)/siNotificationHandler_tecsgen.h \
 # SIGNATURE_HEADERS terminator
 
 CELLTYPE_TECSGEN_HEADERS = \

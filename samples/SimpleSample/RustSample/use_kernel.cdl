@@ -1,4 +1,5 @@
-import(<kernel.cdl>);
+// import(<kernel.cdl>);
+import(<kernel_rs.cdl>);
 
 [generate( RustGenPlugin, "")]
 celltype tPrint {
@@ -14,15 +15,17 @@ celltype tPrint {
 
 [generate( RustGenPlugin, "")]
 cell tPrint PrintA{
-	cTask = task.eTask;
+	cTask = Task.eTask;
 	printattr = 2;
 };
 
 [generate( RustGenPlugin, "")]
-cell tTask task{
+cell tTask Task{
     cTaskBody = PrintA.ePrint;
 
-    id = C_EXP("TASK1_ID");
+    id = C_EXP("TASK1");
+	//task = C_EXP("TASK1_REF");
+	task_ref = C_EXP("unsafe{TaskRef::from_raw_nonnull(NonZeroI32::new(TASK1).unwrap())}");
     attribute = C_EXP("TA_ACT");
     stackSize = 1024;
     priority = 42;
