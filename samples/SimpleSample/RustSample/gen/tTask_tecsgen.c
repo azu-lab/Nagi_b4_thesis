@@ -29,7 +29,6 @@ tTask_INIB tTask_INIB_tab[] = {
     {
         /* entry port #_EP_# */ 
         /* attribute(RO) */ 
-        TASK1,                                   /* id */
         unsafe{TaskRef::from_raw_nonnull(NonZeroI32::new(TASK1).unwrap())}, /* task_ref */
     },
 };

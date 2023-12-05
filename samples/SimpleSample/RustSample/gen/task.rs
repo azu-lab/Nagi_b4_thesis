@@ -1,6 +1,6 @@
+use crate::kernel_cfg::*;  //特別な生成部
 use itron::abi::*;  //特別な生成部
-use itron::task::TaskRef;  //特別な生成部
-use crate::kernel_obj_ref::*;  //特別な生成部
+use itron::TaskRef::*;  //特別な生成部
 use crate::{s_task::*, si_task::*, s_task_body::*, print_a::*, si_notification_handler::*};
 
 pub struct Task<'a, T>
@@ -8,13 +8,11 @@ where
 	T: STaskBody,
 {
 	pub c_task_body: &'a T,
-	pub id: ID,
 	pub task_ref: TaskRef<'a>,  //特別な生成部
 }
 
 pub static TASK: Task<EPrint> = Task {
 	c_task_body: &EPRINTFORPRINTA,
-	id: TASK1,
 	task_ref: unsafe{TaskRef::from_raw_nonnull(NonZeroI32::new(TASK1).unwrap())},
 };
 
@@ -163,8 +161,8 @@ impl SiNotificationHandler for EiWakeUpNotificationHandlerForTask<'_, EPrintForP
 }
 
 impl<T: STaskBody> Task<'_, T> {
-	pub fn get_cell_ref(&self) -> (&T, &ID, &TaskRef, &Mutex<TaskVar>) {
-		(&self.c_task_body, &self.id, &self.task_ref, self.variable)
+	pub fn get_cell_ref(&self) -> (&T, &TaskRef, &Mutex<TaskVar>) {
+		(&self.c_task_body, &self.task_ref, self.variable)
 	}
 }
 

@@ -35,7 +35,6 @@ typedef const struct tag_tTask_INIB {
     /* call port #_TCP_# */
     /* call port #_NEP_# */ 
     /* attribute(RO) #_ATO_# */ 
-    ID             id;
     TaskRef        task_ref;
 }  tTask_INIB;
 
@@ -94,10 +93,8 @@ Inline ER           tTask_eiTask_releaseWait(tTask_IDX idx);
 #define tTask_GET_CELLCB(idx) (idx)
 
 /* attr access  #_AAM_# */
-#define tTask_ATTR_id( p_that )	((p_that)->id)
 #define tTask_ATTR_task_ref( p_that )	((p_that)->task_ref)
 
-#define tTask_GET_id(p_that)	((p_that)->id)
 #define tTask_GET_task_ref(p_that)	((p_that)->task_ref)
 
 
@@ -142,7 +139,6 @@ extern "C" {
 
 
 /* attr access macro (abbrev) #_AAMA_# */
-#define ATTR_id              tTask_ATTR_id( p_cellcb )
 #define ATTR_task_ref        tTask_ATTR_task_ref( p_cellcb )
 
 

@@ -1,0 +1,1773 @@
+#cd ../../..
+#source set_env.sh
+# tecsgen  most_simple_sample.cdl -I ./tecs_kernel
+# tecsgen  sample.cdl -I ./tecs_kernel
+tecsgen  use_kernel.cdl -I ./tecs_kernel
+require_lib: tecslib/version.rb
+require_lib: tecslib/core/tecs_lang.rb
+require_lib: tecslib/messages/messages_console_en_US.rb
+require_lib: tecslib/messages/messages_file_en_US.rb
+LANG_FILE=en_US.utf8, LANG_CONSOLE=en_US.utf8
+Ruby19_File_Encode=ASCII-8BIT
+require_lib: tecslib/core/bnf.tab.rb
+require_lib: tecslib/core/syntaxobj.rb
+require_lib: tecslib/core/syntaxobj/node.rb
+require_lib: tecslib/core/syntaxobj/namedlist.rb
+require_lib: tecslib/core/syntaxobj/decl.rb
+require_lib: tecslib/core/syntaxobj/funchead.rb
+require_lib: tecslib/core/syntaxobj/paramdecl.rb
+require_lib: tecslib/core/syntaxobj/paramlist.rb
+require_lib: tecslib/core/syntaxobj/typedef.rb
+require_lib: tecslib/core/syntaxobj/cdlinitializer.rb
+require_lib: tecslib/core/syntaxobj/cdlstring.rb
+require_lib: tecslib/core/pluginModule.rb
+require_lib: tecslib/core/plugin.rb
+require_lib: tecslib/core/messages.rb
+require_lib: tecslib/core/types.rb
+require_lib: tecslib/core/value.rb
+require_lib: tecslib/core/componentobj.rb
+require_lib: tecslib/core/componentobj/signature.rb
+require_lib: tecslib/core/componentobj/celltypeModule.rb
+require_lib: tecslib/core/componentobj/celltype.rb
+require_lib: tecslib/core/componentobj/port.rb
+require_lib: tecslib/core/componentobj/factory.rb
+require_lib: tecslib/core/componentobj/cell.rb
+require_lib: tecslib/core/componentobj/join.rb
+require_lib: tecslib/core/componentobj/reversejoin.rb
+require_lib: tecslib/core/componentobj/compositecelltype.rb
+require_lib: tecslib/core/componentobj/compositecelltypejoin.rb
+require_lib: tecslib/core/componentobj/domaintype.rb
+require_lib: tecslib/core/componentobj/classtype.rb
+require_lib: tecslib/core/componentobj/namespace.rb
+require_lib: tecslib/core/componentobj/region.rb
+require_lib: tecslib/core/componentobj/namespacepath.rb
+require_lib: tecslib/core/componentobj/importable.rb
+require_lib: tecslib/core/componentobj/import.rb
+require_lib: tecslib/core/componentobj/import_c.rb
+require_lib: tecslib/core/componentobj/generate.rb
+require_lib: tecslib/core/expression.rb
+require_lib: tecslib/core/optimize.rb
+require_lib: tecslib/core/tecsgen.rb
+require_lib: tecslib/core/generate.rb
+require_lib: tecslib/core/gen_xml.rb
+require_lib: tecslib/core/tool_info.rb
+require_lib: tecslib/core/tecsinfo.rb
+require_lib: tecslib/core/unjoin_plugin.rb
+require_lib: tecslib/plugin/CelltypePlugin.rb
+require_lib: tecslib/plugin/CompositePlugin.rb
+require_lib: tecslib/plugin/CellPlugin.rb
+require_lib: tecslib/plugin/SignaturePlugin.rb
+require_lib: tecslib/plugin/ThroughPlugin.rb
+require_lib: tecslib/plugin/DomainPlugin.rb
+require_lib: tecslib/plugin/ClassPlugin.rb
+require_lib: tecslib/plugin/MultiPlugin.rb
+require_lib: tecslib/core/C_parser.tab.rb
+require_lib: tecslib/core/ctypes.rb
+add_import_path: '/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecs'
+add_import_path: '/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecs/TLSFMalloc'
+add_import_path: '/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecs/posix'
+add_import_path: '/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecs/mruby'
+add_import_path: '/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecs/TECSInfo'
+add_import_path: '/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecs/rpc'
+tecspath: /home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen, __FILE__=/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecsgen.rb
+ARGV(remained): ["use_kernel.cdl"], argments= use_kernel.cdl -I ./tecs_kernel
+Namespace: initialize name=:: sp=-1 **
+Namespace: initialize name=:: sp=-1
+Namespace.PUSH 0 ::
+Region#set_region_roots name=::
+Region.new: ::
+set_region_family_line: Region: ::  
+new Node: ::
+new LinkRoot: ::
+## Import: use_kernel.cdl
+base_dir=. while searching use_kernel.cdl
+push Namespace
+use_kernel.cdl: line 2 : IMPORT 'import'
+use_kernel.cdl: line 2 : ( '('
+use_kernel.cdl: line 2 : AB_STRING_LITERAL '<kernel_rs.cdl>'
+use_kernel.cdl: line 2 : ) ')'
+use_kernel.cdl: line 2 : ; ';'
+base_dir=. while searching kernel_rs.cdl
+push Namespace
+kernel_rs.cdl: line 50 : IMPORT_C 'import_C'
+kernel_rs.cdl: line 50 : ( '('
+kernel_rs.cdl: line 50 : STRING_LITERAL '"tecs_kernel.h"'
+kernel_rs.cdl: line 50 : ) ')'
+kernel_rs.cdl: line 50 : ; ';'
+base_dir=. while searching tecs_kernel.h
+push Namespace
+gen/tmp_tecs_kernel.h: line 8 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 8 : STRUCT 'struct'
+gen/tmp_tecs_kernel.h: line 8 : { '{'
+gen/tmp_tecs_kernel.h: line 8 : INT 'int'
+gen/tmp_tecs_kernel.h: line 8 : IDENTIFIER 'dummy'
+gen/tmp_tecs_kernel.h: line 8 : ; ';'
+set_owner: CStructType
+add_item: name=dummy   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 8 : } '}'
+add_item: name=TAG_0_TECS_internal__   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 8 : IDENTIFIER 'va_list'
+gen/tmp_tecs_kernel.h: line 8 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=va_list   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 25 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 25 : LONG 'long'
+gen/tmp_tecs_kernel.h: line 25 : INT 'int'
+gen/tmp_tecs_kernel.h: line 25 : IDENTIFIER 'ptrdiff_t'
+gen/tmp_tecs_kernel.h: line 25 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=ptrdiff_t   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 27 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 27 : LONG 'long'
+gen/tmp_tecs_kernel.h: line 27 : UNSIGNED 'unsigned'
+gen/tmp_tecs_kernel.h: line 27 : INT 'int'
+gen/tmp_tecs_kernel.h: line 27 : IDENTIFIER 'size_t'
+gen/tmp_tecs_kernel.h: line 27 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=size_t   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 29 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 29 : INT 'int'
+gen/tmp_tecs_kernel.h: line 29 : IDENTIFIER 'wchar_t'
+gen/tmp_tecs_kernel.h: line 29 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=wchar_t   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 31 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 31 : STRUCT 'struct'
+gen/tmp_tecs_kernel.h: line 31 : { '{'
+gen/tmp_tecs_kernel.h: line 32 : LONG 'long'
+gen/tmp_tecs_kernel.h: line 32 : LONG 'long'
+gen/tmp_tecs_kernel.h: line 32 : IDENTIFIER '__max_align_ll'
+gen/tmp_tecs_kernel.h: line 32 : ; ';'
+set_owner: CStructType
+add_item: name=__max_align_ll   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 33 : LONG 'long'
+gen/tmp_tecs_kernel.h: line 33 : DOUBLE 'double'
+gen/tmp_tecs_kernel.h: line 33 : IDENTIFIER '__max_align_ld'
+gen/tmp_tecs_kernel.h: line 33 : ; ';'
+set_owner: CStructType
+add_item: name=__max_align_ld   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 35 : } '}'
+add_item: name=TAG_1_TECS_internal__   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 35 : IDENTIFIER 'max_align_t'
+gen/tmp_tecs_kernel.h: line 35 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=max_align_t   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 110 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 110 : SIGNED 'signed'
+gen/tmp_tecs_kernel.h: line 110 : CHAR 'char'
+gen/tmp_tecs_kernel.h: line 110 : IDENTIFIER 'int8_t'
+gen/tmp_tecs_kernel.h: line 110 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=int8_t   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 111 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 111 : UNSIGNED 'unsigned'
+gen/tmp_tecs_kernel.h: line 111 : CHAR 'char'
+gen/tmp_tecs_kernel.h: line 111 : IDENTIFIER 'uint8_t'
+gen/tmp_tecs_kernel.h: line 111 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=uint8_t   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 113 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 113 : SIGNED 'signed'
+gen/tmp_tecs_kernel.h: line 113 : SHORT 'short'
+gen/tmp_tecs_kernel.h: line 113 : IDENTIFIER 'int16_t'
+gen/tmp_tecs_kernel.h: line 113 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=int16_t   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 114 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 114 : UNSIGNED 'unsigned'
+gen/tmp_tecs_kernel.h: line 114 : SHORT 'short'
+gen/tmp_tecs_kernel.h: line 114 : IDENTIFIER 'uint16_t'
+gen/tmp_tecs_kernel.h: line 114 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=uint16_t   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 116 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 116 : SIGNED 'signed'
+gen/tmp_tecs_kernel.h: line 116 : INT 'int'
+gen/tmp_tecs_kernel.h: line 116 : IDENTIFIER 'int32_t'
+gen/tmp_tecs_kernel.h: line 116 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=int32_t   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 117 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 117 : UNSIGNED 'unsigned'
+gen/tmp_tecs_kernel.h: line 117 : INT 'int'
+gen/tmp_tecs_kernel.h: line 117 : IDENTIFIER 'uint32_t'
+gen/tmp_tecs_kernel.h: line 117 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=uint32_t   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 119 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 119 : SIGNED 'signed'
+gen/tmp_tecs_kernel.h: line 119 : LONG 'long'
+gen/tmp_tecs_kernel.h: line 119 : LONG 'long'
+gen/tmp_tecs_kernel.h: line 119 : IDENTIFIER 'int64_t'
+gen/tmp_tecs_kernel.h: line 119 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=int64_t   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 120 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 120 : UNSIGNED 'unsigned'
+gen/tmp_tecs_kernel.h: line 120 : LONG 'long'
+gen/tmp_tecs_kernel.h: line 120 : LONG 'long'
+gen/tmp_tecs_kernel.h: line 120 : IDENTIFIER 'uint64_t'
+gen/tmp_tecs_kernel.h: line 120 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=uint64_t   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 122 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 122 : TYPE_NAME 'int8_t'
+gen/tmp_tecs_kernel.h: line 122 : IDENTIFIER 'int_least8_t'
+gen/tmp_tecs_kernel.h: line 122 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=int_least8_t   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 123 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 123 : TYPE_NAME 'uint8_t'
+gen/tmp_tecs_kernel.h: line 123 : IDENTIFIER 'uint_least8_t'
+gen/tmp_tecs_kernel.h: line 123 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=uint_least8_t   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 125 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 125 : LONG 'long'
+gen/tmp_tecs_kernel.h: line 125 : IDENTIFIER 'intptr_t'
+gen/tmp_tecs_kernel.h: line 125 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=intptr_t   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 126 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 126 : UNSIGNED 'unsigned'
+gen/tmp_tecs_kernel.h: line 126 : LONG 'long'
+gen/tmp_tecs_kernel.h: line 126 : IDENTIFIER 'uintptr_t'
+gen/tmp_tecs_kernel.h: line 126 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=uintptr_t   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 128 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 128 : FLOAT 'float'
+gen/tmp_tecs_kernel.h: line 128 : IDENTIFIER 'float32_t'
+gen/tmp_tecs_kernel.h: line 128 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=float32_t   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 129 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 129 : DOUBLE 'double'
+gen/tmp_tecs_kernel.h: line 129 : IDENTIFIER 'double64_t'
+gen/tmp_tecs_kernel.h: line 129 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=double64_t   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 151 : STRUCT 'struct'
+gen/tmp_tecs_kernel.h: line 151 : IDENTIFIER 'TOPPERS_dummy_t'
+gen/tmp_tecs_kernel.h: line 151 : { '{'
+gen/tmp_tecs_kernel.h: line 151 : INT 'int'
+gen/tmp_tecs_kernel.h: line 151 : IDENTIFIER 'TOPPERS_dummy_field'
+gen/tmp_tecs_kernel.h: line 151 : ; ';'
+set_owner: CStructType
+add_item: name=TOPPERS_dummy_field   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 151 : } '}'
+add_item: name=TOPPERS_dummy_t   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 151 : ; ';'
+gen/tmp_tecs_kernel.h: line 152 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 152 : VOID 'void'
+gen/tmp_tecs_kernel.h: line 152 : ( '('
+gen/tmp_tecs_kernel.h: line 152 : * '*'
+gen/tmp_tecs_kernel.h: line 152 : IDENTIFIER 'TOPPERS_fp_t'
+gen/tmp_tecs_kernel.h: line 152 : ) ')'
+gen/tmp_tecs_kernel.h: line 152 : ( '('
+gen/tmp_tecs_kernel.h: line 152 : STRUCT 'struct'
+gen/tmp_tecs_kernel.h: line 152 : IDENTIFIER 'TOPPERS_dummy_t'
+gen/tmp_tecs_kernel.h: line 152 : ) ')'
+set_owner: CFuncType
+gen/tmp_tecs_kernel.h: line 152 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=TOPPERS_fp_t   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 159 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 159 : INT 'int'
+gen/tmp_tecs_kernel.h: line 159 : IDENTIFIER 'bool_t'
+gen/tmp_tecs_kernel.h: line 159 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=bool_t   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 161 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 161 : SIGNED 'signed'
+gen/tmp_tecs_kernel.h: line 161 : INT 'int'
+gen/tmp_tecs_kernel.h: line 161 : IDENTIFIER 'int_t'
+gen/tmp_tecs_kernel.h: line 161 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=int_t   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 162 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 162 : UNSIGNED 'unsigned'
+gen/tmp_tecs_kernel.h: line 162 : INT 'int'
+gen/tmp_tecs_kernel.h: line 162 : IDENTIFIER 'uint_t'
+gen/tmp_tecs_kernel.h: line 162 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=uint_t   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 164 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 164 : SIGNED 'signed'
+gen/tmp_tecs_kernel.h: line 164 : LONG 'long'
+gen/tmp_tecs_kernel.h: line 164 : IDENTIFIER 'long_t'
+gen/tmp_tecs_kernel.h: line 164 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=long_t   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 165 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 165 : UNSIGNED 'unsigned'
+gen/tmp_tecs_kernel.h: line 165 : LONG 'long'
+gen/tmp_tecs_kernel.h: line 165 : IDENTIFIER 'ulong_t'
+gen/tmp_tecs_kernel.h: line 165 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=ulong_t   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 167 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 167 : TYPE_NAME 'int_t'
+gen/tmp_tecs_kernel.h: line 167 : IDENTIFIER 'FN'
+gen/tmp_tecs_kernel.h: line 167 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=FN   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 168 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 168 : TYPE_NAME 'int_t'
+gen/tmp_tecs_kernel.h: line 168 : IDENTIFIER 'ER'
+gen/tmp_tecs_kernel.h: line 168 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=ER   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 169 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 169 : TYPE_NAME 'int_t'
+gen/tmp_tecs_kernel.h: line 169 : IDENTIFIER 'ID'
+gen/tmp_tecs_kernel.h: line 169 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=ID   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 170 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 170 : TYPE_NAME 'uint_t'
+gen/tmp_tecs_kernel.h: line 170 : IDENTIFIER 'ATR'
+gen/tmp_tecs_kernel.h: line 170 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=ATR   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 171 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 171 : TYPE_NAME 'uint_t'
+gen/tmp_tecs_kernel.h: line 171 : IDENTIFIER 'STAT'
+gen/tmp_tecs_kernel.h: line 171 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=STAT   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 172 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 172 : TYPE_NAME 'uint_t'
+gen/tmp_tecs_kernel.h: line 172 : IDENTIFIER 'MODE'
+gen/tmp_tecs_kernel.h: line 172 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=MODE   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 173 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 173 : TYPE_NAME 'int_t'
+gen/tmp_tecs_kernel.h: line 173 : IDENTIFIER 'PRI'
+gen/tmp_tecs_kernel.h: line 173 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=PRI   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 174 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 174 : TYPE_NAME 'uint32_t'
+gen/tmp_tecs_kernel.h: line 174 : IDENTIFIER 'TMO'
+gen/tmp_tecs_kernel.h: line 174 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=TMO   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 175 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 175 : TYPE_NAME 'intptr_t'
+gen/tmp_tecs_kernel.h: line 175 : IDENTIFIER 'EXINF'
+gen/tmp_tecs_kernel.h: line 175 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=EXINF   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 176 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 176 : TYPE_NAME 'uint32_t'
+gen/tmp_tecs_kernel.h: line 176 : IDENTIFIER 'RELTIM'
+gen/tmp_tecs_kernel.h: line 176 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=RELTIM   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 178 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 178 : TYPE_NAME 'uint64_t'
+gen/tmp_tecs_kernel.h: line 178 : IDENTIFIER 'SYSTIM'
+gen/tmp_tecs_kernel.h: line 178 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=SYSTIM   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 182 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 182 : TYPE_NAME 'uint32_t'
+gen/tmp_tecs_kernel.h: line 182 : IDENTIFIER 'PRCTIM'
+gen/tmp_tecs_kernel.h: line 182 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=PRCTIM   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 184 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 184 : TYPE_NAME 'uint32_t'
+gen/tmp_tecs_kernel.h: line 184 : IDENTIFIER 'HRTCNT'
+gen/tmp_tecs_kernel.h: line 184 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=HRTCNT   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 192 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 192 : TYPE_NAME 'TOPPERS_fp_t'
+gen/tmp_tecs_kernel.h: line 192 : IDENTIFIER 'FP'
+gen/tmp_tecs_kernel.h: line 192 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=FP   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 194 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 194 : TYPE_NAME 'int_t'
+gen/tmp_tecs_kernel.h: line 194 : IDENTIFIER 'ER_BOOL'
+gen/tmp_tecs_kernel.h: line 194 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=ER_BOOL   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 195 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 195 : TYPE_NAME 'int_t'
+gen/tmp_tecs_kernel.h: line 195 : IDENTIFIER 'ER_ID'
+gen/tmp_tecs_kernel.h: line 195 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=ER_ID   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 196 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 196 : TYPE_NAME 'int_t'
+gen/tmp_tecs_kernel.h: line 196 : IDENTIFIER 'ER_UINT'
+gen/tmp_tecs_kernel.h: line 196 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=ER_UINT   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 198 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 198 : TYPE_NAME 'uintptr_t'
+gen/tmp_tecs_kernel.h: line 198 : IDENTIFIER 'MB_T'
+gen/tmp_tecs_kernel.h: line 198 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=MB_T   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 200 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 200 : TYPE_NAME 'uint32_t'
+gen/tmp_tecs_kernel.h: line 200 : IDENTIFIER 'ACPTN'
+gen/tmp_tecs_kernel.h: line 200 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=ACPTN   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 201 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 201 : STRUCT 'struct'
+gen/tmp_tecs_kernel.h: line 201 : IDENTIFIER 'acvct'
+gen/tmp_tecs_kernel.h: line 201 : { '{'
+gen/tmp_tecs_kernel.h: line 202 : TYPE_NAME 'ACPTN'
+gen/tmp_tecs_kernel.h: line 202 : IDENTIFIER 'acptn1'
+gen/tmp_tecs_kernel.h: line 202 : ; ';'
+set_owner: CStructType
+add_item: name=acptn1   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 203 : TYPE_NAME 'ACPTN'
+gen/tmp_tecs_kernel.h: line 203 : IDENTIFIER 'acptn2'
+gen/tmp_tecs_kernel.h: line 203 : ; ';'
+set_owner: CStructType
+add_item: name=acptn2   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 204 : TYPE_NAME 'ACPTN'
+gen/tmp_tecs_kernel.h: line 204 : IDENTIFIER 'acptn3'
+gen/tmp_tecs_kernel.h: line 204 : ; ';'
+set_owner: CStructType
+add_item: name=acptn3   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 205 : TYPE_NAME 'ACPTN'
+gen/tmp_tecs_kernel.h: line 205 : IDENTIFIER 'acptn4'
+gen/tmp_tecs_kernel.h: line 205 : ; ';'
+set_owner: CStructType
+add_item: name=acptn4   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 206 : } '}'
+add_item: name=acvct   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 206 : IDENTIFIER 'ACVCT'
+gen/tmp_tecs_kernel.h: line 206 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=ACVCT   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 216 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 216 : STRUCT 'struct'
+gen/tmp_tecs_kernel.h: line 216 : IDENTIFIER 't_excinf'
+gen/tmp_tecs_kernel.h: line 216 : { '{'
+gen/tmp_tecs_kernel.h: line 217 : TYPE_NAME 'uint32_t'
+gen/tmp_tecs_kernel.h: line 217 : IDENTIFIER 'nest_count'
+gen/tmp_tecs_kernel.h: line 217 : ; ';'
+set_owner: CStructType
+add_item: name=nest_count   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 218 : TYPE_NAME 'int32_t'
+gen/tmp_tecs_kernel.h: line 218 : IDENTIFIER 'intpri'
+gen/tmp_tecs_kernel.h: line 218 : ; ';'
+set_owner: CStructType
+add_item: name=intpri   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 219 : TYPE_NAME 'uint32_t'
+gen/tmp_tecs_kernel.h: line 219 : IDENTIFIER 'cpsr'
+gen/tmp_tecs_kernel.h: line 219 : ; ';'
+set_owner: CStructType
+add_item: name=cpsr   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 220 : TYPE_NAME 'uint32_t'
+gen/tmp_tecs_kernel.h: line 220 : IDENTIFIER 'r0'
+gen/tmp_tecs_kernel.h: line 220 : ; ';'
+set_owner: CStructType
+add_item: name=r0   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 221 : TYPE_NAME 'uint32_t'
+gen/tmp_tecs_kernel.h: line 221 : IDENTIFIER 'r1'
+gen/tmp_tecs_kernel.h: line 221 : ; ';'
+set_owner: CStructType
+add_item: name=r1   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 222 : TYPE_NAME 'uint32_t'
+gen/tmp_tecs_kernel.h: line 222 : IDENTIFIER 'r2'
+gen/tmp_tecs_kernel.h: line 222 : ; ';'
+set_owner: CStructType
+add_item: name=r2   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 223 : TYPE_NAME 'uint32_t'
+gen/tmp_tecs_kernel.h: line 223 : IDENTIFIER 'r3'
+gen/tmp_tecs_kernel.h: line 223 : ; ';'
+set_owner: CStructType
+add_item: name=r3   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 224 : TYPE_NAME 'uint32_t'
+gen/tmp_tecs_kernel.h: line 224 : IDENTIFIER 'r4'
+gen/tmp_tecs_kernel.h: line 224 : ; ';'
+set_owner: CStructType
+add_item: name=r4   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 225 : TYPE_NAME 'uint32_t'
+gen/tmp_tecs_kernel.h: line 225 : IDENTIFIER 'r5'
+gen/tmp_tecs_kernel.h: line 225 : ; ';'
+set_owner: CStructType
+add_item: name=r5   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 226 : TYPE_NAME 'uint32_t'
+gen/tmp_tecs_kernel.h: line 226 : IDENTIFIER 'r12'
+gen/tmp_tecs_kernel.h: line 226 : ; ';'
+set_owner: CStructType
+add_item: name=r12   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 227 : TYPE_NAME 'uint32_t'
+gen/tmp_tecs_kernel.h: line 227 : IDENTIFIER 'lr'
+gen/tmp_tecs_kernel.h: line 227 : ; ';'
+set_owner: CStructType
+add_item: name=lr   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 228 : TYPE_NAME 'uint32_t'
+gen/tmp_tecs_kernel.h: line 228 : IDENTIFIER 'pc'
+gen/tmp_tecs_kernel.h: line 228 : ; ';'
+set_owner: CStructType
+add_item: name=pc   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 229 : } '}'
+add_item: name=t_excinf   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 229 : IDENTIFIER 'T_EXCINF'
+gen/tmp_tecs_kernel.h: line 229 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=T_EXCINF   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 233 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 233 : TYPE_NAME 'uint_t'
+gen/tmp_tecs_kernel.h: line 233 : IDENTIFIER 'FLGPTN'
+gen/tmp_tecs_kernel.h: line 233 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=FLGPTN   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 234 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 234 : TYPE_NAME 'uint_t'
+gen/tmp_tecs_kernel.h: line 234 : IDENTIFIER 'INTNO'
+gen/tmp_tecs_kernel.h: line 234 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=INTNO   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 235 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 235 : TYPE_NAME 'uint_t'
+gen/tmp_tecs_kernel.h: line 235 : IDENTIFIER 'INHNO'
+gen/tmp_tecs_kernel.h: line 235 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=INHNO   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 236 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 236 : TYPE_NAME 'uint_t'
+gen/tmp_tecs_kernel.h: line 236 : IDENTIFIER 'EXCNO'
+gen/tmp_tecs_kernel.h: line 236 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=EXCNO   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 241 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 241 : VOID 'void'
+gen/tmp_tecs_kernel.h: line 241 : ( '('
+gen/tmp_tecs_kernel.h: line 241 : * '*'
+gen/tmp_tecs_kernel.h: line 241 : IDENTIFIER 'TASK'
+gen/tmp_tecs_kernel.h: line 241 : ) ')'
+gen/tmp_tecs_kernel.h: line 241 : ( '('
+gen/tmp_tecs_kernel.h: line 241 : TYPE_NAME 'EXINF'
+gen/tmp_tecs_kernel.h: line 241 : IDENTIFIER 'exinf'
+gen/tmp_tecs_kernel.h: line 241 : ) ')'
+set_owner: CFuncType
+gen/tmp_tecs_kernel.h: line 241 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=TASK   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 242 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 242 : VOID 'void'
+gen/tmp_tecs_kernel.h: line 242 : ( '('
+gen/tmp_tecs_kernel.h: line 242 : * '*'
+gen/tmp_tecs_kernel.h: line 242 : IDENTIFIER 'TMEHDR'
+gen/tmp_tecs_kernel.h: line 242 : ) ')'
+gen/tmp_tecs_kernel.h: line 242 : ( '('
+gen/tmp_tecs_kernel.h: line 242 : TYPE_NAME 'EXINF'
+gen/tmp_tecs_kernel.h: line 242 : IDENTIFIER 'exinf'
+gen/tmp_tecs_kernel.h: line 242 : ) ')'
+set_owner: CFuncType
+gen/tmp_tecs_kernel.h: line 242 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=TMEHDR   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 243 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 243 : VOID 'void'
+gen/tmp_tecs_kernel.h: line 243 : ( '('
+gen/tmp_tecs_kernel.h: line 243 : * '*'
+gen/tmp_tecs_kernel.h: line 243 : IDENTIFIER 'ISR'
+gen/tmp_tecs_kernel.h: line 243 : ) ')'
+gen/tmp_tecs_kernel.h: line 243 : ( '('
+gen/tmp_tecs_kernel.h: line 243 : TYPE_NAME 'EXINF'
+gen/tmp_tecs_kernel.h: line 243 : IDENTIFIER 'exinf'
+gen/tmp_tecs_kernel.h: line 243 : ) ')'
+set_owner: CFuncType
+gen/tmp_tecs_kernel.h: line 243 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=ISR   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 244 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 244 : VOID 'void'
+gen/tmp_tecs_kernel.h: line 244 : ( '('
+gen/tmp_tecs_kernel.h: line 244 : * '*'
+gen/tmp_tecs_kernel.h: line 244 : IDENTIFIER 'INTHDR'
+gen/tmp_tecs_kernel.h: line 244 : ) ')'
+gen/tmp_tecs_kernel.h: line 244 : ( '('
+gen/tmp_tecs_kernel.h: line 244 : VOID 'void'
+gen/tmp_tecs_kernel.h: line 244 : ) ')'
+set_owner: CFuncType
+gen/tmp_tecs_kernel.h: line 244 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=INTHDR   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 245 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 245 : VOID 'void'
+gen/tmp_tecs_kernel.h: line 245 : ( '('
+gen/tmp_tecs_kernel.h: line 245 : * '*'
+gen/tmp_tecs_kernel.h: line 245 : IDENTIFIER 'EXCHDR'
+gen/tmp_tecs_kernel.h: line 245 : ) ')'
+gen/tmp_tecs_kernel.h: line 245 : ( '('
+gen/tmp_tecs_kernel.h: line 245 : VOID 'void'
+gen/tmp_tecs_kernel.h: line 245 : * '*'
+gen/tmp_tecs_kernel.h: line 245 : IDENTIFIER 'p_excinf'
+gen/tmp_tecs_kernel.h: line 245 : ) ')'
+set_owner: CFuncType
+gen/tmp_tecs_kernel.h: line 245 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=EXCHDR   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 246 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 246 : VOID 'void'
+gen/tmp_tecs_kernel.h: line 246 : ( '('
+gen/tmp_tecs_kernel.h: line 246 : * '*'
+gen/tmp_tecs_kernel.h: line 246 : IDENTIFIER 'INIRTN'
+gen/tmp_tecs_kernel.h: line 246 : ) ')'
+gen/tmp_tecs_kernel.h: line 246 : ( '('
+gen/tmp_tecs_kernel.h: line 246 : TYPE_NAME 'EXINF'
+gen/tmp_tecs_kernel.h: line 246 : IDENTIFIER 'exinf'
+gen/tmp_tecs_kernel.h: line 246 : ) ')'
+set_owner: CFuncType
+gen/tmp_tecs_kernel.h: line 246 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=INIRTN   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 247 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 247 : VOID 'void'
+gen/tmp_tecs_kernel.h: line 247 : ( '('
+gen/tmp_tecs_kernel.h: line 247 : * '*'
+gen/tmp_tecs_kernel.h: line 247 : IDENTIFIER 'TERRTN'
+gen/tmp_tecs_kernel.h: line 247 : ) ')'
+gen/tmp_tecs_kernel.h: line 247 : ( '('
+gen/tmp_tecs_kernel.h: line 247 : TYPE_NAME 'EXINF'
+gen/tmp_tecs_kernel.h: line 247 : IDENTIFIER 'exinf'
+gen/tmp_tecs_kernel.h: line 247 : ) ')'
+set_owner: CFuncType
+gen/tmp_tecs_kernel.h: line 247 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=TERRTN   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 255 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 255 : LONG 'long'
+gen/tmp_tecs_kernel.h: line 255 : LONG 'long'
+gen/tmp_tecs_kernel.h: line 255 : IDENTIFIER 'STK_T'
+gen/tmp_tecs_kernel.h: line 255 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=STK_T   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 260 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 260 : TYPE_NAME 'intptr_t'
+gen/tmp_tecs_kernel.h: line 260 : IDENTIFIER 'MPF_T'
+gen/tmp_tecs_kernel.h: line 260 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=MPF_T   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 265 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 265 : STRUCT 'struct'
+gen/tmp_tecs_kernel.h: line 265 : IDENTIFIER 't_rtsk'
+gen/tmp_tecs_kernel.h: line 265 : { '{'
+gen/tmp_tecs_kernel.h: line 266 : TYPE_NAME 'STAT'
+gen/tmp_tecs_kernel.h: line 266 : IDENTIFIER 'tskstat'
+gen/tmp_tecs_kernel.h: line 266 : ; ';'
+set_owner: CStructType
+add_item: name=tskstat   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 267 : TYPE_NAME 'PRI'
+gen/tmp_tecs_kernel.h: line 267 : IDENTIFIER 'tskpri'
+gen/tmp_tecs_kernel.h: line 267 : ; ';'
+set_owner: CStructType
+add_item: name=tskpri   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 268 : TYPE_NAME 'PRI'
+gen/tmp_tecs_kernel.h: line 268 : IDENTIFIER 'tskbpri'
+gen/tmp_tecs_kernel.h: line 268 : ; ';'
+set_owner: CStructType
+add_item: name=tskbpri   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 269 : TYPE_NAME 'STAT'
+gen/tmp_tecs_kernel.h: line 269 : IDENTIFIER 'tskwait'
+gen/tmp_tecs_kernel.h: line 269 : ; ';'
+set_owner: CStructType
+add_item: name=tskwait   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 270 : TYPE_NAME 'ID'
+gen/tmp_tecs_kernel.h: line 270 : IDENTIFIER 'wobjid'
+gen/tmp_tecs_kernel.h: line 270 : ; ';'
+set_owner: CStructType
+add_item: name=wobjid   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 271 : TYPE_NAME 'TMO'
+gen/tmp_tecs_kernel.h: line 271 : IDENTIFIER 'lefttmo'
+gen/tmp_tecs_kernel.h: line 271 : ; ';'
+set_owner: CStructType
+add_item: name=lefttmo   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 272 : TYPE_NAME 'uint_t'
+gen/tmp_tecs_kernel.h: line 272 : IDENTIFIER 'actcnt'
+gen/tmp_tecs_kernel.h: line 272 : ; ';'
+set_owner: CStructType
+add_item: name=actcnt   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 273 : TYPE_NAME 'uint_t'
+gen/tmp_tecs_kernel.h: line 273 : IDENTIFIER 'wupcnt'
+gen/tmp_tecs_kernel.h: line 273 : ; ';'
+set_owner: CStructType
+add_item: name=wupcnt   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 274 : TYPE_NAME 'bool_t'
+gen/tmp_tecs_kernel.h: line 274 : IDENTIFIER 'raster'
+gen/tmp_tecs_kernel.h: line 274 : ; ';'
+set_owner: CStructType
+add_item: name=raster   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 275 : TYPE_NAME 'bool_t'
+gen/tmp_tecs_kernel.h: line 275 : IDENTIFIER 'dister'
+gen/tmp_tecs_kernel.h: line 275 : ; ';'
+set_owner: CStructType
+add_item: name=dister   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 276 : } '}'
+add_item: name=t_rtsk   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 276 : IDENTIFIER 'T_RTSK'
+gen/tmp_tecs_kernel.h: line 276 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=T_RTSK   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 278 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 278 : STRUCT 'struct'
+gen/tmp_tecs_kernel.h: line 278 : IDENTIFIER 't_rsem'
+gen/tmp_tecs_kernel.h: line 278 : { '{'
+gen/tmp_tecs_kernel.h: line 279 : TYPE_NAME 'ID'
+gen/tmp_tecs_kernel.h: line 279 : IDENTIFIER 'wtskid'
+gen/tmp_tecs_kernel.h: line 279 : ; ';'
+set_owner: CStructType
+add_item: name=wtskid   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 280 : TYPE_NAME 'uint_t'
+gen/tmp_tecs_kernel.h: line 280 : IDENTIFIER 'semcnt'
+gen/tmp_tecs_kernel.h: line 280 : ; ';'
+set_owner: CStructType
+add_item: name=semcnt   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 281 : } '}'
+add_item: name=t_rsem   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 281 : IDENTIFIER 'T_RSEM'
+gen/tmp_tecs_kernel.h: line 281 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=T_RSEM   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 283 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 283 : STRUCT 'struct'
+gen/tmp_tecs_kernel.h: line 283 : IDENTIFIER 't_rflg'
+gen/tmp_tecs_kernel.h: line 283 : { '{'
+gen/tmp_tecs_kernel.h: line 284 : TYPE_NAME 'ID'
+gen/tmp_tecs_kernel.h: line 284 : IDENTIFIER 'wtskid'
+gen/tmp_tecs_kernel.h: line 284 : ; ';'
+set_owner: CStructType
+add_item: name=wtskid   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 285 : TYPE_NAME 'FLGPTN'
+gen/tmp_tecs_kernel.h: line 285 : IDENTIFIER 'flgptn'
+gen/tmp_tecs_kernel.h: line 285 : ; ';'
+set_owner: CStructType
+add_item: name=flgptn   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 286 : } '}'
+add_item: name=t_rflg   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 286 : IDENTIFIER 'T_RFLG'
+gen/tmp_tecs_kernel.h: line 286 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=T_RFLG   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 288 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 288 : STRUCT 'struct'
+gen/tmp_tecs_kernel.h: line 288 : IDENTIFIER 't_rdtq'
+gen/tmp_tecs_kernel.h: line 288 : { '{'
+gen/tmp_tecs_kernel.h: line 289 : TYPE_NAME 'ID'
+gen/tmp_tecs_kernel.h: line 289 : IDENTIFIER 'stskid'
+gen/tmp_tecs_kernel.h: line 289 : ; ';'
+set_owner: CStructType
+add_item: name=stskid   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 290 : TYPE_NAME 'ID'
+gen/tmp_tecs_kernel.h: line 290 : IDENTIFIER 'rtskid'
+gen/tmp_tecs_kernel.h: line 290 : ; ';'
+set_owner: CStructType
+add_item: name=rtskid   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 291 : TYPE_NAME 'uint_t'
+gen/tmp_tecs_kernel.h: line 291 : IDENTIFIER 'sdtqcnt'
+gen/tmp_tecs_kernel.h: line 291 : ; ';'
+set_owner: CStructType
+add_item: name=sdtqcnt   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 292 : } '}'
+add_item: name=t_rdtq   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 292 : IDENTIFIER 'T_RDTQ'
+gen/tmp_tecs_kernel.h: line 292 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=T_RDTQ   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 294 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 294 : STRUCT 'struct'
+gen/tmp_tecs_kernel.h: line 294 : IDENTIFIER 't_rpdq'
+gen/tmp_tecs_kernel.h: line 294 : { '{'
+gen/tmp_tecs_kernel.h: line 295 : TYPE_NAME 'ID'
+gen/tmp_tecs_kernel.h: line 295 : IDENTIFIER 'stskid'
+gen/tmp_tecs_kernel.h: line 295 : ; ';'
+set_owner: CStructType
+add_item: name=stskid   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 297 : TYPE_NAME 'ID'
+gen/tmp_tecs_kernel.h: line 297 : IDENTIFIER 'rtskid'
+gen/tmp_tecs_kernel.h: line 297 : ; ';'
+set_owner: CStructType
+add_item: name=rtskid   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 299 : TYPE_NAME 'uint_t'
+gen/tmp_tecs_kernel.h: line 299 : IDENTIFIER 'spdqcnt'
+gen/tmp_tecs_kernel.h: line 299 : ; ';'
+set_owner: CStructType
+add_item: name=spdqcnt   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 301 : } '}'
+add_item: name=t_rpdq   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 301 : IDENTIFIER 'T_RPDQ'
+gen/tmp_tecs_kernel.h: line 301 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=T_RPDQ   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 303 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 303 : STRUCT 'struct'
+gen/tmp_tecs_kernel.h: line 303 : IDENTIFIER 't_rmtx'
+gen/tmp_tecs_kernel.h: line 303 : { '{'
+gen/tmp_tecs_kernel.h: line 304 : TYPE_NAME 'ID'
+gen/tmp_tecs_kernel.h: line 304 : IDENTIFIER 'htskid'
+gen/tmp_tecs_kernel.h: line 304 : ; ';'
+set_owner: CStructType
+add_item: name=htskid   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 305 : TYPE_NAME 'ID'
+gen/tmp_tecs_kernel.h: line 305 : IDENTIFIER 'wtskid'
+gen/tmp_tecs_kernel.h: line 305 : ; ';'
+set_owner: CStructType
+add_item: name=wtskid   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 306 : } '}'
+add_item: name=t_rmtx   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 306 : IDENTIFIER 'T_RMTX'
+gen/tmp_tecs_kernel.h: line 306 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=T_RMTX   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 308 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 308 : STRUCT 'struct'
+gen/tmp_tecs_kernel.h: line 308 : IDENTIFIER 't_rmpf'
+gen/tmp_tecs_kernel.h: line 308 : { '{'
+gen/tmp_tecs_kernel.h: line 309 : TYPE_NAME 'ID'
+gen/tmp_tecs_kernel.h: line 309 : IDENTIFIER 'wtskid'
+gen/tmp_tecs_kernel.h: line 309 : ; ';'
+set_owner: CStructType
+add_item: name=wtskid   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 311 : TYPE_NAME 'uint_t'
+gen/tmp_tecs_kernel.h: line 311 : IDENTIFIER 'fblkcnt'
+gen/tmp_tecs_kernel.h: line 311 : ; ';'
+set_owner: CStructType
+add_item: name=fblkcnt   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 313 : } '}'
+add_item: name=t_rmpf   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 313 : IDENTIFIER 'T_RMPF'
+gen/tmp_tecs_kernel.h: line 313 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=T_RMPF   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 315 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 315 : STRUCT 'struct'
+gen/tmp_tecs_kernel.h: line 315 : IDENTIFIER 't_rcyc'
+gen/tmp_tecs_kernel.h: line 315 : { '{'
+gen/tmp_tecs_kernel.h: line 316 : TYPE_NAME 'STAT'
+gen/tmp_tecs_kernel.h: line 316 : IDENTIFIER 'cycstat'
+gen/tmp_tecs_kernel.h: line 316 : ; ';'
+set_owner: CStructType
+add_item: name=cycstat   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 317 : TYPE_NAME 'RELTIM'
+gen/tmp_tecs_kernel.h: line 317 : IDENTIFIER 'lefttim'
+gen/tmp_tecs_kernel.h: line 317 : ; ';'
+set_owner: CStructType
+add_item: name=lefttim   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 318 : } '}'
+add_item: name=t_rcyc   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 318 : IDENTIFIER 'T_RCYC'
+gen/tmp_tecs_kernel.h: line 318 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=T_RCYC   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 320 : TYPEDEF 'typedef'
+gen/tmp_tecs_kernel.h: line 320 : STRUCT 'struct'
+gen/tmp_tecs_kernel.h: line 320 : IDENTIFIER 't_ralm'
+gen/tmp_tecs_kernel.h: line 320 : { '{'
+gen/tmp_tecs_kernel.h: line 321 : TYPE_NAME 'STAT'
+gen/tmp_tecs_kernel.h: line 321 : IDENTIFIER 'almstat'
+gen/tmp_tecs_kernel.h: line 321 : ; ';'
+set_owner: CStructType
+add_item: name=almstat   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 322 : TYPE_NAME 'RELTIM'
+gen/tmp_tecs_kernel.h: line 322 : IDENTIFIER 'lefttim'
+gen/tmp_tecs_kernel.h: line 322 : ; ';'
+set_owner: CStructType
+add_item: name=lefttim   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 323 : } '}'
+add_item: name=t_ralm   locale=(kernel_rs.cdl, 50)
+gen/tmp_tecs_kernel.h: line 323 : IDENTIFIER 'T_RALM'
+gen/tmp_tecs_kernel.h: line 323 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=T_RALM   locale=(kernel_rs.cdl, 50)
+pop Namespace
+kernel_rs.cdl: line 52 : TYPEDEF 'typedef'
+kernel_rs.cdl: line 52 : TYPE_NAME 'int_t'
+kernel_rs.cdl: line 52 : IDENTIFIER 'TaskRef'
+kernel_rs.cdl: line 52 : ; ';'
+set_owner: Typedef
+set_owner: Region
+add_item: name=TaskRef   locale=(kernel_rs.cdl, 52)
+kernel_rs.cdl: line 57 : SIGNATURE 'signature'
+kernel_rs.cdl: line 57 : IDENTIFIER 'sTaskBody'
+set_owner: Region
+add_item: name=sTaskBody   locale=(kernel_rs.cdl, 57)
+kernel_rs.cdl: line 57 : { '{'
+kernel_rs.cdl: line 58 : VOID 'void'
+kernel_rs.cdl: line 58 : IDENTIFIER 'main'
+kernel_rs.cdl: line 58 : ( '('
+kernel_rs.cdl: line 58 : VOID 'void'
+kernel_rs.cdl: line 58 : ) ')'
+set_owner: FuncType
+kernel_rs.cdl: line 58 : ; ';'
+set_owner: FuncHead
+add_item: name=main   locale=(kernel_rs.cdl, 58)
+kernel_rs.cdl: line 59 : } '}'
+kernel_rs.cdl: line 59 : ; ';'
+set_owner: Signature
+kernel_rs.cdl: line 64 : SIGNATURE 'signature'
+kernel_rs.cdl: line 64 : IDENTIFIER 'sTask'
+set_owner: Region
+add_item: name=sTask   locale=(kernel_rs.cdl, 64)
+kernel_rs.cdl: line 64 : { '{'
+kernel_rs.cdl: line 65 : TYPE_NAME 'ER'
+kernel_rs.cdl: line 65 : IDENTIFIER 'activate'
+kernel_rs.cdl: line 65 : ( '('
+kernel_rs.cdl: line 65 : VOID 'void'
+kernel_rs.cdl: line 65 : ) ')'
+set_owner: FuncType
+kernel_rs.cdl: line 65 : ; ';'
+set_owner: FuncHead
+add_item: name=activate   locale=(kernel_rs.cdl, 65)
+kernel_rs.cdl: line 66 : TYPE_NAME 'ER_UINT'
+kernel_rs.cdl: line 66 : IDENTIFIER 'cancelActivate'
+kernel_rs.cdl: line 66 : ( '('
+kernel_rs.cdl: line 66 : VOID 'void'
+kernel_rs.cdl: line 66 : ) ')'
+set_owner: FuncType
+kernel_rs.cdl: line 66 : ; ';'
+set_owner: FuncHead
+add_item: name=cancelActivate   locale=(kernel_rs.cdl, 66)
+kernel_rs.cdl: line 67 : TYPE_NAME 'ER'
+kernel_rs.cdl: line 67 : IDENTIFIER 'getTaskState'
+kernel_rs.cdl: line 67 : ( '('
+kernel_rs.cdl: line 67 : [ '['
+kernel_rs.cdl: line 67 : OUT 'out'
+kernel_rs.cdl: line 67 : ] ']'
+kernel_rs.cdl: line 67 : TYPE_NAME 'STAT'
+kernel_rs.cdl: line 67 : * '*'
+kernel_rs.cdl: line 67 : IDENTIFIER 'p_tskstat'
+kernel_rs.cdl: line 67 : ) ')'
+set_owner: ParamDecl
+add_item: name=p_tskstat   locale=(kernel_rs.cdl, 67)
+set_owner: ParamList
+set_owner: FuncType
+kernel_rs.cdl: line 67 : ; ';'
+set_owner: FuncHead
+add_item: name=getTaskState   locale=(kernel_rs.cdl, 67)
+kernel_rs.cdl: line 68 : TYPE_NAME 'ER'
+kernel_rs.cdl: line 68 : IDENTIFIER 'changePriority'
+kernel_rs.cdl: line 68 : ( '('
+kernel_rs.cdl: line 68 : [ '['
+kernel_rs.cdl: line 68 : IN 'in'
+kernel_rs.cdl: line 68 : ] ']'
+kernel_rs.cdl: line 68 : TYPE_NAME 'PRI'
+kernel_rs.cdl: line 68 : IDENTIFIER 'priority'
+kernel_rs.cdl: line 68 : ) ')'
+set_owner: ParamDecl
+add_item: name=priority   locale=(kernel_rs.cdl, 68)
+set_owner: ParamList
+set_owner: FuncType
+kernel_rs.cdl: line 68 : ; ';'
+set_owner: FuncHead
+add_item: name=changePriority   locale=(kernel_rs.cdl, 68)
+kernel_rs.cdl: line 69 : TYPE_NAME 'ER'
+kernel_rs.cdl: line 69 : IDENTIFIER 'getPriority'
+kernel_rs.cdl: line 69 : ( '('
+kernel_rs.cdl: line 69 : [ '['
+kernel_rs.cdl: line 69 : OUT 'out'
+kernel_rs.cdl: line 69 : ] ']'
+kernel_rs.cdl: line 69 : TYPE_NAME 'PRI'
+kernel_rs.cdl: line 69 : * '*'
+kernel_rs.cdl: line 69 : IDENTIFIER 'p_priority'
+kernel_rs.cdl: line 69 : ) ')'
+set_owner: ParamDecl
+add_item: name=p_priority   locale=(kernel_rs.cdl, 69)
+set_owner: ParamList
+set_owner: FuncType
+kernel_rs.cdl: line 69 : ; ';'
+set_owner: FuncHead
+add_item: name=getPriority   locale=(kernel_rs.cdl, 69)
+kernel_rs.cdl: line 70 : TYPE_NAME 'ER'
+kernel_rs.cdl: line 70 : IDENTIFIER 'refer'
+kernel_rs.cdl: line 70 : ( '('
+kernel_rs.cdl: line 70 : [ '['
+kernel_rs.cdl: line 70 : OUT 'out'
+kernel_rs.cdl: line 70 : ] ']'
+kernel_rs.cdl: line 70 : TYPE_NAME 'T_RTSK'
+kernel_rs.cdl: line 70 : * '*'
+kernel_rs.cdl: line 70 : IDENTIFIER 'pk_taskStatus'
+kernel_rs.cdl: line 70 : ) ')'
+set_owner: ParamDecl
+add_item: name=pk_taskStatus   locale=(kernel_rs.cdl, 70)
+set_owner: ParamList
+set_owner: FuncType
+kernel_rs.cdl: line 70 : ; ';'
+set_owner: FuncHead
+add_item: name=refer   locale=(kernel_rs.cdl, 70)
+kernel_rs.cdl: line 72 : TYPE_NAME 'ER'
+kernel_rs.cdl: line 72 : IDENTIFIER 'wakeup'
+kernel_rs.cdl: line 72 : ( '('
+kernel_rs.cdl: line 72 : VOID 'void'
+kernel_rs.cdl: line 72 : ) ')'
+set_owner: FuncType
+kernel_rs.cdl: line 72 : ; ';'
+set_owner: FuncHead
+add_item: name=wakeup   locale=(kernel_rs.cdl, 72)
+kernel_rs.cdl: line 73 : TYPE_NAME 'ER_UINT'
+kernel_rs.cdl: line 73 : IDENTIFIER 'cancelWakeup'
+kernel_rs.cdl: line 73 : ( '('
+kernel_rs.cdl: line 73 : VOID 'void'
+kernel_rs.cdl: line 73 : ) ')'
+set_owner: FuncType
+kernel_rs.cdl: line 73 : ; ';'
+set_owner: FuncHead
+add_item: name=cancelWakeup   locale=(kernel_rs.cdl, 73)
+kernel_rs.cdl: line 74 : TYPE_NAME 'ER'
+kernel_rs.cdl: line 74 : IDENTIFIER 'releaseWait'
+kernel_rs.cdl: line 74 : ( '('
+kernel_rs.cdl: line 74 : VOID 'void'
+kernel_rs.cdl: line 74 : ) ')'
+set_owner: FuncType
+kernel_rs.cdl: line 74 : ; ';'
+set_owner: FuncHead
+add_item: name=releaseWait   locale=(kernel_rs.cdl, 74)
+kernel_rs.cdl: line 75 : TYPE_NAME 'ER'
+kernel_rs.cdl: line 75 : IDENTIFIER 'suspend'
+kernel_rs.cdl: line 75 : ( '('
+kernel_rs.cdl: line 75 : VOID 'void'
+kernel_rs.cdl: line 75 : ) ')'
+set_owner: FuncType
+kernel_rs.cdl: line 75 : ; ';'
+set_owner: FuncHead
+add_item: name=suspend   locale=(kernel_rs.cdl, 75)
+kernel_rs.cdl: line 76 : TYPE_NAME 'ER'
+kernel_rs.cdl: line 76 : IDENTIFIER 'resume'
+kernel_rs.cdl: line 76 : ( '('
+kernel_rs.cdl: line 76 : VOID 'void'
+kernel_rs.cdl: line 76 : ) ')'
+set_owner: FuncType
+kernel_rs.cdl: line 76 : ; ';'
+set_owner: FuncHead
+add_item: name=resume   locale=(kernel_rs.cdl, 76)
+kernel_rs.cdl: line 78 : TYPE_NAME 'ER'
+kernel_rs.cdl: line 78 : IDENTIFIER 'raiseTerminate'
+kernel_rs.cdl: line 78 : ( '('
+kernel_rs.cdl: line 78 : VOID 'void'
+kernel_rs.cdl: line 78 : ) ')'
+set_owner: FuncType
+kernel_rs.cdl: line 78 : ; ';'
+set_owner: FuncHead
+add_item: name=raiseTerminate   locale=(kernel_rs.cdl, 78)
+kernel_rs.cdl: line 79 : TYPE_NAME 'ER'
+kernel_rs.cdl: line 79 : IDENTIFIER 'terminate'
+kernel_rs.cdl: line 79 : ( '('
+kernel_rs.cdl: line 79 : VOID 'void'
+kernel_rs.cdl: line 79 : ) ')'
+set_owner: FuncType
+kernel_rs.cdl: line 79 : ; ';'
+set_owner: FuncHead
+add_item: name=terminate   locale=(kernel_rs.cdl, 79)
+kernel_rs.cdl: line 80 : } '}'
+kernel_rs.cdl: line 80 : ; ';'
+set_owner: Signature
+set_owner: Signature
+set_owner: Signature
+set_owner: Signature
+set_owner: Signature
+set_owner: Signature
+set_owner: Signature
+set_owner: Signature
+set_owner: Signature
+set_owner: Signature
+set_owner: Signature
+set_owner: Signature
+set_owner: Signature
+kernel_rs.cdl: line 85 : [ '['
+kernel_rs.cdl: line 85 : CONTEXT 'context'
+kernel_rs.cdl: line 85 : ( '('
+kernel_rs.cdl: line 85 : STRING_LITERAL '"non-task"'
+kernel_rs.cdl: line 85 : ) ')'
+kernel_rs.cdl: line 85 : ] ']'
+kernel_rs.cdl: line 86 : SIGNATURE 'signature'
+kernel_rs.cdl: line 86 : IDENTIFIER 'siTask'
+set_owner: Region
+add_item: name=siTask   locale=(kernel_rs.cdl, 86)
+kernel_rs.cdl: line 86 : { '{'
+kernel_rs.cdl: line 87 : TYPE_NAME 'ER'
+kernel_rs.cdl: line 87 : IDENTIFIER 'activate'
+kernel_rs.cdl: line 87 : ( '('
+kernel_rs.cdl: line 87 : VOID 'void'
+kernel_rs.cdl: line 87 : ) ')'
+set_owner: FuncType
+kernel_rs.cdl: line 87 : ; ';'
+set_owner: FuncHead
+add_item: name=activate   locale=(kernel_rs.cdl, 87)
+kernel_rs.cdl: line 88 : TYPE_NAME 'ER'
+kernel_rs.cdl: line 88 : IDENTIFIER 'wakeup'
+kernel_rs.cdl: line 88 : ( '('
+kernel_rs.cdl: line 88 : VOID 'void'
+kernel_rs.cdl: line 88 : ) ')'
+set_owner: FuncType
+kernel_rs.cdl: line 88 : ; ';'
+set_owner: FuncHead
+add_item: name=wakeup   locale=(kernel_rs.cdl, 88)
+kernel_rs.cdl: line 89 : TYPE_NAME 'ER'
+kernel_rs.cdl: line 89 : IDENTIFIER 'releaseWait'
+kernel_rs.cdl: line 89 : ( '('
+kernel_rs.cdl: line 89 : VOID 'void'
+kernel_rs.cdl: line 89 : ) ')'
+set_owner: FuncType
+kernel_rs.cdl: line 89 : ; ';'
+set_owner: FuncHead
+add_item: name=releaseWait   locale=(kernel_rs.cdl, 89)
+kernel_rs.cdl: line 90 : } '}'
+kernel_rs.cdl: line 90 : ; ';'
+set_owner: Signature
+set_owner: Signature
+set_owner: Signature
+kernel_rs.cdl: line 95 : [ '['
+kernel_rs.cdl: line 95 : CONTEXT 'context'
+kernel_rs.cdl: line 95 : ( '('
+kernel_rs.cdl: line 95 : STRING_LITERAL '"non-task"'
+kernel_rs.cdl: line 95 : ) ')'
+kernel_rs.cdl: line 95 : ] ']'
+kernel_rs.cdl: line 96 : SIGNATURE 'signature'
+kernel_rs.cdl: line 96 : IDENTIFIER 'siNotificationHandler'
+set_owner: Region
+add_item: name=siNotificationHandler   locale=(kernel_rs.cdl, 96)
+kernel_rs.cdl: line 96 : { '{'
+kernel_rs.cdl: line 97 : } '}'
+kernel_rs.cdl: line 97 : ; ';'
+kernel_rs.cdl: line 102 : [ '['
+kernel_rs.cdl: line 102 : ACTIVE 'active'
+kernel_rs.cdl: line 102 : ] ']'
+kernel_rs.cdl: line 103 : CELLTYPE 'celltype'
+kernel_rs.cdl: line 103 : IDENTIFIER 'tTask'
+set_owner: Region
+add_item: name=tTask   locale=(kernel_rs.cdl, 103)
+kernel_rs.cdl: line 103 : { '{'
+kernel_rs.cdl: line 104 : [ '['
+kernel_rs.cdl: line 104 : INLINE 'inline'
+kernel_rs.cdl: line 104 : ] ']'
+kernel_rs.cdl: line 104 : ENTRY 'entry'
+kernel_rs.cdl: line 104 : IDENTIFIER 'sTask'
+kernel_rs.cdl: line 104 : IDENTIFIER 'eTask'
+kernel_rs.cdl: line 104 : ; ';'
+set_owner: Celltype
+add_item: name=eTask   locale=(kernel_rs.cdl, 104)
+kernel_rs.cdl: line 105 : [ '['
+kernel_rs.cdl: line 105 : INLINE 'inline'
+kernel_rs.cdl: line 105 : ] ']'
+kernel_rs.cdl: line 105 : ENTRY 'entry'
+kernel_rs.cdl: line 105 : IDENTIFIER 'siTask'
+kernel_rs.cdl: line 105 : IDENTIFIER 'eiTask'
+kernel_rs.cdl: line 105 : ; ';'
+set_owner: Celltype
+add_item: name=eiTask   locale=(kernel_rs.cdl, 105)
+kernel_rs.cdl: line 106 : CALL 'call'
+kernel_rs.cdl: line 106 : IDENTIFIER 'sTaskBody'
+kernel_rs.cdl: line 106 : IDENTIFIER 'cTaskBody'
+kernel_rs.cdl: line 106 : ; ';'
+set_owner: Celltype
+add_item: name=cTaskBody   locale=(kernel_rs.cdl, 106)
+kernel_rs.cdl: line 108 : [ '['
+kernel_rs.cdl: line 108 : INLINE 'inline'
+kernel_rs.cdl: line 108 : ] ']'
+kernel_rs.cdl: line 108 : ENTRY 'entry'
+kernel_rs.cdl: line 108 : IDENTIFIER 'siNotificationHandler'
+kernel_rs.cdl: line 108 : IDENTIFIER 'eiActivateNotificationHandler'
+kernel_rs.cdl: line 108 : ; ';'
+set_owner: Celltype
+add_item: name=eiActivateNotificationHandler   locale=(kernel_rs.cdl, 108)
+kernel_rs.cdl: line 109 : [ '['
+kernel_rs.cdl: line 109 : INLINE 'inline'
+kernel_rs.cdl: line 109 : ] ']'
+kernel_rs.cdl: line 109 : ENTRY 'entry'
+kernel_rs.cdl: line 109 : IDENTIFIER 'siNotificationHandler'
+kernel_rs.cdl: line 109 : IDENTIFIER 'eiWakeUpNotificationHandler'
+kernel_rs.cdl: line 109 : ; ';'
+set_owner: Celltype
+add_item: name=eiWakeUpNotificationHandler   locale=(kernel_rs.cdl, 109)
+kernel_rs.cdl: line 111 : ATTRIBUTE 'attr'
+kernel_rs.cdl: line 111 : { '{'
+kernel_rs.cdl: line 112 : [ '['
+kernel_rs.cdl: line 112 : OMIT 'omit'
+kernel_rs.cdl: line 112 : ] ']'
+kernel_rs.cdl: line 112 : TYPE_NAME 'ID'
+kernel_rs.cdl: line 112 : IDENTIFIER 'id'
+kernel_rs.cdl: line 112 : = '='
+kernel_rs.cdl: line 112 : C_EXP 'C_EXP'
+kernel_rs.cdl: line 112 : ( '('
+kernel_rs.cdl: line 112 : STRING_LITERAL '"TSKID_$id$"'
+kernel_rs.cdl: line 112 : ) ')'
+kernel_rs.cdl: line 112 : ; ';'
+set_owner: Celltype
+add_item: name=id   locale=(kernel_rs.cdl, 112)
+kernel_rs.cdl: line 114 : TYPE_NAME 'TaskRef'
+kernel_rs.cdl: line 114 : IDENTIFIER 'task_ref'
+kernel_rs.cdl: line 114 : = '='
+kernel_rs.cdl: line 114 : C_EXP 'C_EXP'
+kernel_rs.cdl: line 114 : ( '('
+kernel_rs.cdl: line 114 : STRING_LITERAL '"unsafe{TaskRef::from_raw_nonnull(NonZeroI32::new(TSKID_$id$).unwrap())}"'
+kernel_rs.cdl: line 114 : ) ')'
+kernel_rs.cdl: line 114 : ; ';'
+set_owner: Celltype
+add_item: name=task_ref   locale=(kernel_rs.cdl, 114)
+kernel_rs.cdl: line 115 : [ '['
+kernel_rs.cdl: line 115 : OMIT 'omit'
+kernel_rs.cdl: line 115 : ] ']'
+kernel_rs.cdl: line 115 : TYPE_NAME 'ATR'
+kernel_rs.cdl: line 115 : IDENTIFIER 'attribute'
+kernel_rs.cdl: line 115 : = '='
+kernel_rs.cdl: line 115 : C_EXP 'C_EXP'
+kernel_rs.cdl: line 115 : ( '('
+kernel_rs.cdl: line 115 : STRING_LITERAL '"TA_NULL"'
+kernel_rs.cdl: line 115 : ) ')'
+kernel_rs.cdl: line 115 : ; ';'
+set_owner: Celltype
+add_item: name=attribute   locale=(kernel_rs.cdl, 115)
+kernel_rs.cdl: line 116 : [ '['
+kernel_rs.cdl: line 116 : OMIT 'omit'
+kernel_rs.cdl: line 116 : ] ']'
+kernel_rs.cdl: line 116 : TYPE_NAME 'PRI'
+kernel_rs.cdl: line 116 : IDENTIFIER 'priority'
+kernel_rs.cdl: line 116 : ; ';'
+set_owner: Celltype
+add_item: name=priority   locale=(kernel_rs.cdl, 116)
+kernel_rs.cdl: line 117 : [ '['
+kernel_rs.cdl: line 117 : OMIT 'omit'
+kernel_rs.cdl: line 117 : ] ']'
+kernel_rs.cdl: line 117 : TYPE_NAME 'size_t'
+kernel_rs.cdl: line 117 : IDENTIFIER 'stackSize'
+kernel_rs.cdl: line 117 : ; ';'
+set_owner: Celltype
+add_item: name=stackSize   locale=(kernel_rs.cdl, 117)
+kernel_rs.cdl: line 118 : } '}'
+kernel_rs.cdl: line 118 : ; ';'
+kernel_rs.cdl: line 120 : FACTORY 'factory'
+kernel_rs.cdl: line 120 : { '{'
+kernel_rs.cdl: line 121 : IDENTIFIER 'write'
+kernel_rs.cdl: line 121 : ( '('
+kernel_rs.cdl: line 121 : STRING_LITERAL '"tecsgen.cfg"'
+kernel_rs.cdl: line 121 : , ','
+kernel_rs.cdl: line 122 : STRING_LITERAL '"CRE_TSK(%s, { %s, $cbp$, tTask_start, %s, %s, NULL });"'
+kernel_rs.cdl: line 122 : , ','
+kernel_rs.cdl: line 123 : IDENTIFIER 'id'
+kernel_rs.cdl: line 123 : , ','
+kernel_rs.cdl: line 123 : IDENTIFIER 'attribute'
+kernel_rs.cdl: line 123 : , ','
+kernel_rs.cdl: line 123 : IDENTIFIER 'priority'
+kernel_rs.cdl: line 123 : , ','
+kernel_rs.cdl: line 123 : IDENTIFIER 'stackSize'
+kernel_rs.cdl: line 123 : ) ')'
+kernel_rs.cdl: line 123 : ; ';'
+set_owner: Celltype
+kernel_rs.cdl: line 124 : IDENTIFIER 'write'
+kernel_rs.cdl: line 124 : ( '('
+kernel_rs.cdl: line 124 : STRING_LITERAL '"kernel_obj_ref.rs"'
+kernel_rs.cdl: line 124 : , ','
+kernel_rs.cdl: line 125 : STRING_LITERAL '"static %s_REF:TaskRef = unsafe{TaskRef::from_raw_nonnull(NonZeroI32::new(%s).unwrap())};"'
+kernel_rs.cdl: line 125 : , ','
+kernel_rs.cdl: line 126 : IDENTIFIER 'id'
+kernel_rs.cdl: line 126 : , ','
+kernel_rs.cdl: line 126 : IDENTIFIER 'id'
+kernel_rs.cdl: line 126 : ) ')'
+kernel_rs.cdl: line 126 : ; ';'
+set_owner: Celltype
+kernel_rs.cdl: line 128 : } '}'
+kernel_rs.cdl: line 128 : ; ';'
+kernel_rs.cdl: line 129 : CTFACTORY 'FACTORY'
+kernel_rs.cdl: line 129 : { '{'
+kernel_rs.cdl: line 130 : IDENTIFIER 'write'
+kernel_rs.cdl: line 130 : ( '('
+kernel_rs.cdl: line 130 : STRING_LITERAL '"tecsgen.cfg"'
+kernel_rs.cdl: line 130 : , ','
+kernel_rs.cdl: line 130 : STRING_LITERAL '"#include \"$ct$_tecsgen.h\""'
+kernel_rs.cdl: line 130 : ) ')'
+kernel_rs.cdl: line 130 : ; ';'
+set_owner: Celltype
+kernel_rs.cdl: line 131 : IDENTIFIER 'write'
+kernel_rs.cdl: line 131 : ( '('
+kernel_rs.cdl: line 131 : STRING_LITERAL '"$ct$_factory.h"'
+kernel_rs.cdl: line 131 : , ','
+kernel_rs.cdl: line 131 : STRING_LITERAL '"#include \"kernel_cfg.h\""'
+kernel_rs.cdl: line 131 : ) ')'
+kernel_rs.cdl: line 131 : ; ';'
+set_owner: Celltype
+kernel_rs.cdl: line 132 : IDENTIFIER 'write'
+kernel_rs.cdl: line 132 : ( '('
+kernel_rs.cdl: line 132 : STRING_LITERAL '"lib.rs"'
+kernel_rs.cdl: line 132 : , ','
+kernel_rs.cdl: line 132 : STRING_LITERAL '"mod kernel_cfg;"'
+kernel_rs.cdl: line 132 : ) ')'
+kernel_rs.cdl: line 132 : ; ';'
+set_owner: Celltype
+kernel_rs.cdl: line 133 : IDENTIFIER 'write'
+kernel_rs.cdl: line 133 : ( '('
+kernel_rs.cdl: line 133 : STRING_LITERAL '"lib.rs"'
+kernel_rs.cdl: line 133 : , ','
+kernel_rs.cdl: line 133 : STRING_LITERAL '"mod kernel_obj_ref;"'
+kernel_rs.cdl: line 133 : ) ')'
+kernel_rs.cdl: line 133 : ; ';'
+set_owner: Celltype
+kernel_rs.cdl: line 134 : IDENTIFIER 'write'
+kernel_rs.cdl: line 134 : ( '('
+kernel_rs.cdl: line 134 : STRING_LITERAL '"kernel_obj_ref.rs"'
+kernel_rs.cdl: line 134 : , ','
+kernel_rs.cdl: line 134 : STRING_LITERAL '"use crate::kernel_cfg::*;"'
+kernel_rs.cdl: line 134 : ) ')'
+kernel_rs.cdl: line 134 : ; ';'
+set_owner: Celltype
+kernel_rs.cdl: line 135 : } '}'
+kernel_rs.cdl: line 135 : ; ';'
+kernel_rs.cdl: line 136 : } '}'
+kernel_rs.cdl: line 136 : ; ';'
+pop Namespace
+use_kernel.cdl: line 4 : [ '['
+use_kernel.cdl: line 4 : GENERATE 'generate'
+use_kernel.cdl: line 4 : ( '('
+use_kernel.cdl: line 4 : IDENTIFIER 'ItronrsGenPlugin'
+use_kernel.cdl: line 4 : , ','
+use_kernel.cdl: line 4 : STRING_LITERAL '""'
+use_kernel.cdl: line 4 : ) ')'
+use_kernel.cdl: line 4 : ] ']'
+use_kernel.cdl: line 5 : CELLTYPE 'celltype'
+use_kernel.cdl: line 5 : IDENTIFIER 'tPrint'
+set_owner: Region
+add_item: name=tPrint   locale=(use_kernel.cdl, 5)
+use_kernel.cdl: line 5 : { '{'
+use_kernel.cdl: line 6 : ENTRY 'entry'
+use_kernel.cdl: line 6 : IDENTIFIER 'sTaskBody'
+use_kernel.cdl: line 6 : IDENTIFIER 'ePrint'
+use_kernel.cdl: line 6 : ; ';'
+set_owner: Celltype
+add_item: name=ePrint   locale=(use_kernel.cdl, 6)
+use_kernel.cdl: line 7 : CALL 'call'
+use_kernel.cdl: line 7 : IDENTIFIER 'sTask'
+use_kernel.cdl: line 7 : IDENTIFIER 'cTask'
+use_kernel.cdl: line 7 : ; ';'
+set_owner: Celltype
+add_item: name=cTask   locale=(use_kernel.cdl, 7)
+use_kernel.cdl: line 8 : ATTRIBUTE 'attr'
+use_kernel.cdl: line 8 : { '{'
+use_kernel.cdl: line 9 : INT32_T 'int32_t'
+use_kernel.cdl: line 9 : IDENTIFIER 'printattr'
+use_kernel.cdl: line 9 : = '='
+use_kernel.cdl: line 9 : INTEGER_CONSTANT '1'
+use_kernel.cdl: line 9 : ; ';'
+set_owner: Celltype
+add_item: name=printattr   locale=(use_kernel.cdl, 9)
+sign= ident=printattr val=1 max=2147483647 min=-2147483648
+use_kernel.cdl: line 10 : } '}'
+use_kernel.cdl: line 10 : ; ';'
+use_kernel.cdl: line 11 : VAR 'var'
+use_kernel.cdl: line 11 : { '{'
+use_kernel.cdl: line 12 : INT32_T 'int32_t'
+use_kernel.cdl: line 12 : IDENTIFIER 'printvar'
+use_kernel.cdl: line 12 : = '='
+use_kernel.cdl: line 12 : INTEGER_CONSTANT '10'
+use_kernel.cdl: line 12 : ; ';'
+set_owner: Celltype
+add_item: name=printvar   locale=(use_kernel.cdl, 12)
+sign= ident=printvar val=10 max=2147483647 min=-2147483648
+use_kernel.cdl: line 13 : } '}'
+use_kernel.cdl: line 13 : ; ';'
+use_kernel.cdl: line 14 : } '}'
+use_kernel.cdl: line 14 : ; ';'
+PluginModule: load_plugin: ItronrsGenPlugin
+require_lib: ItronrsGenPlugin.rb
+pluginClass=ItronrsGenPlugin
+require_lib: tecslib/plugin/ItronrsGenCelltypePlugin.rb
+*** Begin Ruby exception message ***
+uninitialized constant RustGenCelltypePlugin
+#### stack trace ####
+["/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecslib/plugin/ItronrsGenCelltypePlugin.rb:43:in `<top (required)>'",
+ "<internal:/usr/lib/ruby/vendor_ruby/rubygems/core_ext/kernel_require.rb>:85:in `require'",
+ "<internal:/usr/lib/ruby/vendor_ruby/rubygems/core_ext/kernel_require.rb>:85:in `require'",
+ "/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecsgen.rb:112:in `block (2 levels) in require_tecsgen_lib'",
+ "/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecsgen.rb:107:in `each'",
+ "/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecsgen.rb:107:in `block in require_tecsgen_lib'",
+ "/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecsgen.rb:106:in `each'",
+ "/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecsgen.rb:106:in `require_tecsgen_lib'",
+ "/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecslib/plugin/ItronrsGenPlugin.rb:47:in `get_plugin'",
+ "/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecslib/core/pluginModule.rb:86:in `load_plugin'",
+ "/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecslib/core/componentobj/celltypeModule.rb:60:in `apply_plugin'",
+ "/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecslib/core/componentobj/celltypeModule.rb:45:in `celltype_plugin'",
+ "/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecslib/core/componentobj/celltype.rb:243:in `end_of_parse'",
+ "bnf.y.rb:957:in `_reduce_266'",
+ "(eval):3:in `_racc_do_parse_c'",
+ "(eval):3:in `do_parse'",
+ "bnf.y.rb:1881:in `parse'",
+ "/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecslib/core/componentobj/import.rb:129:in `initialize'",
+ "/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecslib/core/tecsgen.rb:234:in `new'",
+ "/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecslib/core/tecsgen.rb:234:in `block in syntax_analisys'",
+ "/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecslib/core/tecsgen.rb:232:in `each'",
+ "/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecslib/core/tecsgen.rb:232:in `syntax_analisys'",
+ "/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecsgen.rb:243:in `run1'",
+ "/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecsgen.rb:597:in `<main>'"]
+*** End Ruby exception message ***
+SystemExit
+["/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecsgen.rb:156:in `exit'",
+ "/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecsgen.rb:156:in `require_tecsgen_lib'",
+ "/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecslib/plugin/ItronrsGenPlugin.rb:47:in `get_plugin'",
+ "/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecslib/core/pluginModule.rb:86:in `load_plugin'",
+ "/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecslib/core/componentobj/celltypeModule.rb:60:in `apply_plugin'",
+ "/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecslib/core/componentobj/celltypeModule.rb:45:in `celltype_plugin'",
+ "/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecslib/core/componentobj/celltype.rb:243:in `end_of_parse'",
+ "bnf.y.rb:957:in `_reduce_266'",
+ "(eval):3:in `_racc_do_parse_c'",
+ "(eval):3:in `do_parse'",
+ "bnf.y.rb:1881:in `parse'",
+ "/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecslib/core/componentobj/import.rb:129:in `initialize'",
+ "/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecslib/core/tecsgen.rb:234:in `new'",
+ "/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecslib/core/tecsgen.rb:234:in `block in syntax_analisys'",
+ "/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecslib/core/tecsgen.rb:232:in `each'",
+ "/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecslib/core/tecsgen.rb:232:in `syntax_analisys'",
+ "/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecsgen.rb:243:in `run1'",
+ "/home/yosshy/tecsgen-V1.9.0-Beta5/tecsgen/tecsgen/tecsgen.rb:597:in `<main>'"]
+use_kernel.cdl:14:2: error: P2003 ItronrsGenPlugin: load failed
+use_kernel.cdl: line 16 : [ '['
+use_kernel.cdl: line 16 : GENERATE 'generate'
+use_kernel.cdl: line 16 : ( '('
+use_kernel.cdl: line 16 : IDENTIFIER 'RustGenPlugin'
+use_kernel.cdl: line 16 : , ','
+use_kernel.cdl: line 16 : STRING_LITERAL '""'
+use_kernel.cdl: line 16 : ) ')'
+use_kernel.cdl: line 16 : ] ']'
+use_kernel.cdl: line 17 : CELL 'cell'
+use_kernel.cdl: line 17 : IDENTIFIER 'tPrint'
+use_kernel.cdl: line 17 : IDENTIFIER 'PrintA'
+Namespace.new_cell: ::::PrintA
+set_owner: Region
+add_item: name=PrintA   locale=(use_kernel.cdl, 17)
+Cell new_cell: PrintA false #<Cell:0x00005596b49500d8>
+use_kernel.cdl: line 17 : { '{'
+set_spec_list: PrintA
+use_kernel.cdl: line 18 : IDENTIFIER 'cTask'
+use_kernel.cdl: line 18 : = '='
+use_kernel.cdl: line 18 : IDENTIFIER 'Task'
+use_kernel.cdl: line 18 : . '.'
+use_kernel.cdl: line 18 : IDENTIFIER 'eTask'
+use_kernel.cdl: line 18 : ; ';'
+Join#new: cTask, 
+set_owner: Cell
+new_join: cell=PrintA add_item=cTask
+add_item: name=cTask   locale=(use_kernel.cdl, 18)
+use_kernel.cdl: line 19 : IDENTIFIER 'printattr'
+use_kernel.cdl: line 19 : = '='
+use_kernel.cdl: line 19 : INTEGER_CONSTANT '2'
+use_kernel.cdl: line 19 : ; ';'
+Join#new: printattr, 
+set_owner: Cell
+new_join: cell=PrintA add_item=printattr
+add_item: name=printattr   locale=(use_kernel.cdl, 19)
+use_kernel.cdl: line 20 : } '}'
+use_kernel.cdl: line 20 : ; ';'
+Celltype#new_cell( PrintA )
+PluginModule: load_plugin: RustGenPlugin
+require_lib: RustGenPlugin.rb
+pluginClass=RustGenPlugin
+require_lib: tecslib/plugin/RustGenCellPlugin.rb
+pluginClass=RustGenCellPlugin
+generate_and_parse: RustGenCellPlugin: gen_cdl_file
+push Namespace
+gen/tmp_RustGenCellPlugin_0.cdl: line 2 : GENERATE 'generate'
+gen/tmp_RustGenCellPlugin_0.cdl: line 2 : ( '('
+gen/tmp_RustGenCellPlugin_0.cdl: line 2 : IDENTIFIER 'RustGenPlugin'
+gen/tmp_RustGenCellPlugin_0.cdl: line 2 : , ','
+gen/tmp_RustGenCellPlugin_0.cdl: line 2 : :: '::'
+gen/tmp_RustGenCellPlugin_0.cdl: line 2 : IDENTIFIER 'tPrint'
+gen/tmp_RustGenCellPlugin_0.cdl: line 2 : , ','
+gen/tmp_RustGenCellPlugin_0.cdl: line 2 : STRING_LITERAL '""'
+gen/tmp_RustGenCellPlugin_0.cdl: line 2 : ) ')'
+gen/tmp_RustGenCellPlugin_0.cdl: line 2 : ; ';'
+generate: RustGenPlugin ::tPrint option=""
+PluginModule: load_plugin: RustGenPlugin
+pluginClass=RustGenPlugin
+require_lib: tecslib/plugin/RustGenCelltypePlugin.rb
+pluginClass=RustGenCelltypePlugin
+generate_and_parse: RustGenCelltypePlugin: gen_cdl_file
+push Namespace
+pop Namespace
+pop Namespace
+use_kernel.cdl: line 22 : [ '['
+use_kernel.cdl: line 22 : GENERATE 'generate'
+use_kernel.cdl: line 22 : ( '('
+use_kernel.cdl: line 22 : IDENTIFIER 'ItronrsGenPlugin'
+use_kernel.cdl: line 22 : , ','
+use_kernel.cdl: line 22 : STRING_LITERAL '""'
+use_kernel.cdl: line 22 : ) ')'
+use_kernel.cdl: line 22 : ] ']'
+use_kernel.cdl: line 23 : CELL 'cell'
+use_kernel.cdl: line 23 : IDENTIFIER 'tTask'
+use_kernel.cdl: line 23 : IDENTIFIER 'Task'
+Namespace.new_cell: ::::Task
+set_owner: Region
+add_item: name=Task   locale=(use_kernel.cdl, 23)
+Cell new_cell: Task false #<Cell:0x00005596b4cb9198>
+use_kernel.cdl: line 23 : { '{'
+set_spec_list: Task
+use_kernel.cdl: line 24 : IDENTIFIER 'cTaskBody'
+use_kernel.cdl: line 24 : = '='
+use_kernel.cdl: line 24 : IDENTIFIER 'PrintA'
+use_kernel.cdl: line 24 : . '.'
+use_kernel.cdl: line 24 : IDENTIFIER 'ePrint'
+use_kernel.cdl: line 24 : ; ';'
+Join#new: cTaskBody, 
+set_owner: Cell
+new_join: cell=Task add_item=cTaskBody
+add_item: name=cTaskBody   locale=(use_kernel.cdl, 24)
+use_kernel.cdl: line 26 : IDENTIFIER 'id'
+use_kernel.cdl: line 26 : = '='
+use_kernel.cdl: line 26 : C_EXP 'C_EXP'
+use_kernel.cdl: line 26 : ( '('
+use_kernel.cdl: line 26 : STRING_LITERAL '"TASK1"'
+use_kernel.cdl: line 26 : ) ')'
+use_kernel.cdl: line 26 : ; ';'
+Join#new: id, 
+set_owner: Cell
+new_join: cell=Task add_item=id
+add_item: name=id   locale=(use_kernel.cdl, 26)
+use_kernel.cdl: line 28 : IDENTIFIER 'task_ref'
+use_kernel.cdl: line 28 : = '='
+use_kernel.cdl: line 28 : C_EXP 'C_EXP'
+use_kernel.cdl: line 28 : ( '('
+use_kernel.cdl: line 28 : STRING_LITERAL '"unsafe{TaskRef::from_raw_nonnull(NonZeroI32::new(TASK1).unwrap())}"'
+use_kernel.cdl: line 28 : ) ')'
+use_kernel.cdl: line 28 : ; ';'
+Join#new: task_ref, 
+set_owner: Cell
+new_join: cell=Task add_item=task_ref
+add_item: name=task_ref   locale=(use_kernel.cdl, 28)
+use_kernel.cdl: line 29 : IDENTIFIER 'attribute'
+use_kernel.cdl: line 29 : = '='
+use_kernel.cdl: line 29 : C_EXP 'C_EXP'
+use_kernel.cdl: line 29 : ( '('
+use_kernel.cdl: line 29 : STRING_LITERAL '"TA_ACT"'
+use_kernel.cdl: line 29 : ) ')'
+use_kernel.cdl: line 29 : ; ';'
+Join#new: attribute, 
+set_owner: Cell
+new_join: cell=Task add_item=attribute
+add_item: name=attribute   locale=(use_kernel.cdl, 29)
+use_kernel.cdl: line 30 : IDENTIFIER 'stackSize'
+use_kernel.cdl: line 30 : = '='
+use_kernel.cdl: line 30 : INTEGER_CONSTANT '1024'
+use_kernel.cdl: line 30 : ; ';'
+Join#new: stackSize, 
+set_owner: Cell
+new_join: cell=Task add_item=stackSize
+add_item: name=stackSize   locale=(use_kernel.cdl, 30)
+use_kernel.cdl: line 31 : IDENTIFIER 'priority'
+use_kernel.cdl: line 31 : = '='
+use_kernel.cdl: line 31 : INTEGER_CONSTANT '42'
+use_kernel.cdl: line 31 : ; ';'
+Join#new: priority, 
+set_owner: Cell
+new_join: cell=Task add_item=priority
+add_item: name=priority   locale=(use_kernel.cdl, 31)
+use_kernel.cdl: line 32 : } '}'
+use_kernel.cdl: line 32 : ; ';'
+Celltype#new_cell( Task )
+PluginModule: load_plugin: ItronrsGenPlugin
+pluginClass=ItronrsGenPlugin
+require_lib: tecslib/plugin/ItronrsGenCellPlugin.rb
+pluginClass=ItronrsGenCellPlugin
+generate_and_parse: ItronrsGenCellPlugin: gen_cdl_file
+push Namespace
+gen/tmp_ItronrsGenCellPlugin_0.cdl: line 2 : GENERATE 'generate'
+gen/tmp_ItronrsGenCellPlugin_0.cdl: line 2 : ( '('
+gen/tmp_ItronrsGenCellPlugin_0.cdl: line 2 : IDENTIFIER 'ItronrsGenPlugin'
+gen/tmp_ItronrsGenCellPlugin_0.cdl: line 2 : , ','
+gen/tmp_ItronrsGenCellPlugin_0.cdl: line 2 : :: '::'
+gen/tmp_ItronrsGenCellPlugin_0.cdl: line 2 : IDENTIFIER 'tTask'
+gen/tmp_ItronrsGenCellPlugin_0.cdl: line 2 : , ','
+gen/tmp_ItronrsGenCellPlugin_0.cdl: line 2 : STRING_LITERAL '""'
+gen/tmp_ItronrsGenCellPlugin_0.cdl: line 2 : ) ')'
+gen/tmp_ItronrsGenCellPlugin_0.cdl: line 2 : ; ';'
+generate: ItronrsGenPlugin ::tTask option=""
+PluginModule: load_plugin: ItronrsGenPlugin
+pluginClass=ItronrsGenPlugin
+require_lib: tecslib/plugin/ItronrsGenCelltypePlugin.rb
+pluginClass=ItronrsGenCelltypePlugin
+generate_and_parse: ItronrsGenCelltypePlugin: gen_cdl_file
+push Namespace
+pop Namespace
+pop Namespace
+pop Namespace
+## End all parse (except Post Code)
+## Creating reverse join 
+## Checking all join
+set_definition_join PrintA
+set_definition_join in PrintA
+ set_definition_join: checking PrintA.cTask
+set_definition_join: PrintA.cTask celltype=tPrint
+set_definition: PrintA.cTask = Port
+Join#check_call_port_init:cell.call=PrintA.cTask
+set_definition: set_f_ref PrintA.cTask => Task
+set_f_ref: Task
+Join OK PrintA.cTask = Task.eTask #<Join:0x00005596b48aba38>
+Cell#get_ep_through_list: name=Task len=0
+ep_through_list: cell=Task len=0
+Cell#get_ep_through_list: name=Task len=0
+check_region PrintA.cTask => Task
+check_and_gen_through PrintA.cTask
+set_definition_join in Task
+ set_definition_join: checking Task.cTaskBody
+set_definition_join: Task.cTaskBody celltype=tTask
+set_definition: Task.cTaskBody = Port
+Join#check_call_port_init:cell.call=Task.cTaskBody
+set_definition: set_f_ref Task.cTaskBody => PrintA
+set_f_ref: PrintA
+Join OK Task.cTaskBody = PrintA.ePrint #<Join:0x00005596b4cb3bd0>
+Cell#get_ep_through_list: name=PrintA len=0
+ep_through_list: cell=PrintA len=0
+Cell#get_ep_through_list: name=PrintA len=0
+check_region Task.cTaskBody => PrintA
+check_and_gen_through Task.cTaskBody
+create_allocator_join: Task.cTaskBody=>PrintA
+ set_definition_join: checking Task.id
+set_definition_join: Task.id celltype=tTask
+set_definition: Task.id = Decl
+ set_definition_join: checking Task.task_ref
+set_definition_join: Task.task_ref celltype=tTask
+set_definition: Task.task_ref = Decl
+ set_definition_join: checking Task.attribute
+set_definition_join: Task.attribute celltype=tTask
+set_definition: Task.attribute = Decl
+ set_definition_join: checking Task.stackSize
+set_definition_join: Task.stackSize celltype=tTask
+set_definition: Task.stackSize = Decl
+sign=UNSIGNED ident=stackSize val=1024 max= min=0
+ set_definition_join: checking Task.priority
+set_definition_join: Task.priority celltype=tTask
+set_definition: Task.priority = Decl
+sign=SIGNED ident=priority val=42 max= min=
+create_allocator_join: PrintA.cTask=>Task
+ set_definition_join: checking PrintA.printattr
+set_definition_join: PrintA.printattr celltype=tPrint
+set_definition: PrintA.printattr = Decl
+sign= ident=printattr val=2 max=2147483647 min=-2147483648
+set_definition_join Task
+## Generating Post Code
+------------  gen_plugin_post_code  -------------
+PluginModule {:ItronrsGenPlugin=>:MultiPlugin, :RustGenPlugin=>:MultiPlugin, :RustGenCellPlugin=>1, :RustGenCelltypePlugin=>1, :ItronrsGenCellPlugin=>1, :ItronrsGenCelltypePlugin=>1}
+pluginModule: prio=0 plugin=ItronrsGenPlugin
+pluginModule: prio=0 plugin=RustGenPlugin
+pluginModule: prio=50000 plugin=RustGenCellPlugin
+pluginModule: prio=30000 plugin=RustGenCelltypePlugin
+pluginModule: prio=50000 plugin=ItronrsGenCellPlugin
+pluginModule: prio=30000 plugin=ItronrsGenCelltypePlugin
+PluginModule: RustGenCelltypePlugin
+## Import Post Code
+base_dir=. while searching gen/tmp_RustGenCelltypePlugin_post_code.cdl
+push Namespace
+pop Namespace
+PluginModule: ItronrsGenCelltypePlugin
+## Import Post Code
+base_dir=. while searching gen/tmp_ItronrsGenCelltypePlugin_post_code.cdl
+push Namespace
+pop Namespace
+PluginModule: RustGenCellPlugin
+## Import Post Code
+base_dir=. while searching gen/tmp_RustGenCellPlugin_post_code.cdl
+push Namespace
+pop Namespace
+PluginModule: ItronrsGenCellPlugin
+## Import Post Code
+base_dir=. while searching gen/tmp_ItronrsGenCellPlugin_post_code.cdl
+push Namespace
+pop Namespace
+pluginModule: prio=0 plugin=ItronrsGenPlugin
+pluginModule: prio=0 plugin=RustGenPlugin
+## Creating reverse join (for post code) 
+## Checking all join (for cells generated by Post Code
+set_definition_join PrintA
+set_definition_join Task
+set_max_entry_port_inner_cell name=PrintA entry_array_max_subscript.len=0
+set_max_entry_port_inner_cell name=Task entry_array_max_subscript.len=0
+## Set require join
+## Set fixed join
+## Setting port reference count
+set_port_reference_count: PrintA.cTask => Task.eTask
+set_port_reference_count: Task.cTaskBody => PrintA.ePrint
+## Checking all join
+check_join PrintA
+check_join: PrintA tPrint cTask
+get_path_string: ::
+check_region2 PrintA => ::Task.eTask
+check_join Task
+check_join: Task tTask cTaskBody
+get_path_string: ::
+check_region2 Task => ::PrintA.ePrint
+## Checking referenced but undefined cell
+check_ref_but_undef: PrintA
+check_ref_but_undef: Task
+:: has  cells
+Region.path_str: ::
+## Unset optimize variables
+1 error
