@@ -49,8 +49,8 @@ class ItronrsGenCelltypePlugin < RustGenCelltypePlugin
     def initialize( celltype, option )
       super
       @celltype = celltype
-      # @plugin_arg_str = option.gsub( /\A"(.*)/, '\1' )    # 前後の "" を取り除く
-      # @plugin_arg_str.sub!( /(.*)"\z/, '\1' )
+      @plugin_arg_str = option.gsub( /\A"(.*)/, '\1' )    # 前後の "" を取り除く
+      @plugin_arg_str.sub!( /(.*)"\z/, '\1' )
       @plugin_arg_str = CDLString.remove_dquote option
       @plugin_arg_list = {}
       @cell_list =[]
@@ -148,6 +148,10 @@ class ItronrsGenCelltypePlugin < RustGenCelltypePlugin
     # file 以外の他のファイルにファクトリコードを生成してもよい
     # セルタイププラグインが指定されたセルタイプのみ呼び出される
     def gen_factory file
+
+        # @celltype.get_cell_list.each{ |cell|
+        #     gen_mod_in_lib_rs_for_cell cell
+        # }
 
         super(file)
 

@@ -63,7 +63,7 @@ void         tPrint_ePrint_main(tPrint_IDX idx);
 #define  tPrint_CB_TYPE_ONLY
 #define TOPPERS_CB_TYPE_ONLY
 #endif  /* TOPPERS_CB_TYPE_ONLY */
-#include "tTask_tecsgen.h"
+#include "tTask_rs_tecsgen.h"
 #ifdef  tPrint_CB_TYPE_ONLY
 #undef TOPPERS_CB_TYPE_ONLY
 #endif /* tPrint_CB_TYPE_ONLY */
@@ -94,44 +94,44 @@ void         tPrint_ePrint_main(tPrint_IDX idx);
 #ifndef TECSFLOW
  /* call port function macro #_CPM_# */
 #define tPrint_cTask_activate( p_that ) \
-	  tTask_eTask_activate( \
-	   &tTask_INIB_tab[0] )
+	  tTask_rs_eTask_activate( \
+	   &tTask_rs_INIB_tab[0] )
 #define tPrint_cTask_cancelActivate( p_that ) \
-	  tTask_eTask_cancelActivate( \
-	   &tTask_INIB_tab[0] )
+	  tTask_rs_eTask_cancelActivate( \
+	   &tTask_rs_INIB_tab[0] )
 #define tPrint_cTask_getTaskState( p_that, p_tskstat ) \
-	  tTask_eTask_getTaskState( \
-	   &tTask_INIB_tab[0], (p_tskstat) )
+	  tTask_rs_eTask_getTaskState( \
+	   &tTask_rs_INIB_tab[0], (p_tskstat) )
 #define tPrint_cTask_changePriority( p_that, priority ) \
-	  tTask_eTask_changePriority( \
-	   &tTask_INIB_tab[0], (priority) )
+	  tTask_rs_eTask_changePriority( \
+	   &tTask_rs_INIB_tab[0], (priority) )
 #define tPrint_cTask_getPriority( p_that, p_priority ) \
-	  tTask_eTask_getPriority( \
-	   &tTask_INIB_tab[0], (p_priority) )
+	  tTask_rs_eTask_getPriority( \
+	   &tTask_rs_INIB_tab[0], (p_priority) )
 #define tPrint_cTask_refer( p_that, pk_taskStatus ) \
-	  tTask_eTask_refer( \
-	   &tTask_INIB_tab[0], (pk_taskStatus) )
+	  tTask_rs_eTask_refer( \
+	   &tTask_rs_INIB_tab[0], (pk_taskStatus) )
 #define tPrint_cTask_wakeup( p_that ) \
-	  tTask_eTask_wakeup( \
-	   &tTask_INIB_tab[0] )
+	  tTask_rs_eTask_wakeup( \
+	   &tTask_rs_INIB_tab[0] )
 #define tPrint_cTask_cancelWakeup( p_that ) \
-	  tTask_eTask_cancelWakeup( \
-	   &tTask_INIB_tab[0] )
+	  tTask_rs_eTask_cancelWakeup( \
+	   &tTask_rs_INIB_tab[0] )
 #define tPrint_cTask_releaseWait( p_that ) \
-	  tTask_eTask_releaseWait( \
-	   &tTask_INIB_tab[0] )
+	  tTask_rs_eTask_releaseWait( \
+	   &tTask_rs_INIB_tab[0] )
 #define tPrint_cTask_suspend( p_that ) \
-	  tTask_eTask_suspend( \
-	   &tTask_INIB_tab[0] )
+	  tTask_rs_eTask_suspend( \
+	   &tTask_rs_INIB_tab[0] )
 #define tPrint_cTask_resume( p_that ) \
-	  tTask_eTask_resume( \
-	   &tTask_INIB_tab[0] )
+	  tTask_rs_eTask_resume( \
+	   &tTask_rs_INIB_tab[0] )
 #define tPrint_cTask_raiseTerminate( p_that ) \
-	  tTask_eTask_raiseTerminate( \
-	   &tTask_INIB_tab[0] )
+	  tTask_rs_eTask_raiseTerminate( \
+	   &tTask_rs_INIB_tab[0] )
 #define tPrint_cTask_terminate( p_that ) \
-	  tTask_eTask_terminate( \
-	   &tTask_INIB_tab[0] )
+	  tTask_rs_eTask_terminate( \
+	   &tTask_rs_INIB_tab[0] )
 
 #else  /* TECSFLOW */
 #define tPrint_cTask_activate( p_that ) \

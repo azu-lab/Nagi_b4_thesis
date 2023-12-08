@@ -1,6 +1,3 @@
-use crate::kernel_cfg::*;  //特別な生成部
-use itron::abi::*;  //特別な生成部
-use itron::TaskRef::*;  //特別な生成部
 use crate::{s_task::*, si_task::*, s_task_body::*, print_a::*, si_notification_handler::*};
 
 pub struct Task<'a, T>

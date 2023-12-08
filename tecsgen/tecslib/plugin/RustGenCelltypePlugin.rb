@@ -47,8 +47,8 @@ class RustGenCelltypePlugin < CelltypePlugin
     def initialize( celltype, option )
       super
       @celltype = celltype
-      # @plugin_arg_str = option.gsub( /\A"(.*)/, '\1' )    # 前後の "" を取り除く
-      # @plugin_arg_str.sub!( /(.*)"\z/, '\1' )
+      @plugin_arg_str = option.gsub( /\A"(.*)/, '\1' )    # 前後の "" を取り除く
+      @plugin_arg_str.sub!( /(.*)"\z/, '\1' )
       @plugin_arg_str = CDLString.remove_dquote option
       @plugin_arg_list = {}
       @cell_list =[]
@@ -337,6 +337,8 @@ class RustGenCelltypePlugin < CelltypePlugin
 
                 sig = port.get_signature
                 sig_name = sig.get_global_name.to_s
+
+                gen_mod_in_main_lib_rs_for_signature sig
                 # if File.exist?("#{$gen}/#{snake_case(sig_name)}.rs") then
                 #     return
                 # else
@@ -417,21 +419,34 @@ class RustGenCelltypePlugin < CelltypePlugin
         end
     end
 
-    def gen_mod_in_lib_rs cell
-        if @plugin_arg_str == "main" then
-            if File.exist?("#{$gen}/main.rs") then
-                file = CFile.open( "#{$gen}/main.rs", "a" )
-            else
-                file = CFile.open( "#{$gen}/main.rs", "w" )
-            end
-        else
-            if File.exist?("#{$gen}/lib.rs") then
-                file = CFile.open( "#{$gen}/lib.rs", "a" )
-            else
-                file = CFile.open( "#{$gen}/lib.rs", "w" )
+    def gen_mod_in_main_lib_rs_for_cell cell
+        plugin_option = @plugin_arg_str.strip
+        if plugin_option == "main" || plugin_option == "lib" then
+            tempfile = CFile.open( "#{$gen}/#{plugin_option}.rs", "a" )
+            tempfile.print "mod #{snake_case(cell.get_global_name.to_s)};\n"
+            tempfile.close
+            lines = File.readlines("#{$gen}/#{plugin_option}.rs", chomp: true).uniq!
+            if lines != nil then
+                File.open("#{$gen}/#{plugin_option}.rs", 'w') do |file|
+                    lines.each { |line| file.puts line }
+                end
             end
         end
-        file.print "mod #{snake_case(cell.get_global_name.to_s)};\n"
+    end
+
+    def gen_mod_in_main_lib_rs_for_signature signature
+        plugin_option = @plugin_arg_str.strip
+        if plugin_option == "main" || plugin_option == "lib" then
+            tempfile = CFile.open( "#{$gen}/#{plugin_option}.rs", "a" )
+            tempfile.print "mod #{snake_case(signature.get_global_name.to_s)};\n"
+            tempfile.close
+            lines = File.readlines("#{$gen}/#{plugin_option}.rs", chomp: true).uniq!
+            if lines != nil then
+                File.open("#{$gen}/#{plugin_option}.rs", 'w') do |file|
+                    lines.each { |line| file.puts line }
+                end
+            end
+        end
     end
 
     def creat_itron_rs_use cell
@@ -881,6 +896,21 @@ class RustGenCelltypePlugin < CelltypePlugin
             end # if port.get_port_type == :ENTRY then
         } # celltype.get_port_list.each
     end
+
+    def gen_mod_test cell
+        if @plugin_arg_str == "lib" || @plugin_arg_str == "main" then
+            lib = CFile.open( "#{$gen}/#{@plugin_arg_str}.rs", "a" )
+            lib.print "#{@plugin_arg_str}\n"
+            lib.print "mod #{snake_case(cell.get_global_name.to_s)};\n"
+            lib.close
+            lines = File.readlines("#{$gen}/#{@plugin_arg_str}.rs").uniq!
+            if lines != nil then
+                File.open("#{$gen}/#{@plugin_arg_str}.rs", 'w') do |file|
+                    lines.each { |line| file.puts line }
+                end
+            end
+        end
+    end
         
     #=== tCelltype_factory.h に挿入するコードを生成する
     # file 以外の他のファイルにファクトリコードを生成してもよい
@@ -908,12 +938,15 @@ class RustGenCelltypePlugin < CelltypePlugin
         @celltype.get_cell_list.each{ |cell|
             if cell.is_generate? then
                 # lib.rs に mod を追加する
-                # gen_mod_in_lib_rs cell
                 global_file_name = cell.get_global_name
                 global_file_name = global_file_name.to_s
                 # new_string = global_file_name[1..-1]
                 global_file_name = snake_case(global_file_name)
             end
+
+            gen_mod_in_main_lib_rs_for_cell cell
+
+            # gen_mod_test cell
 
             file = CFile.open( "#{$gen}/#{global_file_name}.rs", "w" )
 

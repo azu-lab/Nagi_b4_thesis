@@ -59,7 +59,7 @@ class RustGenCellPlugin < CellPlugin
   def gen_cdl_file file
     file.print <<EOT
 /* apply CppIfGenCelltypePlugin to celltype '#{@cell.get_celltype.get_name}' (celltype of cell '#{@cell.get_name}') */
-generate( RustGenPlugin, #{@cell.get_celltype.get_namespace_path.get_path_str}, "" ); 
+generate( RustGenPlugin, #{@cell.get_celltype.get_namespace_path.get_path_str}, "#{@plugin_arg_str}" ); 
 
 EOT
   end

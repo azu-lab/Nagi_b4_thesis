@@ -1,10 +1,10 @@
-# Celltype: tTask  #_MDEP_#
-$(_TECS_OBJ_DIR)tTask_tecsgen.o : tTask_tecsgen.c  $(GEN_DIR)/tPrint_tecsgen.h  $(GEN_DIR)/tTask_tecsgen.h  tTask_inline.h $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sTaskBody_tecsgen.h $(GEN_DIR)/sTask_tecsgen.h $(GEN_DIR)/siTask_tecsgen.h $(GEN_DIR)/tTask_factory.h $(GEN_DIR)/tTask_tecsgen.h tTask_inline.h
-$(_TECS_OBJ_DIR)tTask_templ.o : tTask_templ.c  $(GEN_DIR)/tPrint_tecsgen.h  $(GEN_DIR)/tTask_tecsgen.h  tTask_inline.h $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sTaskBody_tecsgen.h $(GEN_DIR)/sTask_tecsgen.h $(GEN_DIR)/siTask_tecsgen.h $(GEN_DIR)/tTask_factory.h $(GEN_DIR)/tTask_tecsgen.h tTask_inline.h
-$(_TECS_OBJ_DIR)tTask.o : tTask.c  $(GEN_DIR)/tPrint_tecsgen.h  $(GEN_DIR)/tTask_tecsgen.h  tTask_inline.h $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sTaskBody_tecsgen.h $(GEN_DIR)/sTask_tecsgen.h $(GEN_DIR)/siTask_tecsgen.h $(GEN_DIR)/tTask_factory.h $(GEN_DIR)/tTask_tecsgen.h tTask_inline.h
+# Celltype: tTask_rs  #_MDEP_#
+$(_TECS_OBJ_DIR)tTask_rs_tecsgen.o : tTask_rs_tecsgen.c  $(GEN_DIR)/tPrint_tecsgen.h  $(GEN_DIR)/tTask_rs_tecsgen.h  tTask_rs_inline.h $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sTaskBody_tecsgen.h $(GEN_DIR)/sTask_tecsgen.h $(GEN_DIR)/siTask_tecsgen.h $(GEN_DIR)/tTask_rs_factory.h $(GEN_DIR)/tTask_rs_tecsgen.h tTask_rs_inline.h
+$(_TECS_OBJ_DIR)tTask_rs_templ.o : tTask_rs_templ.c  $(GEN_DIR)/tPrint_tecsgen.h  $(GEN_DIR)/tTask_rs_tecsgen.h  tTask_rs_inline.h $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sTaskBody_tecsgen.h $(GEN_DIR)/sTask_tecsgen.h $(GEN_DIR)/siTask_tecsgen.h $(GEN_DIR)/tTask_rs_factory.h $(GEN_DIR)/tTask_rs_tecsgen.h tTask_rs_inline.h
+$(_TECS_OBJ_DIR)tTask_rs.o : tTask_rs.c  $(GEN_DIR)/tPrint_tecsgen.h  $(GEN_DIR)/tTask_rs_tecsgen.h  tTask_rs_inline.h $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sTaskBody_tecsgen.h $(GEN_DIR)/sTask_tecsgen.h $(GEN_DIR)/siTask_tecsgen.h $(GEN_DIR)/tTask_rs_factory.h $(GEN_DIR)/tTask_rs_tecsgen.h tTask_rs_inline.h
 
 # Celltype: tPrint  #_MDEP_#
-$(_TECS_OBJ_DIR)tPrint_tecsgen.o : tPrint_tecsgen.c  $(GEN_DIR)/tPrint_tecsgen.h  $(GEN_DIR)/tTask_tecsgen.h  tTask_inline.h $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sTaskBody_tecsgen.h $(GEN_DIR)/sTask_tecsgen.h $(GEN_DIR)/tPrint_factory.h $(GEN_DIR)/tPrint_tecsgen.h
-$(_TECS_OBJ_DIR)tPrint_templ.o : tPrint_templ.c  $(GEN_DIR)/tPrint_tecsgen.h  $(GEN_DIR)/tTask_tecsgen.h  tTask_inline.h $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sTaskBody_tecsgen.h $(GEN_DIR)/sTask_tecsgen.h $(GEN_DIR)/tPrint_factory.h $(GEN_DIR)/tPrint_tecsgen.h
-$(_TECS_OBJ_DIR)tPrint.o : tPrint.c  $(GEN_DIR)/tPrint_tecsgen.h  $(GEN_DIR)/tTask_tecsgen.h  tTask_inline.h $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sTaskBody_tecsgen.h $(GEN_DIR)/sTask_tecsgen.h $(GEN_DIR)/tPrint_factory.h $(GEN_DIR)/tPrint_tecsgen.h
+$(_TECS_OBJ_DIR)tPrint_tecsgen.o : tPrint_tecsgen.c  $(GEN_DIR)/tPrint_tecsgen.h  $(GEN_DIR)/tTask_rs_tecsgen.h  tTask_rs_inline.h $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sTaskBody_tecsgen.h $(GEN_DIR)/sTask_tecsgen.h $(GEN_DIR)/tPrint_factory.h $(GEN_DIR)/tPrint_tecsgen.h
+$(_TECS_OBJ_DIR)tPrint_templ.o : tPrint_templ.c  $(GEN_DIR)/tPrint_tecsgen.h  $(GEN_DIR)/tTask_rs_tecsgen.h  tTask_rs_inline.h $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sTaskBody_tecsgen.h $(GEN_DIR)/sTask_tecsgen.h $(GEN_DIR)/tPrint_factory.h $(GEN_DIR)/tPrint_tecsgen.h
+$(_TECS_OBJ_DIR)tPrint.o : tPrint.c  $(GEN_DIR)/tPrint_tecsgen.h  $(GEN_DIR)/tTask_rs_tecsgen.h  tTask_rs_inline.h $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sTaskBody_tecsgen.h $(GEN_DIR)/sTask_tecsgen.h $(GEN_DIR)/tPrint_factory.h $(GEN_DIR)/tPrint_tecsgen.h
 
