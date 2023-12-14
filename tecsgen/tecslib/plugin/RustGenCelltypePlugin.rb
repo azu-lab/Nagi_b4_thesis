@@ -118,6 +118,7 @@ class RustGenCelltypePlugin < CelltypePlugin
         param_list = []
         param_list_diff = []
         param_return = []
+        lifetime_annotation_flag = false
         # シグニチャの param_decl を取得する
         # 今回は receive が引数に存在していないからうまくいったが，引数にもしある場合は要素数がずれる．
         sig.each_param{ |func_decl, param_decl|
@@ -158,6 +159,10 @@ class RustGenCelltypePlugin < CelltypePlugin
         param_list_str =[]
         param_return_str =[]
         param_list.each{ |param_decl|
+            param_type = param_decl.get_type.get_type_str
+            if check_lifetime_annotation(param_type) then
+                lifetime_annotation_flag = true
+            end
             if param_decl == "return" then
                 next
             elsif param_list_diff.include?(param_decl.get_name.to_s) then
@@ -180,9 +185,64 @@ class RustGenCelltypePlugin < CelltypePlugin
                 end
             end
         }
-        return param_list_str , param_return_str
+        return param_list_str, param_return_str, lifetime_annotation_flag
+    end
+
+    # 正規表現を用いて，Option 型などに変換する
+    def convert_rust_type_string(input)
+        # 正規表現パターンの配列を定義
+        patterns = [
+          /Option__(\w+)__/,
+          /Option_Ref__(\w+)__/,
+          /Option_Ref_mut__(\w+)__/,
+          /Option_Ref_a_mut__(\w+)__/,
+          /Ref__(\w+)__/,
+          /Ref_mut__(\w+)__/,
+          /Ref_a__(\w+)__/,
+          # 他にも必要なパターンがあれば追加
+        ]
+      
+        # 各パターンに対する変換ロジックを定義
+        conversion_rules = {
+          0 => lambda { |type_name| "Option<#{type_name}>" },
+          1 => lambda { |type_name| "Option<& #{type_name}>" },
+          2 => lambda { |type_name| "Option<&mut #{type_name}>" },
+          3 => lambda { |type_name| "Option<&'a mut #{type_name}>" },
+          4 => lambda { |type_name| "&#{type_name}" },
+          5 => lambda { |type_name| "&mut #{type_name}" },
+          6 => lambda { |type_name| "&'a #{type_name}" },
+          # 他にも必要な変換ルールがあれば追加
+        }
+      
+        # 各パターンに対して処理を行う
+        result = input.dup
+        patterns.each_with_index do |pattern, index|
+          result.gsub!(pattern) do |match|
+            type_name = $1
+            conversion_rules[index].call(type_name)
+          end
+        end
+      
+        return result
     end
     
+    # 正規表現のパターンを用いて，ライフタイムが必要かチェックする関数
+    # 正規表現のパターン以外には対応していない
+    def check_lifetime_annotation str
+        # 正規表現パターンの配列を定義
+        patterns = [
+            /Option_Ref_a_mut__(\w+)__/,
+            /Ref_a__(\w+)__/,
+            # 他にも必要なパターンがあれば追加
+        ]
+
+        # 各正規表現パターンとの一致を確認
+        match_found = patterns.any? { |pattern| str =~ pattern }
+
+        return match_found
+
+    end
+
     # @use_string_list に格納されている文字列を元に use 文を生成する
     def gen_use_header file
         if @celltype.get_var_list.length != 0 then
@@ -257,17 +317,22 @@ class RustGenCelltypePlugin < CelltypePlugin
             elsif c_type.get_max != nil then
                 str = "check_max"
             else
-                str = c_type.get_type_str.gsub("*", "")
+                # ポインタの中の型に対して，もう一度 c_type_to_rust_type を呼び出す
+                type = c_type_to_rust_type(c_type.get_type)
+                str = type.gsub("*", "")
+                str = convert_rust_type_string(str)
                 if str == "void" then
                     str = "unknown"
                 end
             end
         else
             str = c_type.get_type_str
+            str = convert_rust_type_string(str)
             if str == "void" then
                 str = "unknown"
             end
         end
+        # print "c_type_to_rust_type: #{str}\n"
         return str
     end
 
@@ -286,11 +351,15 @@ class RustGenCelltypePlugin < CelltypePlugin
 
             file2.print "pub trait #{camel_case(snake_case(sig_name))} {\n\n"
             # シグニチャの引数の文字列を取得する
-            param_list_str, param_return_str = get_sig_param_str sig
+            param_list_str, param_return_str, lifetime_flag = get_sig_param_str sig
 
             sig.get_function_head_array.each{ |func_head|
                 return_flag = false
-                file2.print "\tfn #{func_head.get_name}(&self"
+                file2.print "\tfn #{func_head.get_name}"
+                if lifetime_flag then
+                    file2.print("<'a>")
+                end
+                file2.print "(&self"
                 param_list_item = func_head.get_paramlist.get_items
                 num = param_list_item.size
                 num.times do
@@ -347,11 +416,15 @@ class RustGenCelltypePlugin < CelltypePlugin
 
                 file2.print "pub trait #{camel_case(snake_case(sig_name))} {\n\n"
                 # シグニチャの引数の文字列を取得する
-                param_list_str, param_return_str = get_sig_param_str sig
+                param_list_str, param_return_str, lifetime_flag = get_sig_param_str sig
 
                 sig.get_function_head_array.each{ |func_head|
                     return_flag = false
-                    file2.print "\tfn #{func_head.get_name}(&self"
+                    file2.print "\tfn #{func_head.get_name}"
+                    if lifetime_flag then
+                        file2.print("<'a>")
+                    end
+                    file2.print "(&self"
                     param_list_item = func_head.get_paramlist.get_items
                     num = param_list_item.size
                     num.times do
@@ -576,14 +649,34 @@ class RustGenCelltypePlugin < CelltypePlugin
     # セル構造体の変数フィールドの定義を生成
     def gen_rust_cell_structure_variable file, cell
         if @celltype.get_var_list.length != 0 then
-            file.print "\tpub variable: &'a Mutex<#{camel_case(snake_case(cell.get_global_name.to_s))}Var>,\n"
+            file.print "\tpub variable: &'a Mutex<#{camel_case(snake_case(cell.get_global_name.to_s))}Var"
+            # ライフタイムアノテーションの生成部
+            # TODO：ライフタイムについては，もう少し厳格にする必要がある
+            @celltype.get_var_list.each{ |var|
+                var_type_name = var.get_type.get_type_str
+                if check_lifetime_annotation var_type_name then
+                    file.print "<'a>"
+                    break
+                end
+            }
+            file.print ">,\n"
         end
     end
 
     # 変数構造体の定義を生成
     def gen_rust_variable_structure file, cell
         if @celltype.get_var_list.length != 0 then
-            file.print "pub struct #{camel_case(snake_case(cell.get_global_name.to_s))}Var {\n"
+            file.print "pub struct #{camel_case(snake_case(cell.get_global_name.to_s))}Var" 
+            # ライフタイムアノテーションの生成部
+            # TODO：ライフタイムについては，もう少し厳格にする必要がある
+            @celltype.get_var_list.each{ |var|
+                var_type_name = var.get_type.get_type_str
+                if check_lifetime_annotation var_type_name then
+                    file.print "<'a>"
+                    break
+                end
+            }
+            file.print "{\n"
 
             # 変数構造体のフィールドの定義を生成
             @celltype.get_var_list.each{ |var|
@@ -742,23 +835,40 @@ class RustGenCelltypePlugin < CelltypePlugin
                     else
                         entryport_name = camel_case(snake_case(callport.get_real_callee_port.get_name.to_s))
                         call_cell_name = camel_case(snake_case(callport.get_real_callee_cell.get_global_name.to_s))
+                        callee_cell = callport.get_real_callee_cell
+                        callee_celltype = callee_cell.get_celltype
                         if index == callport_list.length - 1
                             # 最後の要素の処理
                             file.print ", #{entryport_name}For#{call_cell_name}"
+                            callee_celltype.get_port_list.each do |callee_port|
+                                if callee_port.get_port_type == :CALL then
+                                    file.print "<'_>"
+                                    break
+                                end
+                            end
                         else
                             # 通常の要素の処理
                             file.print ", #{entryport_name}For#{call_cell_name}"
+                            callee_celltype.get_port_list.each do |callee_port|
+                                if callee_port.get_port_type == :CALL then
+                                    file.print "<'_>"
+                                end
+                            end
                         end
                     end
                 end # port_list.each_with_index
 
                 file.print "> {\n\n"
 
-                sig_param_str_list , _ = get_sig_param_str sig
+                sig_param_str_list, _, lifetime_flag = get_sig_param_str sig
 
                 # 空の関数を生成
                 sig.get_function_head_array.each{ |func_head|
-                    file.print "\tfn #{func_head.get_name}(&self"
+                    file.print "\tfn #{func_head.get_name}"
+                    if lifetime_flag then
+                        file.print "<'a>"
+                    end
+                    file.print"(&self"
                     param_num = func_head.get_paramlist.get_items.size
                     param_num.times do
                         temp = sig_param_str_list.shift
@@ -815,10 +925,8 @@ class RustGenCelltypePlugin < CelltypePlugin
                             file.print ", #{alphabet}: #{camel_case(snake_case(callport.get_signature.get_global_name.to_s))}"
                         end
                     end
-                    if jenerics_flag == false then
-                        file.print ">"
-                    end
                 end
+                file.print ">"
 
                 # impl する型を生成
                 file.print " #{camel_case(snake_case(cell.get_global_name.to_s))}<'_"

@@ -76,15 +76,15 @@ class ItronrsGenCelltypePlugin < RustGenCelltypePlugin
     # セルタイプ名から，カーネルオブジェクトかどうか判断し，Ref型文字列に変換する
     def get_itronrs_kernel_obj_ref_str celltype_name
         case celltype_name
-        when "tTask"
+        when "tTask_rs"
             return "TaskRef"
-        when "tSemaphore"
+        when "tSemaphore_rs"
             return "SemaphoreRef"
-        when "tEventflag"
+        when "tEventflag_rs"
             return "EventflagRef"
-        when "tDataqueue"
+        when "tDataqueue_rs"
             return "DataqueueRef"
-        when "tMutex"
+        when "tMutex_rs"
             return "MutexRef"
         else
             return "unknown"
@@ -98,7 +98,8 @@ class ItronrsGenCelltypePlugin < RustGenCelltypePlugin
             file.print "use crate::kernel_cfg::*;  //特別な生成部\n"
             # file.print "use crate::kernel_obj_ref::*;  //特別な生成部\n"
             file.print "use itron::abi::*;  //特別な生成部\n"
-            file.print "use itron::#{obj_ref_str}::*;  //特別な生成部\n"
+            # TODO: task の部分の変換
+            file.print "use itron::task::#{obj_ref_str}::*;  //特別な生成部\n"
         end
         super(file)
     end

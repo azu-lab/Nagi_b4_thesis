@@ -1,7 +1,7 @@
 use crate::kernel_cfg::*;  //特別な生成部
 use itron::abi::*;  //特別な生成部
-use itron::TaskRef::*;  //特別な生成部
-use crate::{s_task::*, si_task::*, s_task_body::*, print_a::*, si_notification_handler::*};
+use itron::task::TaskRef::*;  //特別な生成部
+use crate::{s_task::*, si_task::*, s_task_body::*, taskbody::*, si_notification_handler::*};
 
 pub struct Task<'a, T>
 where
@@ -11,13 +11,13 @@ where
 	pub task_ref: TaskRef<'a>,  //特別な生成部
 }
 
-pub static TASK: Task<EPrint> = Task {
-	c_task_body: &EPRINTFORPRINTA,
+pub static TASK: Task<ETaskbody> = Task {
+	c_task_body: &ETASKBODYFORTASKBODY,
 	task_ref: unsafe{TaskRef::from_raw_nonnull(NonZeroI32::new(TASK1).unwrap())},
 };
 
 pub struct ETaskForTask<'a>{
-	pub cell: &'a Task<'a, EPrintForPrintA<'a>>,
+	pub cell: &'a Task<'a, ETaskbodyForTaskbody<'a>>,
 }
 
 pub static ETASKFORTASK: ETaskForTask = ETaskForTask {
@@ -25,7 +25,7 @@ pub static ETASKFORTASK: ETaskForTask = ETaskForTask {
 };
 
 pub struct EiTaskForTask<'a>{
-	pub cell: &'a Task<'a, EPrintForPrintA<'a>>,
+	pub cell: &'a Task<'a, ETaskbodyForTaskbody<'a>>,
 }
 
 pub static EITASKFORTASK: EiTaskForTask = EiTaskForTask {
@@ -33,7 +33,7 @@ pub static EITASKFORTASK: EiTaskForTask = EiTaskForTask {
 };
 
 pub struct EiActivateNotificationHandlerForTask<'a>{
-	pub cell: &'a Task<'a, EPrintForPrintA<'a>>,
+	pub cell: &'a Task<'a, ETaskbodyForTaskbody<'a>>,
 }
 
 pub static EIACTIVATENOTIFICATIONHANDLERFORTASK: EiActivateNotificationHandlerForTask = EiActivateNotificationHandlerForTask {
@@ -41,14 +41,14 @@ pub static EIACTIVATENOTIFICATIONHANDLERFORTASK: EiActivateNotificationHandlerFo
 };
 
 pub struct EiWakeUpNotificationHandlerForTask<'a>{
-	pub cell: &'a Task<'a, EPrintForPrintA<'a>>,
+	pub cell: &'a Task<'a, ETaskbodyForTaskbody<'a>>,
 }
 
 pub static EIWAKEUPNOTIFICATIONHANDLERFORTASK: EiWakeUpNotificationHandlerForTask = EiWakeUpNotificationHandlerForTask {
 	cell: &TASK,
 };
 
-impl STask for ETaskForTask<'_, EPrintForPrintA> {
+impl STask for ETaskForTask<'_, ETaskbodyForTaskbody<'_>> {
 
 	fn activate(&self) -> ER{
 
@@ -130,7 +130,7 @@ impl STask for ETaskForTask<'_, EPrintForPrintA> {
 
 }
 
-impl SiTask for EiTaskForTask<'_, EPrintForPrintA> {
+impl SiTask for EiTaskForTask<'_, ETaskbodyForTaskbody<'_>> {
 
 	fn activate(&self) -> ER{
 
@@ -152,11 +152,11 @@ impl SiTask for EiTaskForTask<'_, EPrintForPrintA> {
 
 }
 
-impl SiNotificationHandler for EiActivateNotificationHandlerForTask<'_, EPrintForPrintA> {
+impl SiNotificationHandler for EiActivateNotificationHandlerForTask<'_, ETaskbodyForTaskbody<'_>> {
 
 }
 
-impl SiNotificationHandler for EiWakeUpNotificationHandlerForTask<'_, EPrintForPrintA> {
+impl SiNotificationHandler for EiWakeUpNotificationHandlerForTask<'_, ETaskbodyForTaskbody<'_>> {
 
 }
 
