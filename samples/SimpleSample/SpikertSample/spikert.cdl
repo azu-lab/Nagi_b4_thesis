@@ -42,7 +42,7 @@ celltype tMotor {
     //   Option_Ref_a_mut__pup_motor_t__ motor = C_EXP("pup_motor_t::get_ref(pbio_port_id_t::PBIO_PORT_ID_A)");
     //};
     attr {
-        pbio_port_id_t port = C_EXP("PBIO_PORT_ID_$port$");
+        pbio_port_id_t port = C_EXP("pbio_port_id_t::PBIO_PORT_ID_$port$");
     };
     var {
        //Option_Ref_a_mut__pup_motor_t__ motor = C_EXP("pup_motor_t::get_ref(pbio_port_id_t::PBIO_PORT_ID_A)");
@@ -59,7 +59,7 @@ celltype tSensor {
     //};
     attr{
         // 属性にportを入れて，varで参照する
-        pbio_port_id_t port = C_EXP("PBIO_PORT_ID_$port$");
+        pbio_port_id_t port = C_EXP("pbio_port_id_t::PBIO_PORT_ID_$port$");
     };
     var {
         //Option_Ref_a_mut__pup_ultrasonic_sensor_t__ ult = C_EXP("pup_ultrasonic_sensor_t::get_ref(pbio_port_id_t::$port$)");
@@ -82,13 +82,13 @@ celltype tPowerdown {
 
 cell tMotor Motor {
     cPowerdown = Powerdown.ePowerdown1;
-    port = C_EXP("PBIO_PORT_ID_A");
+    port = C_EXP("pbio_port_id_t::PBIO_PORT_ID_A");
     //motor = C_EXP("pup_motor_t::get_ref(pbio_port_id_t::PBIO_PORT_ID_A)");
 };
 
 cell tSensor Sensor {
     cPowerdown = Powerdown.ePowerdown2;
-    port = C_EXP("PBIO_PORT_ID_B");
+    port = C_EXP("pbio_port_id_t::PBIO_PORT_ID_B");
     //ult = C_EXP("pup_motor_t::get_ref(pbio_port_id_t::PBIO_PORT_ID_B)");
 };
 

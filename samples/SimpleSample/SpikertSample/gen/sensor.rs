@@ -14,9 +14,9 @@ pub struct SensorVar<'a>{
 	pub ult: Option<&'a mut pup_ultrasonic_sensor_t>,
 }
 
-pub static SENSOR: Sensor<EPowerdown2> = Sensor {
+pub static SENSOR: Sensor<EPowerdown2ForPowerdown> = Sensor {
 	c_powerdown: &EPOWERDOWN2FORPOWERDOWN,
-	port: PBIO_PORT_ID_B,
+	port: pbio_port_id_t::PBIO_PORT_ID_B,
 	variable: &SENSORVAR,
 };
 
@@ -32,42 +32,38 @@ pub static ESENSORFORSENSOR: ESensorForSensor = ESensorForSensor {
 	cell: &SENSOR,
 };
 
-impl SSensor for ESensorForSensor<'_, EPowerdown2ForPowerdown> {
+impl SSensor for ESensorForSensor<'_>{
 
+	#[inline]
 	fn set_device_ref(&self) {
-
 		let mut cell_ref = self.cell.get_cell_ref();
 
 	}
-
+	#[inline]
 	fn get_distance(&self, distance: &mut i32) {
-
 		let mut cell_ref = self.cell.get_cell_ref();
 
 	}
-
+	#[inline]
 	fn light_on(&self) -> pbio_error_t{
-
 		let mut cell_ref = self.cell.get_cell_ref();
 
 	}
-
+	#[inline]
 	fn light_set(&self, bv1: &i32, bv2: &i32, bv3: &i32, bv4: &i32) -> pbio_error_t{
-
 		let mut cell_ref = self.cell.get_cell_ref();
 
 	}
-
+	#[inline]
 	fn light_off(&self) -> pbio_error_t{
-
 		let mut cell_ref = self.cell.get_cell_ref();
 
 	}
-
 }
 
-impl<T: SPowerdown2> Sensor<'_, T> {
-	pub fn get_cell_ref(&self) -> (&T, &pbio_port_id_t, &Mutex<SensorVar>) {
+impl<'a, T: SPowerdown2> Sensor<'a, T> {
+	#[inline]
+	pub fn get_cell_ref<'a>(&self) -> (&T, &pbio_port_id_t, &Mutex<SensorVar<'a>>) {
 		(&self.c_powerdown, &self.port, self.variable)
 	}
 }

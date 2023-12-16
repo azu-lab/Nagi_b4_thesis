@@ -91,6 +91,18 @@ class ItronrsGenCelltypePlugin < RustGenCelltypePlugin
         end
     end
 
+    def gen_mod_in_main_lib_rs_for_cell cell
+        plugin_option = @plugin_arg_str.strip
+        if plugin_option == "main" || plugin_option == "lib" then
+            tempfile = CFile.open( "#{$gen}/#{plugin_option}.rs", "a" )
+            tempfile.print "#![no_std]\n"
+            tempfile.print "#![feature(const_option)]\n"
+            tempfile.print "mod kernel_cfg;\n"
+            tempfile.close
+        end
+        super(cell)
+    end
+
     # @use_string_list に格納されている文字列を元に use 文を生成する
     def gen_use_header file
         obj_ref_str = get_itronrs_kernel_obj_ref_str @celltype.get_global_name.to_s
@@ -100,6 +112,7 @@ class ItronrsGenCelltypePlugin < RustGenCelltypePlugin
             file.print "use itron::abi::*;  //特別な生成部\n"
             # TODO: task の部分の変換
             file.print "use itron::task::#{obj_ref_str}::*;  //特別な生成部\n"
+            file.print "use core::num::NonZeroI32;  //特別な生成部\n"
         end
         super(file)
     end

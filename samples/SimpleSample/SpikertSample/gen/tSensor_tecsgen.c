@@ -25,7 +25,7 @@ tSensor_INIB tSensor_INIB_tab[] = {
     {
         /* entry port #_EP_# */ 
         /* attribute(RO) */ 
-        PBIO_PORT_ID_B,                          /* port */
+        pbio_port_id_t::PBIO_PORT_ID_B,          /* port */
     },
 };
 

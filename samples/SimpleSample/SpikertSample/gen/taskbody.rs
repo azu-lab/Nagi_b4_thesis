@@ -9,7 +9,7 @@ where
 	pub c_motor: &'a U,
 }
 
-pub static TASKBODY: Taskbody<ESensor, EMotor> = Taskbody {
+pub static TASKBODY: Taskbody<ESensorForSensor, EMotorForMotor> = Taskbody {
 	c_sensor: &ESENSORFORSENSOR,
 	c_motor: &EMOTORFORMOTOR,
 };
@@ -22,19 +22,19 @@ pub static ETASKBODYFORTASKBODY: ETaskbodyForTaskbody = ETaskbodyForTaskbody {
 	cell: &TASKBODY,
 };
 
-impl STaskBody for ETaskbodyForTaskbody<'_, ESensorForSensor<'_>, EMotorForMotor<'_>> {
+impl STaskBody for ETaskbodyForTaskbody<'_>{
 
+	#[inline]
 	fn main(&self) {
-
 		let mut cell_ref = self.cell.get_cell_ref();
 
 	}
-
 }
 
 impl<T: SSensor, U: SMotor> Taskbody<'_, T, U> {
-	pub fn get_cell_ref(&self) -> (&T, &U, &Mutex<TaskbodyVar>) {
-		(&self.c_sensor, &self.c_motor, self.variable)
+	#[inline]
+	pub fn get_cell_ref(&self) -> (&T, &U) {
+		(&self.c_sensor, &self.c_motor)
 	}
 }
 
