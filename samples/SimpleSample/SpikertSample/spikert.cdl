@@ -1,68 +1,51 @@
 import(<kernel_rs.cdl>);
 
-typedef int_t   pup_motor_t;
-typedef int_t   pup_ultrasonic_sensor_t;
-typedef int_t   pbio_error_t;
 typedef int_t   pup_direction_t;
 typedef int_t   pbio_port_id_t;
+typedef int_t   pbio_error_t;
 typedef int_t   Option_Ref_a_mut__pup_motor_t__;
 typedef int_t   Option_Ref_a_mut__pup_ultrasonic_sensor_t__;
 typedef int_t   bool;
 
 signature sMotor {
-    // void get_ref( [in] pbio_port_id_t port );
     void set_motor_ref( void );
-    pbio_error_t setup( [in] pup_direction_t positive_direction, [in] bool reset_count );
-    pbio_error_t set_speed( [in] int32_t speed );
-    pbio_error_t stop( void );
+    void setup( [in] pup_direction_t positive_direction, [in] bool reset_count );
+    void set_speed( [in] int32_t speed );
+    void stop( void );
 };
 
 signature sSensor {
-    // void get_ref( [in] pbio_port_id_t port );
     void set_device_ref( void );
     void get_distance( [out] int32_t* distance );
-    pbio_error_t light_on( void );
-    pbio_error_t light_set( [in] int32_t bv1, [in] int32_t bv2, [in] int32_t bv3, [in] int32_t bv4 );
-    pbio_error_t light_off( void );
+    void light_on( void );
+    void light_set( [in] int32_t bv1, [in] int32_t bv2, [in] int32_t bv3, [in] int32_t bv4 );
+    void light_off( void );
 };
 
-signature sPowerdown1{
-    void powerdown( [in] Option_Ref_a_mut__pup_motor_t__ motor );
-};
-
-signature sPowerdown2{
-    void powerdown( [in] Option_Ref_a_mut__pup_ultrasonic_sensor_t__ ult );
+signature sPowerdown{
+    void powerdown( [in] pbio_error_t error );
 };
 
 [generate (RustGenPlugin, "lib")]
 celltype tMotor {
-    call sPowerdown1 cPowerdown;
+    call sPowerdown cPowerdown;
     entry sMotor eMotor;
-    //attr {
-    //   Option_Ref_a_mut__pup_motor_t__ motor = C_EXP("pup_motor_t::get_ref(pbio_port_id_t::PBIO_PORT_ID_A)");
-    //};
     attr {
         pbio_port_id_t port = C_EXP("pbio_port_id_t::PBIO_PORT_ID_$port$");
     };
     var {
-       //Option_Ref_a_mut__pup_motor_t__ motor = C_EXP("pup_motor_t::get_ref(pbio_port_id_t::PBIO_PORT_ID_A)");
        Option_Ref_a_mut__pup_motor_t__ motor = C_EXP("None");
     };
 };
 
 [generate (RustGenPlugin, "lib")]
 celltype tSensor {
-    call sPowerdown2 cPowerdown;
+    call sPowerdown cPowerdown;
     entry sSensor eSensor;
-    //attr {
-    //   Option_Ref_a_mut__pup_ultrasonic_sensor_t__ ult = C_EXP("pup_motor_t::get_ref(pbio_port_id_t::PBIO_PORT_ID_B)");
-    //};
     attr{
-        // 属性にportを入れて，varで参照する
         pbio_port_id_t port = C_EXP("pbio_port_id_t::PBIO_PORT_ID_$port$");
     };
     var {
-        //Option_Ref_a_mut__pup_ultrasonic_sensor_t__ ult = C_EXP("pup_ultrasonic_sensor_t::get_ref(pbio_port_id_t::$port$)");
         Option_Ref_a_mut__pup_ultrasonic_sensor_t__ ult = C_EXP("None");
     };
 };
@@ -76,20 +59,18 @@ celltype tTaskbody {
 
 [generate (RustGenPlugin, "lib")]
 celltype tPowerdown {
-    entry sPowerdown1 ePowerdown1;
-    entry sPowerdown2 ePowerdown2;
+    entry sPowerdown ePowerdown1;
+    entry sPowerdown ePowerdown2;
 };
 
 cell tMotor Motor {
     cPowerdown = Powerdown.ePowerdown1;
     port = C_EXP("pbio_port_id_t::PBIO_PORT_ID_A");
-    //motor = C_EXP("pup_motor_t::get_ref(pbio_port_id_t::PBIO_PORT_ID_A)");
 };
 
 cell tSensor Sensor {
     cPowerdown = Powerdown.ePowerdown2;
     port = C_EXP("pbio_port_id_t::PBIO_PORT_ID_B");
-    //ult = C_EXP("pup_motor_t::get_ref(pbio_port_id_t::PBIO_PORT_ID_B)");
 };
 
 cell tTaskbody Taskbody {
@@ -103,9 +84,7 @@ cell tPowerdown Powerdown{
 [generate( ItronrsGenPlugin, "lib")]
 cell tTask_rs Task{
     cTaskBody = Taskbody.eTaskbody;
-
     id = C_EXP("TASK1");
-	//task = C_EXP("TASK1_REF");
 	task_ref = C_EXP("unsafe{TaskRef::from_raw_nonnull(NonZeroI32::new(TASK1).unwrap())}");
     attribute = C_EXP("TA_ACT");
     stackSize = 1024;

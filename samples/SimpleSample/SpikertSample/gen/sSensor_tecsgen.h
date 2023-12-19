@@ -22,9 +22,9 @@ struct tag_sSensor_VDES {
 struct tag_sSensor_VMT {
     void           (*set_device_ref__T)( const struct tag_sSensor_VDES *edp );
     void           (*get_distance__T)( const struct tag_sSensor_VDES *edp, int32_t* distance );
-    pbio_error_t   (*light_on__T)( const struct tag_sSensor_VDES *edp );
-    pbio_error_t   (*light_set__T)( const struct tag_sSensor_VDES *edp, int32_t bv1, int32_t bv2, int32_t bv3, int32_t bv4 );
-    pbio_error_t   (*light_off__T)( const struct tag_sSensor_VDES *edp );
+    void           (*light_on__T)( const struct tag_sSensor_VDES *edp );
+    void           (*light_set__T)( const struct tag_sSensor_VDES *edp, int32_t bv1, int32_t bv2, int32_t bv3, int32_t bv4 );
+    void           (*light_off__T)( const struct tag_sSensor_VDES *edp );
 };
 
 /* signature descriptor #_SDES_# for dynamic join */

@@ -21,8 +21,7 @@
 #include "global_tecsgen.h"
 
 /* signature header #_ISH_# */
-#include "sPowerdown1_tecsgen.h"
-#include "sPowerdown2_tecsgen.h"
+#include "sPowerdown_tecsgen.h"
 
 #ifndef TOPPERS_MACRO_ONLY
 
@@ -39,10 +38,10 @@ typedef struct tag_tPowerdown_CB {
 typedef int   tPowerdown_IDX;
 
 /* prototype declaration of entry port function #_EPP_# */
-/* sPowerdown1 */
-void         tPowerdown_ePowerdown1_powerdown(tPowerdown_IDX idx, const pup_motor_t* motor);
-/* sPowerdown2 */
-void         tPowerdown_ePowerdown2_powerdown(tPowerdown_IDX idx, const pup_device_t* ult);
+/* sPowerdown */
+void         tPowerdown_ePowerdown1_powerdown(tPowerdown_IDX idx, pbio_error_t error);
+/* sPowerdown */
+void         tPowerdown_ePowerdown2_powerdown(tPowerdown_IDX idx, pbio_error_t error);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

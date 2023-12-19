@@ -1,9 +1,9 @@
 use spin::Mutex;
-use crate::{s_powerdown1::*, powerdown::*, s_motor::*};
+use crate::{s_powerdown::*, powerdown::*, s_motor::*};
 
 pub struct Motor<'a, T>
 where
-	T: SPowerdown1,
+	T: SPowerdown,
 {
 	pub c_powerdown: &'a T,
 	pub port: pbio_port_id_t,
@@ -32,31 +32,7 @@ pub static EMOTORFORMOTOR: EMotorForMotor = EMotorForMotor {
 	cell: &MOTOR,
 };
 
-impl SMotor for EMotorForMotor<'_>{
-
-	#[inline]
-	fn set_motor_ref(&self) {
-		let mut cell_ref = self.cell.get_cell_ref();
-
-	}
-	#[inline]
-	fn setup(&self, positive_direction: &pup_direction_t, reset_count: &bool) -> pbio_error_t{
-		let mut cell_ref = self.cell.get_cell_ref();
-
-	}
-	#[inline]
-	fn set_speed(&self, speed: &i32) -> pbio_error_t{
-		let mut cell_ref = self.cell.get_cell_ref();
-
-	}
-	#[inline]
-	fn stop(&self) -> pbio_error_t{
-		let mut cell_ref = self.cell.get_cell_ref();
-
-	}
-}
-
-impl<'a, T: SPowerdown1> Motor<'a, T> {
+impl<'a, T: SPowerdown> Motor<'a, T> {
 	#[inline]
 	pub fn get_cell_ref<'a>(&self) -> (&T, &pbio_port_id_t, &Mutex<MotorVar<'a>>) {
 		(&self.c_powerdown, &self.port, self.variable)

@@ -13,8 +13,8 @@
  * motor            Option_Ref_a_mut__pup_motor_t__  VAR_motor       
  *
  * call port function #_TCPF_#
- * call port: cPowerdown signature: sPowerdown1 context:task
- *   void           cPowerdown_powerdown( Option_Ref_a_mut__pup_motor_t__ motor );
+ * call port: cPowerdown signature: sPowerdown context:task
+ *   void           cPowerdown_powerdown( pbio_error_t error );
  *
  * #[</PREAMBLE>]# */
 
@@ -53,7 +53,7 @@ eMotor_set_motor_ref(CELLIDX idx)
  * global_name:  tMotor_eMotor_setup
  * oneway:       false
  * #[</ENTRY_FUNC>]# */
-pbio_error_t
+void
 eMotor_setup(CELLIDX idx, pup_direction_t positive_direction, bool reset_count)
 {
 	CELLCB	*p_cellcb = GET_CELLCB(idx);
@@ -68,7 +68,7 @@ eMotor_setup(CELLIDX idx, pup_direction_t positive_direction, bool reset_count)
  * global_name:  tMotor_eMotor_set_speed
  * oneway:       false
  * #[</ENTRY_FUNC>]# */
-pbio_error_t
+void
 eMotor_set_speed(CELLIDX idx, int32_t speed)
 {
 	CELLCB	*p_cellcb = GET_CELLCB(idx);
@@ -83,7 +83,7 @@ eMotor_set_speed(CELLIDX idx, int32_t speed)
  * global_name:  tMotor_eMotor_stop
  * oneway:       false
  * #[</ENTRY_FUNC>]# */
-pbio_error_t
+void
 eMotor_stop(CELLIDX idx)
 {
 	CELLCB	*p_cellcb = GET_CELLCB(idx);

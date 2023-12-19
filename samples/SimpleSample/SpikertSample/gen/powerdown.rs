@@ -1,4 +1,4 @@
-use crate::{s_powerdown1::*, s_powerdown2::*};
+use crate::{s_powerdown::*};
 
 pub struct Powerdown
 {
@@ -22,24 +22,6 @@ pub struct EPowerdown2ForPowerdown<'a>{
 pub static EPOWERDOWN2FORPOWERDOWN: EPowerdown2ForPowerdown = EPowerdown2ForPowerdown {
 	cell: &POWERDOWN,
 };
-
-impl SPowerdown1 for EPowerdown1ForPowerdown<'_>{
-
-	#[inline]
-	fn powerdown<'a>(&self, motor: &Option<&'a mut pup_motor_t>) {
-		let mut cell_ref = self.cell.get_cell_ref();
-
-	}
-}
-
-impl SPowerdown2 for EPowerdown2ForPowerdown<'_>{
-
-	#[inline]
-	fn powerdown<'a>(&self, ult: &Option<&'a mut pup_ultrasonic_sensor_t>) {
-		let mut cell_ref = self.cell.get_cell_ref();
-
-	}
-}
 
 impl Powerdown {
 	#[inline]

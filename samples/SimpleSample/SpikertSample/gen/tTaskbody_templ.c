@@ -12,14 +12,14 @@
  * call port: cSensor signature: sSensor context:task
  *   void           cSensor_set_device_ref( );
  *   void           cSensor_get_distance( int32_t* distance );
- *   pbio_error_t   cSensor_light_on( );
- *   pbio_error_t   cSensor_light_set( int32_t bv1, int32_t bv2, int32_t bv3, int32_t bv4 );
- *   pbio_error_t   cSensor_light_off( );
+ *   void           cSensor_light_on( );
+ *   void           cSensor_light_set( int32_t bv1, int32_t bv2, int32_t bv3, int32_t bv4 );
+ *   void           cSensor_light_off( );
  * call port: cMotor signature: sMotor context:task
  *   void           cMotor_set_motor_ref( );
- *   pbio_error_t   cMotor_setup( pup_direction_t positive_direction, bool reset_count );
- *   pbio_error_t   cMotor_set_speed( int32_t speed );
- *   pbio_error_t   cMotor_stop( );
+ *   void           cMotor_setup( pup_direction_t positive_direction, bool reset_count );
+ *   void           cMotor_set_speed( int32_t speed );
+ *   void           cMotor_stop( );
  *
  * #[</PREAMBLE>]# */
 

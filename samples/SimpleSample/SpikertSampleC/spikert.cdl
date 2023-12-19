@@ -1,56 +1,50 @@
 import(<kernel.cdl>);
 
-typedef int_t   pup_motor_t;
-typedef int_t   pup_ultrasonic_sensor_t;
-typedef int_t   pbio_error_t;
-typedef int_t   pup_device_t;
 typedef int_t   pup_direction_t;
 typedef int_t   pbio_port_id_t;
+typedef int_t   pbio_error_t;
+typedef int_t   pup_motor_t;
+typedef int_t   pup_device_t;
 typedef int_t   bool;
 
 signature sMotor {
     void set_motor_ref( void );
-    pbio_error_t setup( [in] pup_direction_t positive_direction, [in] bool reset_count );
-    pbio_error_t set_speed( [in] int32_t speed );
-    pbio_error_t stop( void );
+    void setup( [in] pup_direction_t positive_direction, [in] bool reset_count );
+    void set_speed( [in] int32_t speed );
+    void stop( void );
 };
 
 signature sSensor {
     void set_device_ref( void );
     void get_distance( [out] int32_t* distance );
-    pbio_error_t light_on( void );
-    pbio_error_t light_set( [in] int32_t bv1, [in] int32_t bv2, [in] int32_t bv3, [in] int32_t bv4 );
-    pbio_error_t light_off( void );
+    void light_on( void );
+    void light_set( [in] int32_t bv1, [in] int32_t bv2, [in] int32_t bv3, [in] int32_t bv4 );
+    void light_off( void );
 };
 
-signature sPowerdown1{
-    void powerdown( [in] const pup_motor_t *motor );
-};
-
-signature sPowerdown2{
-    void powerdown( [in] const pup_device_t *ult );
+signature sPowerdown{
+    void powerdown( [in] pbio_error_t error );
 };
 
 celltype tMotor {
-    call sPowerdown1 cPowerdown;
+    call sPowerdown cPowerdown;
     entry sMotor eMotor;
     attr {
         pbio_port_id_t port = C_EXP("PBIO_PORT_ID_$port$");
     };
     var {
-        pup_motor_t *motor = C_EXP("NULL");
+       pup_motor_t *motor = C_EXP("NULL");
     };
 };
 
 celltype tSensor {
-    call sPowerdown2 cPowerdown;
+    call sPowerdown cPowerdown;
     entry sSensor eSensor;
     attr{
-        // 属性にportを入れて，varで参照する
         pbio_port_id_t port = C_EXP("PBIO_PORT_ID_$port$");
     };
     var {
-        pup_device_t *ult = C_EXP("NULL");
+        pup_device_t ult = C_EXP("NULL");
     };
 };
 
@@ -61,8 +55,8 @@ celltype tTaskbody {
 };
 
 celltype tPowerdown {
-    entry sPowerdown1 ePowerdown1;
-    entry sPowerdown2 ePowerdown2;
+    entry sPowerdown ePowerdown1;
+    entry sPowerdown ePowerdown2;
 };
 
 cell tMotor Motor {

@@ -21,7 +21,7 @@
 /* entry port function #_TEPF_# */
 /* #[<ENTRY_PORT>]# ePowerdown1
  * entry port: ePowerdown1
- * signature:  sPowerdown1
+ * signature:  sPowerdown
  * context:    task
  * #[</ENTRY_PORT>]# */
 
@@ -31,7 +31,7 @@
  * oneway:       false
  * #[</ENTRY_FUNC>]# */
 void
-ePowerdown1_powerdown(CELLIDX idx, const pup_motor_t* motor)
+ePowerdown1_powerdown(CELLIDX idx, pbio_error_t error)
 {
 	CELLCB	*p_cellcb = GET_CELLCB(idx);
 
@@ -42,7 +42,7 @@ ePowerdown1_powerdown(CELLIDX idx, const pup_motor_t* motor)
 
 /* #[<ENTRY_PORT>]# ePowerdown2
  * entry port: ePowerdown2
- * signature:  sPowerdown2
+ * signature:  sPowerdown
  * context:    task
  * #[</ENTRY_PORT>]# */
 
@@ -52,7 +52,7 @@ ePowerdown1_powerdown(CELLIDX idx, const pup_motor_t* motor)
  * oneway:       false
  * #[</ENTRY_FUNC>]# */
 void
-ePowerdown2_powerdown(CELLIDX idx, const pup_device_t* ult)
+ePowerdown2_powerdown(CELLIDX idx, pbio_error_t error)
 {
 	CELLCB	*p_cellcb = GET_CELLCB(idx);
 

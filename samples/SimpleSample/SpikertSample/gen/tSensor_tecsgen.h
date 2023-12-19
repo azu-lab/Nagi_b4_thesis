@@ -21,7 +21,7 @@
 #include "global_tecsgen.h"
 
 /* signature header #_ISH_# */
-#include "sPowerdown2_tecsgen.h"
+#include "sPowerdown_tecsgen.h"
 #include "sSensor_tecsgen.h"
 
 #ifndef TOPPERS_MACRO_ONLY
@@ -54,9 +54,9 @@ typedef struct tag_tSensor_CB *tSensor_IDX;
 /* sSensor */
 void         tSensor_eSensor_set_device_ref(tSensor_IDX idx);
 void         tSensor_eSensor_get_distance(tSensor_IDX idx, int32_t* distance);
-pbio_error_t tSensor_eSensor_light_on(tSensor_IDX idx);
-pbio_error_t tSensor_eSensor_light_set(tSensor_IDX idx, int32_t bv1, int32_t bv2, int32_t bv3, int32_t bv4);
-pbio_error_t tSensor_eSensor_light_off(tSensor_IDX idx);
+void         tSensor_eSensor_light_on(tSensor_IDX idx);
+void         tSensor_eSensor_light_set(tSensor_IDX idx, int32_t bv1, int32_t bv2, int32_t bv3, int32_t bv4);
+void         tSensor_eSensor_light_off(tSensor_IDX idx);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
@@ -97,14 +97,14 @@ pbio_error_t tSensor_eSensor_light_off(tSensor_IDX idx);
 
 #ifndef TECSFLOW
  /* call port function macro #_CPM_# */
-#define tSensor_cPowerdown_powerdown( p_that, ult ) \
+#define tSensor_cPowerdown_powerdown( p_that, error ) \
 	  tPowerdown_ePowerdown2_powerdown( \
-	   (tPowerdown_IDX)0, (ult) )
+	   (tPowerdown_IDX)0, (error) )
 
 #else  /* TECSFLOW */
-#define tSensor_cPowerdown_powerdown( p_that, ult ) \
+#define tSensor_cPowerdown_powerdown( p_that, error ) \
 	  (p_that)->cPowerdown.powerdown__T( \
- (ult) )
+ (error) )
 
 #endif /* TECSFLOW */
 #endif /* TOPPERS_CB_TYPE_ONLY */
@@ -150,8 +150,8 @@ extern "C" {
 #define VAR_ult              tSensor_VAR_ult( p_cellcb )
 
 /* call port function macro (abbrev) #_CPMA_# */
-#define cPowerdown_powerdown( ult ) \
-          ((void)p_cellcb, tSensor_cPowerdown_powerdown( p_cellcb, ult ))
+#define cPowerdown_powerdown( error ) \
+          ((void)p_cellcb, tSensor_cPowerdown_powerdown( p_cellcb, error ))
 
 
 

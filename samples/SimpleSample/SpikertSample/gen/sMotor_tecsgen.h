@@ -21,9 +21,9 @@ struct tag_sMotor_VDES {
 /* signature function table #_SFT_# */
 struct tag_sMotor_VMT {
     void           (*set_motor_ref__T)( const struct tag_sMotor_VDES *edp );
-    pbio_error_t   (*setup__T)( const struct tag_sMotor_VDES *edp, pup_direction_t positive_direction, bool reset_count );
-    pbio_error_t   (*set_speed__T)( const struct tag_sMotor_VDES *edp, int32_t speed );
-    pbio_error_t   (*stop__T)( const struct tag_sMotor_VDES *edp );
+    void           (*setup__T)( const struct tag_sMotor_VDES *edp, pup_direction_t positive_direction, bool reset_count );
+    void           (*set_speed__T)( const struct tag_sMotor_VDES *edp, int32_t speed );
+    void           (*stop__T)( const struct tag_sMotor_VDES *edp );
 };
 
 /* signature descriptor #_SDES_# for dynamic join */

@@ -13,8 +13,8 @@
  * ult              Option_Ref_a_mut__pup_ultrasonic_sensor_t__  VAR_ult         
  *
  * call port function #_TCPF_#
- * call port: cPowerdown signature: sPowerdown2 context:task
- *   void           cPowerdown_powerdown( Option_Ref_a_mut__pup_ultrasonic_sensor_t__ ult );
+ * call port: cPowerdown signature: sPowerdown context:task
+ *   void           cPowerdown_powerdown( pbio_error_t error );
  *
  * #[</PREAMBLE>]# */
 
@@ -68,7 +68,7 @@ eSensor_get_distance(CELLIDX idx, int32_t* distance)
  * global_name:  tSensor_eSensor_light_on
  * oneway:       false
  * #[</ENTRY_FUNC>]# */
-pbio_error_t
+void
 eSensor_light_on(CELLIDX idx)
 {
 	CELLCB	*p_cellcb = GET_CELLCB(idx);
@@ -83,7 +83,7 @@ eSensor_light_on(CELLIDX idx)
  * global_name:  tSensor_eSensor_light_set
  * oneway:       false
  * #[</ENTRY_FUNC>]# */
-pbio_error_t
+void
 eSensor_light_set(CELLIDX idx, int32_t bv1, int32_t bv2, int32_t bv3, int32_t bv4)
 {
 	CELLCB	*p_cellcb = GET_CELLCB(idx);
@@ -98,7 +98,7 @@ eSensor_light_set(CELLIDX idx, int32_t bv1, int32_t bv2, int32_t bv3, int32_t bv
  * global_name:  tSensor_eSensor_light_off
  * oneway:       false
  * #[</ENTRY_FUNC>]# */
-pbio_error_t
+void
 eSensor_light_off(CELLIDX idx)
 {
 	CELLCB	*p_cellcb = GET_CELLCB(idx);

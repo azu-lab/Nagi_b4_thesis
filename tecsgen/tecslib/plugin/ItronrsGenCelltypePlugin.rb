@@ -157,6 +157,18 @@ class ItronrsGenCelltypePlugin < RustGenCelltypePlugin
             end
         }
     end
+    
+    # 呼び先のセルタイプが ITRON オブジェクトかどうかを判断する
+    def check_callee_port_celltype_is_itron_object port
+        itron_object_list = ["tTask", "tSemaphore", "tEventflag", "tDataqueue", "tMutex"]
+        if port.get_port_type == :CALL then
+            callee_celltype_name = port.get_real_callee_cell.get_celltype.get_global_name.to_s
+            if itron_object_list.include?(callee_celltype_name) then
+                return true
+            end
+        end
+        return false
+    end
         
     #=== tCelltype_factory.h に挿入するコードを生成する
     # file 以外の他のファイルにファクトリコードを生成してもよい

@@ -22,15 +22,6 @@ pub static ETASKBODYFORTASKBODY: ETaskbodyForTaskbody = ETaskbodyForTaskbody {
 	cell: &TASKBODY,
 };
 
-impl STaskBody for ETaskbodyForTaskbody<'_>{
-
-	#[inline]
-	fn main(&self) {
-		let mut cell_ref = self.cell.get_cell_ref();
-
-	}
-}
-
 impl<T: SSensor, U: SMotor> Taskbody<'_, T, U> {
 	#[inline]
 	pub fn get_cell_ref(&self) -> (&T, &U) {

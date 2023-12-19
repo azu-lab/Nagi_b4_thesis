@@ -48,8 +48,7 @@ SIGNATURE_HEADERS = \
 	$(GEN_DIR)/siNotificationHandler_tecsgen.h \
 	$(GEN_DIR)/sMotor_tecsgen.h \
 	$(GEN_DIR)/sSensor_tecsgen.h \
-	$(GEN_DIR)/sPowerdown1_tecsgen.h \
-	$(GEN_DIR)/sPowerdown2_tecsgen.h \
+	$(GEN_DIR)/sPowerdown_tecsgen.h \
 # SIGNATURE_HEADERS terminator
 
 CELLTYPE_TECSGEN_HEADERS = \
