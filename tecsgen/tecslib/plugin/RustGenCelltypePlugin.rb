@@ -310,7 +310,6 @@ class RustGenCelltypePlugin < CelltypePlugin
                 # TODO: size_is指定子のときの処理
                 type = c_type_to_rust_type(c_type.get_type)
                 str = "[#{type}; #{c_type.get_size}]"
-                str = c_type_to_rust_type(c_type.get_type)
             elsif c_type.get_count != nil then
                 type = c_type_to_rust_type(c_type.get_type)
                 str = "[#{type}; #{c_type.get_size}]"
@@ -518,20 +517,7 @@ class RustGenCelltypePlugin < CelltypePlugin
                 file.print "\tpub #{attr.get_name.to_s}: "
                 # file.print "#{c_type_to_rust_type(attr.get_type)}"
                 str = c_type_to_rust_type(attr.get_type)
-                # 属性や変数のフィールドに構造体がある場合は，ライフタイムを付与する必要がある
-                # itron-rsオブジェクトに対する，特別な生成
-                # if str == "TaskRef" then
-                #     # ライフタイムを付与
-                #     str = "TaskRef<'a>"
-                #     file.print "#{str},  //特別な生成部\n"
-                #     # 書き込んでいるファイルを一度閉じる
-                #     # file.close
-                #     creat_itron_rs_use cell
-                #     global_file_name = snake_case(cell.get_global_name.to_s)
-                #     # file = CFile.open( "#{$gen}/#{global_file_name}.rs", "a" )
-                # else
-                    file.print "#{str},\n"
-                # end
+                file.print "#{str},\n"
             end
         }
     end
@@ -622,7 +608,21 @@ class RustGenCelltypePlugin < CelltypePlugin
             else
                 # セル記述で初期化されていても，反映する
                 attr_symbol = attr.get_name.to_s.to_sym
-                file.print "\t#{attr.get_name.to_s}: #{(cell.get_attr_initializer attr_symbol).to_s},\n"
+                attr_array = cell.get_attr_initializer(attr_symbol)
+                # 属性が配列であるときに対応
+                if attr_array.is_a?(Array) then
+                    file.print "\t#{attr.get_name.to_s}: ["
+                    attr_array.each{ |attr_array_item|
+                        if attr_array_item == attr_array.last then
+                            file.print "#{attr_array_item}"
+                        else
+                            file.print "#{attr_array_item}, "
+                        end
+                    }
+                    file.print "],\n"
+                else
+                    file.print "\t#{attr.get_name.to_s}: #{cell.get_attr_initializer(attr_symbol).to_s},\n"
+                end
             end
         }
     end
@@ -641,7 +641,21 @@ class RustGenCelltypePlugin < CelltypePlugin
 
             # 変数構造体のフィールドの初期化を生成
             @celltype.get_var_list.each{ |var|
-                file.print "\t#{var.get_name}: #{var.get_initializer},\n"
+                var_array = var.get_initializer
+                # 属性が配列であるときに対応
+                if var_array.is_a?(Array) then
+                    file.print "\t#{var.get_name}: ["
+                    var_array.each{ |var_array_item|
+                        if var_array_item == var_array.last then
+                            file.print "#{var_array_item.to_s}"
+                        else
+                            file.print "#{var_array_item.to_s}, "
+                        end
+                    }
+                    file.print "],\n"
+                else
+                    file.print "\t#{var.get_name}: #{var.get_initializer},\n"
+                end
             }
 
             file.print "});\n\n"

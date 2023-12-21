@@ -1,0 +1,20 @@
+# Celltype: tTask_rs  #_MDEP_#
+$(_TECS_OBJ_DIR)tTask_rs_tecsgen.o : tTask_rs_tecsgen.c  $(GEN_DIR)/tBinarySearch_tecsgen.h  $(GEN_DIR)/tCompare_tecsgen.h  $(GEN_DIR)/tTaskBody_tecsgen.h $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sTaskBody_tecsgen.h $(GEN_DIR)/sTask_tecsgen.h $(GEN_DIR)/siTask_tecsgen.h $(GEN_DIR)/tTask_rs_factory.h $(GEN_DIR)/tTask_rs_tecsgen.h tTask_rs_inline.h
+$(_TECS_OBJ_DIR)tTask_rs_templ.o : tTask_rs_templ.c  $(GEN_DIR)/tBinarySearch_tecsgen.h  $(GEN_DIR)/tCompare_tecsgen.h  $(GEN_DIR)/tTaskBody_tecsgen.h $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sTaskBody_tecsgen.h $(GEN_DIR)/sTask_tecsgen.h $(GEN_DIR)/siTask_tecsgen.h $(GEN_DIR)/tTask_rs_factory.h $(GEN_DIR)/tTask_rs_tecsgen.h tTask_rs_inline.h
+$(_TECS_OBJ_DIR)tTask_rs.o : tTask_rs.c  $(GEN_DIR)/tBinarySearch_tecsgen.h  $(GEN_DIR)/tCompare_tecsgen.h  $(GEN_DIR)/tTaskBody_tecsgen.h $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sTaskBody_tecsgen.h $(GEN_DIR)/sTask_tecsgen.h $(GEN_DIR)/siTask_tecsgen.h $(GEN_DIR)/tTask_rs_factory.h $(GEN_DIR)/tTask_rs_tecsgen.h tTask_rs_inline.h
+
+# Celltype: tTaskBody  #_MDEP_#
+$(_TECS_OBJ_DIR)tTaskBody_tecsgen.o : tTaskBody_tecsgen.c  $(GEN_DIR)/tBinarySearch_tecsgen.h  $(GEN_DIR)/tCompare_tecsgen.h $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sBinarySearch_tecsgen.h $(GEN_DIR)/sTaskBody_tecsgen.h $(GEN_DIR)/tTaskBody_factory.h $(GEN_DIR)/tTaskBody_tecsgen.h
+$(_TECS_OBJ_DIR)tTaskBody_templ.o : tTaskBody_templ.c  $(GEN_DIR)/tBinarySearch_tecsgen.h  $(GEN_DIR)/tCompare_tecsgen.h $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sBinarySearch_tecsgen.h $(GEN_DIR)/sTaskBody_tecsgen.h $(GEN_DIR)/tTaskBody_factory.h $(GEN_DIR)/tTaskBody_tecsgen.h
+$(_TECS_OBJ_DIR)tTaskBody.o : tTaskBody.c  $(GEN_DIR)/tBinarySearch_tecsgen.h  $(GEN_DIR)/tCompare_tecsgen.h $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sBinarySearch_tecsgen.h $(GEN_DIR)/sTaskBody_tecsgen.h $(GEN_DIR)/tTaskBody_factory.h $(GEN_DIR)/tTaskBody_tecsgen.h
+
+# Celltype: tBinarySearch  #_MDEP_#
+$(_TECS_OBJ_DIR)tBinarySearch_tecsgen.o : tBinarySearch_tecsgen.c  $(GEN_DIR)/tCompare_tecsgen.h $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sBinarySearch_tecsgen.h $(GEN_DIR)/sCompare_tecsgen.h $(GEN_DIR)/tBinarySearch_factory.h $(GEN_DIR)/tBinarySearch_tecsgen.h
+$(_TECS_OBJ_DIR)tBinarySearch_templ.o : tBinarySearch_templ.c  $(GEN_DIR)/tCompare_tecsgen.h $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sBinarySearch_tecsgen.h $(GEN_DIR)/sCompare_tecsgen.h $(GEN_DIR)/tBinarySearch_factory.h $(GEN_DIR)/tBinarySearch_tecsgen.h
+$(_TECS_OBJ_DIR)tBinarySearch.o : tBinarySearch.c  $(GEN_DIR)/tCompare_tecsgen.h $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sBinarySearch_tecsgen.h $(GEN_DIR)/sCompare_tecsgen.h $(GEN_DIR)/tBinarySearch_factory.h $(GEN_DIR)/tBinarySearch_tecsgen.h
+
+# Celltype: tCompare  #_MDEP_#
+$(_TECS_OBJ_DIR)tCompare_tecsgen.o : tCompare_tecsgen.c $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sCompare_tecsgen.h $(GEN_DIR)/tCompare_factory.h $(GEN_DIR)/tCompare_tecsgen.h
+$(_TECS_OBJ_DIR)tCompare_templ.o : tCompare_templ.c $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sCompare_tecsgen.h $(GEN_DIR)/tCompare_factory.h $(GEN_DIR)/tCompare_tecsgen.h
+$(_TECS_OBJ_DIR)tCompare.o : tCompare.c $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sCompare_tecsgen.h $(GEN_DIR)/tCompare_factory.h $(GEN_DIR)/tCompare_tecsgen.h
+
