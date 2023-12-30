@@ -91,7 +91,7 @@ class ItronrsGenCelltypePlugin < RustGenCelltypePlugin
         end
     end
 
-    def gen_mod_in_main_lib_rs_for_cell cell
+    def gen_mod_in_main_lib_rs_for_cell celltype
         plugin_option = @plugin_arg_str.strip
         if plugin_option == "main" || plugin_option == "lib" then
             tempfile = CFile.open( "#{$gen}/#{plugin_option}.rs", "a" )
@@ -100,7 +100,7 @@ class ItronrsGenCelltypePlugin < RustGenCelltypePlugin
             tempfile.print "mod kernel_cfg;\n"
             tempfile.close
         end
-        super(cell)
+        super(celltype)
     end
 
     # @use_string_list に格納されている文字列を元に use 文を生成する

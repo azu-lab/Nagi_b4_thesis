@@ -1,0 +1,25 @@
+signature sMulti {
+    void print(void);
+};
+
+[generate(RustGenPlugin,"lib")]
+celltype tSingle {
+    call sMulti cMulti1;
+    call sMulti cMulti2;
+};
+
+[generate(RustGenPlugin,"lib")]
+celltype tMulti {
+    entry sMulti eMulti;
+};
+
+cell tSingle Single {
+    cMulti1 = Multi1.eMulti;
+    cMulti2 = Multi2.eMulti;
+};
+
+cell tMulti Multi1 {
+};
+
+cell tMulti Multi2 {
+};

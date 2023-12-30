@@ -1,0 +1,10 @@
+# Celltype: tSingle  #_MDEP_#
+$(_TECS_OBJ_DIR)tSingle_tecsgen.o : tSingle_tecsgen.c  $(GEN_DIR)/tMulti_tecsgen.h $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sMulti_tecsgen.h $(GEN_DIR)/tSingle_factory.h $(GEN_DIR)/tSingle_tecsgen.h
+$(_TECS_OBJ_DIR)tSingle_templ.o : tSingle_templ.c  $(GEN_DIR)/tMulti_tecsgen.h $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sMulti_tecsgen.h $(GEN_DIR)/tSingle_factory.h $(GEN_DIR)/tSingle_tecsgen.h
+$(_TECS_OBJ_DIR)tSingle.o : tSingle.c  $(GEN_DIR)/tMulti_tecsgen.h $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sMulti_tecsgen.h $(GEN_DIR)/tSingle_factory.h $(GEN_DIR)/tSingle_tecsgen.h
+
+# Celltype: tMulti  #_MDEP_#
+$(_TECS_OBJ_DIR)tMulti_tecsgen.o : tMulti_tecsgen.c $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sMulti_tecsgen.h $(GEN_DIR)/tMulti_factory.h $(GEN_DIR)/tMulti_tecsgen.h
+$(_TECS_OBJ_DIR)tMulti_templ.o : tMulti_templ.c $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sMulti_tecsgen.h $(GEN_DIR)/tMulti_factory.h $(GEN_DIR)/tMulti_tecsgen.h
+$(_TECS_OBJ_DIR)tMulti.o : tMulti.c $(GEN_DIR)/global_tecsgen.h $(GEN_DIR)/sMulti_tecsgen.h $(GEN_DIR)/tMulti_factory.h $(GEN_DIR)/tMulti_tecsgen.h
+
