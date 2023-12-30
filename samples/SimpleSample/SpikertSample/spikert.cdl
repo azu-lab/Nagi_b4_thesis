@@ -46,6 +46,7 @@ celltype tSensor {
         pbio_port_id_t port = C_EXP("pbio_port_id_t::PBIO_PORT_ID_$port$");
     };
     var {
+        // RS_EXPもしくは，両方，もしくは別の表現，NONTECS_EXPみたいな
         Option_Ref_a_mut__pup_ultrasonic_sensor_t__ ult = C_EXP("None");
     };
 };

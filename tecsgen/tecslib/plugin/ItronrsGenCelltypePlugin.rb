@@ -111,7 +111,7 @@ class ItronrsGenCelltypePlugin < RustGenCelltypePlugin
             # file.print "use crate::kernel_obj_ref::*;  //特別な生成部\n"
             file.print "use itron::abi::*;  //特別な生成部\n"
             # TODO: task の部分の変換
-            file.print "use itron::task::#{obj_ref_str}::*;  //特別な生成部\n"
+            file.print "use itron::task::#{obj_ref_str};  //特別な生成部\n"
             file.print "use core::num::NonZeroI32;  //特別な生成部\n"
         end
         super(file)
@@ -160,7 +160,7 @@ class ItronrsGenCelltypePlugin < RustGenCelltypePlugin
     
     # 呼び先のセルタイプが ITRON オブジェクトかどうかを判断する
     def check_callee_port_celltype_is_itron_object port
-        itron_object_list = ["tTask", "tSemaphore", "tEventflag", "tDataqueue", "tMutex"]
+        itron_object_list = ["tTask_rs", "tSemaphore_rs", "tEventflag_rs", "tDataqueue_rs", "tMutex_rs"]
         if port.get_port_type == :CALL then
             callee_celltype_name = port.get_real_callee_cell.get_celltype.get_global_name.to_s
             if itron_object_list.include?(callee_celltype_name) then
@@ -168,6 +168,16 @@ class ItronrsGenCelltypePlugin < RustGenCelltypePlugin
             end
         end
         return false
+    end
+
+    def gen_use_for_trait_files file, celltype, port
+        super(file, celltype, port)
+        if port.get_port_type == :ENTRY then
+            object_ref = get_itronrs_kernel_obj_ref_str celltype.get_global_name.to_s
+            file.print "use itron::abi::*;\n"
+            object_module = object_ref.gsub(/Ref/, "").downcase
+            file.print "use itron::#{object_module}::#{object_ref};\n"
+        end
     end
         
     #=== tCelltype_factory.h に挿入するコードを生成する

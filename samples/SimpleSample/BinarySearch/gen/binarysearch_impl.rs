@@ -1,3 +1,4 @@
+use spin::Mutex;
 use crate::{binarysearch::*, s_binary_search::*, s_compare::*};
 
 impl SBinarySearch for EBinarySearchForBinarysearch<'_>{

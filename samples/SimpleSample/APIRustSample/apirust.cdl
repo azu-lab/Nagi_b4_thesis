@@ -1,0 +1,21 @@
+import(<kernel_rs.cdl>);
+
+[generate (RustGenPlugin, "lib")]
+celltype tTaskbody {
+    entry sTaskBody eTaskbody;
+    call sTask cTask;
+};
+
+cell tTaskbody Taskbody {
+    cTask = Task.eTask;
+};
+
+[generate( ItronrsGenPlugin, "lib")]
+cell tTask_rs Task{
+    cTaskBody = Taskbody.eTaskbody;
+    id = C_EXP("TSKID_1");
+	task_ref = C_EXP("unsafe{TaskRef::from_raw_nonnull(NonZeroI32::new(TSKID_1).unwrap())}");
+    attribute = C_EXP("TA_ACT");
+    stackSize = 4096;
+    priority = 7;
+};

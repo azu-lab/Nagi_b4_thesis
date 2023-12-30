@@ -88,7 +88,7 @@ void         tTaskBody_eTaskbody_main(tTaskBody_IDX idx);
  /* call port function macro #_CPM_# */
 #define tTaskBody_cBinarySearch_binary_search( p_that, key ) \
 	  tBinarySearch_eBinarySearch_binary_search( \
-	   &tBinarySearch_INIB_tab[0], (key) )
+	   &tBinarySearch_CB_tab[0], (key) )
 
 #else  /* TECSFLOW */
 #define tTaskBody_cBinarySearch_binary_search( p_that, key ) \

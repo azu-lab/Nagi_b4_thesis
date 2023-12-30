@@ -10,6 +10,8 @@
  *
  * attr access macro #_CAAM_#
  * array            const int32_t*   ATTR_array      
+ * left             int32_t          VAR_left        
+ * right            int32_t          VAR_right       
  *
  * call port function #_TCPF_#
  * call port: cCompare signature: sCompare context:task

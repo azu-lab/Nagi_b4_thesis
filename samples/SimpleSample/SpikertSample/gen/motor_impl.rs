@@ -1,7 +1,7 @@
 use spin::Mutex;
 use crate::{motor::*, s_powerdown::*, s_motor::*};
 
-impl SMotor for EMotorForMotor<'_>{
+impl SMotor for EMotorForTMotor<'_>{
 
 	#[inline]
 	fn set_motor_ref(&self) {

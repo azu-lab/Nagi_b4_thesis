@@ -119,7 +119,7 @@ celltype tTask_rs {
 
 	factory {
 		write("tecsgen.cfg",
-				"CRE_TSK(%s, { %s, 0, task_rs, %s, %s, NULL });",
+				"CRE_TSK(%s, { %s, 0, tTask_start, %s, %s, NULL });",
 									id, attribute, priority, stackSize);
 		//write("kernel_obj_ref.rs", 
 		//		"static %s_REF:TaskRef = unsafe{TaskRef::from_raw_nonnull(NonZeroI32::new(%s).unwrap())};",

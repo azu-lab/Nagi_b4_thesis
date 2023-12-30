@@ -11,10 +11,10 @@
  * multi-domain      :  no
  * idx_is_id(actual) :  no(no)
  * singleton         :  no
- * has_CB            :  no
+ * has_CB            :  yes
  * has_INIB          :  yes
  * rom               :  yes
- * CB initializer    :  no
+ * CB initializer    :  yes
  */
 
 /* global header #_IGH_# */
@@ -36,17 +36,20 @@ typedef const struct tag_tBinarySearch_INIB {
     /* attribute(RO) #_ATO_# */ 
     const int32_t*       array;
 }  tBinarySearch_INIB;
-
-/* CB not exist. CB corresponding to INIB #_DCI_# */
-#define tBinarySearch_CB_tab           tBinarySearch_INIB_tab
-#define tBinarySearch_CB               tBinarySearch_INIB
-#define tag_tBinarySearch_CB           tag_tBinarySearch_INIB
-
+/* cell CB type definition #_CCTPA_# */
+typedef struct tag_tBinarySearch_CB {
+    tBinarySearch_INIB  *_inib;
+    /* call port #_TCP_# */
+    /* call port #_NEP_# */ 
+    /* var #_VA_# */ 
+    int32_t        left;
+    int32_t        right;
+}  tBinarySearch_CB;
 /* singleton cell CB prototype declaration #_MCPB_# */
-extern tBinarySearch_INIB  tBinarySearch_INIB_tab[];
+extern tBinarySearch_CB  tBinarySearch_CB_tab[];
 
 /* celltype IDX type #_CTIX_# */
-typedef const struct tag_tBinarySearch_INIB *tBinarySearch_IDX;
+typedef struct tag_tBinarySearch_CB *tBinarySearch_IDX;
 
 /* prototype declaration of entry port function #_EPP_# */
 /* sBinarySearch */
@@ -78,11 +81,19 @@ int32_t      tBinarySearch_eBinarySearch_binary_search(tBinarySearch_IDX idx, in
 #define tBinarySearch_GET_CELLCB(idx) (idx)
 
 /* attr access  #_AAM_# */
-#define tBinarySearch_ATTR_array( p_that )	((p_that)->array)
+#define tBinarySearch_ATTR_array( p_that )	((p_that)->_inib->array)
 
-#define tBinarySearch_GET_array(p_that)	((p_that)->array)
+#define tBinarySearch_GET_array(p_that)	((p_that)->_inib->array)
 
 
+/* var access macro #_VAM_# */
+#define tBinarySearch_VAR_left(p_that)	((p_that)->left)
+#define tBinarySearch_VAR_right(p_that)	((p_that)->right)
+
+#define tBinarySearch_GET_left(p_that)	((p_that)->left)
+#define tBinarySearch_SET_left(p_that,val)	((p_that)->left=(val))
+#define tBinarySearch_GET_right(p_that)	((p_that)->right)
+#define tBinarySearch_SET_right(p_that,val)	((p_that)->right=(val))
 
 #ifndef TECSFLOW
  /* call port function macro #_CPM_# */
@@ -135,6 +146,10 @@ extern "C" {
 #define ATTR_array           tBinarySearch_ATTR_array( p_cellcb )
 
 
+/* var access macro (abbrev) #_VAMA_# */
+#define VAR_left             tBinarySearch_VAR_left( p_cellcb )
+#define VAR_right            tBinarySearch_VAR_right( p_cellcb )
+
 /* call port function macro (abbrev) #_CPMA_# */
 #define cCompare_cmp( value, key, left, right, mind ) \
           ((void)p_cellcb, tBinarySearch_cCompare_cmp( p_cellcb, value, key, left, right, mind ))
@@ -148,11 +163,17 @@ extern "C" {
 /* iteration code (FOREACH_CELL) #_FEC_# */
 #define FOREACH_CELL(i,p_cb)   \
     for( (i) = 0; (i) < tBinarySearch_N_CELL; (i)++ ){ \
-       //(p_cb) = &tBinarySearch_CB_tab[i];
+       (p_cb) = &tBinarySearch_CB_tab[i];
 
 #define END_FOREACH_CELL   }
 
 /* CB initialize macro #_CIM_# */
+#define INITIALIZE_CB(p_that)\
+	(p_that)->left = 0;\
+	(p_that)->right = 99;
+#define SET_CB_INIB_POINTER(i,p_that)\
+	(p_that)->_inib = &tBinarySearch_INIB_tab[(i)];
+
 #endif /* TOPPERS_CB_TYPE_ONLY */
 
 #ifndef TOPPERS_MACRO_ONLY

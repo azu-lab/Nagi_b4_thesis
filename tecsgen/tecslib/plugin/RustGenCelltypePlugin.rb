@@ -335,6 +335,13 @@ class RustGenCelltypePlugin < CelltypePlugin
         return str
     end
 
+    # implファイルにuse文を生成する
+    def gen_use_for_trait_files file, celltype, port
+        if @celltype.get_var_list.length != 0 then
+            file.print "use spin::Mutex;\n"
+        end
+    end
+
     # セルタイプに呼び口がある場合，その呼び口につながっているシグニチャのトレイトファイルを生成する
     def gen_trait_files
 
@@ -350,6 +357,8 @@ class RustGenCelltypePlugin < CelltypePlugin
                 # else
                     file2 = CFile.open( "#{$gen}/#{snake_case(sig_name)}.rs", "w" )
                 # end
+
+                gen_use_for_trait_files file2, @celltype, port
 
                 file2.print "pub trait #{camel_case(snake_case(sig_name))} {\n"
                 # シグニチャの引数の文字列を取得する
@@ -865,6 +874,9 @@ class RustGenCelltypePlugin < CelltypePlugin
                             var_type_name = var.get_type.get_type_str
                             if check_lifetime_annotation var_type_name then
                                 file.print "a"
+                                break
+                            else
+                                file.print "_"
                                 break
                             end
                         }
