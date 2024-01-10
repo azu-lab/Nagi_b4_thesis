@@ -1,3 +1,4 @@
+use spin::Mutex;
 pub trait SMotor {
 	#[inline]
 	fn set_motor_ref(&self);

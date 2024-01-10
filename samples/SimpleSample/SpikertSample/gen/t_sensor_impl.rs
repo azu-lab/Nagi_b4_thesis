@@ -1,7 +1,7 @@
 use spin::Mutex;
-use crate::{sensor::*, s_powerdown::*, s_sensor::*};
+use crate::{t_sensor::*, s_powerdown::*, s_sensor::*};
 
-impl SSensor for ESensorForSensor<'_>{
+impl SSensor for ESensorForTSensor<'_>{
 
 	#[inline]
 	fn set_device_ref(&self) {

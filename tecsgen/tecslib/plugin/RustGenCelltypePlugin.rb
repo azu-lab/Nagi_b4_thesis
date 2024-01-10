@@ -337,9 +337,11 @@ class RustGenCelltypePlugin < CelltypePlugin
 
     # implファイルにuse文を生成する
     def gen_use_for_trait_files file, celltype, port
-        if @celltype.get_var_list.length != 0 then
+        # TODO:シグニチャが接続されているセルタイプに変数があるときだけ，spinクレートをuseするようにする
+        # 下のifだとシグニチャが複数回利用され，セルタイプに変数が無いものがあるとき，うまくuse文を生成できない
+        # if celltype.get_var_list.length != 0 then
             file.print "use spin::Mutex;\n"
-        end
+        # end
     end
 
     # セルタイプに呼び口がある場合，その呼び口につながっているシグニチャのトレイトファイルを生成する
@@ -357,10 +359,12 @@ class RustGenCelltypePlugin < CelltypePlugin
                 # else
                     file2 = CFile.open( "#{$gen}/#{snake_case(sig_name)}.rs", "w" )
                 # end
-
+                print "gen_use_for_trait_files\n"
                 gen_use_for_trait_files file2, @celltype, port
 
                 file2.print "pub trait #{camel_case(snake_case(sig_name))} {\n"
+
+                print "get_sig_param_str\n"
                 # シグニチャの引数の文字列を取得する
                 param_list_str, param_return_str, lifetime_flag = get_sig_param_str sig
 
@@ -402,6 +406,14 @@ class RustGenCelltypePlugin < CelltypePlugin
                 }
                 file2.print "}\n"
 
+                file2.close
+
+                # lines = File.readlines("#{$gen}/#{snake_case(sig_name)}.rs", chomp: true).uniq!
+                # if lines != nil then
+                #     File.open("#{$gen}/#{snake_case(sig_name)}.rs", 'w') do |file|
+                #         lines.each { |line| file.puts line }
+                #     end
+                # end
             # end
         }
 
@@ -412,10 +424,10 @@ class RustGenCelltypePlugin < CelltypePlugin
         plugin_option = @plugin_arg_str.strip
         if plugin_option == "main" || plugin_option == "lib" then
             tempfile = CFile.open( "#{$gen}/#{plugin_option}.rs", "a" )
-            tempfile.print "mod t_#{snake_case(camel_case(celltype.get_global_name.to_s[1..-1]))};\n"
+            tempfile.print "mod #{snake_case(celltype.get_global_name.to_s)};\n"
             @celltype.get_port_list.each{ |port|
                 if port.get_port_type == :ENTRY then
-                    tempfile.print "mod t_#{snake_case(camel_case(celltype.get_global_name.to_s[1..-1]))}_impl;\n"
+                    tempfile.print "mod #{snake_case(celltype.get_global_name.to_s)}_impl;\n"
                     break
                 end
             }
@@ -456,7 +468,7 @@ class RustGenCelltypePlugin < CelltypePlugin
                 else
                     call_celltype_name = port.get_real_callee_port.get_celltype.get_global_name.to_s
                     call_cell_name = port.get_real_callee_cell.get_global_name.to_s
-                    @use_string_list.push("t_#{snake_case(camel_case(call_celltype_name[1..-1]))}")
+                    @use_string_list.push("#{snake_case(call_celltype_name)}")
                     # @use_string_list.push("#{snake_case(call_celltype_name[1..-1])}_des")
                 end
             # end
@@ -1008,7 +1020,7 @@ class RustGenCelltypePlugin < CelltypePlugin
     # implファイルのuse文を生成する
     def gen_use_for_impl_file file, celltype
         use_list = []
-        use_list.push("t_#{snake_case(camel_case(celltype.get_global_name.to_s[1..-1]))}")
+        use_list.push("#{snake_case(celltype.get_global_name.to_s)}")
         @celltype.get_port_list.each{ |port|
             use_list.push("#{snake_case(port.get_signature.get_global_name.to_s)}")
         }
@@ -1060,7 +1072,7 @@ class RustGenCelltypePlugin < CelltypePlugin
             # gen_mod_test cell
 
             # file = CFile.open( "#{$gen}/#{global_file_name}.rs", "w" )
-            file = CFile.open( "#{$gen}/t_#{snake_case(camel_case(@celltype.get_global_name.to_s[1..-1]))}.rs", "w")
+            file = CFile.open( "#{$gen}/#{snake_case(@celltype.get_global_name.to_s)}.rs", "w")
 
             @use_string_list = []
 
@@ -1165,7 +1177,7 @@ class RustGenCelltypePlugin < CelltypePlugin
 
             if port.get_port_type == :ENTRY then
 
-                file = CFile.open( "#{$gen}/t_#{snake_case(camel_case(@celltype.get_global_name.to_s[1..-1]))}_impl.rs", "w" )
+                file = CFile.open( "#{$gen}/#{snake_case(@celltype.get_global_name.to_s)}_impl.rs", "w" )
 
                 print "gen_use_for_impl_file\n"
                 # implファイルようのuse文を生成
@@ -1174,8 +1186,8 @@ class RustGenCelltypePlugin < CelltypePlugin
                 print "gen_rust_entryport_function\n"
                 # セルタイプに受け口がある場合，impl を生成する
                 gen_rust_entryport_function file, @celltype, callport_list, use_jenerics_alphabet
+                break
             end
-            break
         }
 
         # } # celltype.get_cell_list.each

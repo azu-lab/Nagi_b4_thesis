@@ -1,5 +1,5 @@
 use spin::Mutex;
-use crate::{motor::*, s_powerdown::*, s_motor::*};
+use crate::{t_motor::*, s_powerdown::*, s_motor::*};
 
 impl SMotor for EMotorForTMotor<'_>{
 

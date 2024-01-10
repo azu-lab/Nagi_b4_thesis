@@ -91,7 +91,7 @@ class ItronrsGenCelltypePlugin < RustGenCelltypePlugin
         end
     end
 
-    def gen_mod_in_main_lib_rs_for_cell celltype
+    def gen_mod_in_main_lib_rs_for_celltype celltype
         plugin_option = @plugin_arg_str.strip
         if plugin_option == "main" || plugin_option == "lib" then
             tempfile = CFile.open( "#{$gen}/#{plugin_option}.rs", "a" )
@@ -132,7 +132,7 @@ class ItronrsGenCelltypePlugin < RustGenCelltypePlugin
     end
 
     # セル構造体の属性フィールドの定義を生成
-    def gen_rust_cell_structure_attribute file, cell, callport_list, use_jenerics_alphabet
+    def gen_rust_cell_structure_attribute file, callport_list, use_jenerics_alphabet
         @celltype.get_attribute_list.each{ |attr|
             if attr.is_omit? then
                 next

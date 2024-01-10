@@ -1,6 +1,6 @@
-use crate::{task::*, s_task::*, si_task::*, s_task_body::*, si_notification_handler::*};
+use crate::{t_task_rs::*, s_task::*, si_task::*, s_task_body::*, si_notification_handler::*};
 
-impl STask for ETaskForTask<'_>{
+impl STask for ETaskForTTaskRs<'_>{
 
 	#[inline]
 	fn activate(&self) -> ER{
@@ -69,7 +69,7 @@ impl STask for ETaskForTask<'_>{
 	}
 }
 
-impl SiTask for EiTaskForTask<'_>{
+impl SiTask for EiTaskForTTaskRs<'_>{
 
 	#[inline]
 	fn activate(&self) -> ER{
@@ -88,11 +88,11 @@ impl SiTask for EiTaskForTask<'_>{
 	}
 }
 
-impl SiNotificationHandler for EiActivateNotificationHandlerForTask<'_>{
+impl SiNotificationHandler for EiActivateNotificationHandlerForTTaskRs<'_>{
 
 }
 
-impl SiNotificationHandler for EiWakeUpNotificationHandlerForTask<'_>{
+impl SiNotificationHandler for EiWakeUpNotificationHandlerForTTaskRs<'_>{
 
 }
 

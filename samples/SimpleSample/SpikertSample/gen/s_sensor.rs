@@ -1,3 +1,4 @@
+use spin::Mutex;
 pub trait SSensor {
 	#[inline]
 	fn set_device_ref(&self);
