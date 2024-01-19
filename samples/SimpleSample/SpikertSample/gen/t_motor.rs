@@ -35,7 +35,6 @@ pub static EMOTORFORMOTOR: EMotorForTMotor = EMotorForTMotor {
 impl<'a, T: SPowerdown> TMotor<'a, T> {
 	#[inline]
 	pub fn get_cell_ref<'a>(&self) -> (&T, &pbio_port_id_t, &Mutex<TMotorVar<'a>>) {
-		(&self.c_powerdown, &self.port, self.variable)
+		(&self.c_powerdown, &self.port, &self.variable)
 	}
 }
-

@@ -35,7 +35,6 @@ pub static ESENSORFORSENSOR: ESensorForTSensor = ESensorForTSensor {
 impl<'a, T: SPowerdown> TSensor<'a, T> {
 	#[inline]
 	pub fn get_cell_ref<'a>(&self) -> (&T, &pbio_port_id_t, &Mutex<TSensorVar<'a>>) {
-		(&self.c_powerdown, &self.port, self.variable)
+		(&self.c_powerdown, &self.port, &self.variable)
 	}
 }
-

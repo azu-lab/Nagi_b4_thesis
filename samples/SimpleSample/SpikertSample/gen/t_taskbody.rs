@@ -28,4 +28,3 @@ impl<T: SSensor, U: SMotor> TTaskbody<'_, T, U> {
 		(&self.c_sensor, &self.c_motor)
 	}
 }
-

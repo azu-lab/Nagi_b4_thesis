@@ -55,4 +55,3 @@ impl<T: STaskBody> TTaskRs<'_, T> {
 		(&self.c_task_body, &self.task_ref)
 	}
 }
-

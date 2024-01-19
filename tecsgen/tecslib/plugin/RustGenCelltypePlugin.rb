@@ -465,7 +465,7 @@ class RustGenCelltypePlugin < CelltypePlugin
     # セルの構造体の定義の先頭部を生成
     def gen_rust_cell_structure_header file, celltype, callport_list, use_jenerics_alphabet
         file.print "pub struct #{get_rust_celltype_name(celltype)}"
-        if check_empty_celltype(celltype) then
+        if check_only_entryport_celltype(celltype) then
         else
             file.print "<'a"
             # use_jenerics_alphabet と callport_list の要素数が等しいことを前提としている
@@ -650,117 +650,56 @@ class RustGenCelltypePlugin < CelltypePlugin
     end
 
     # 受け口構造体の定義を生成
-    def gen_rust_entry_structure file, celltype, callport_list, use_jenerics_alphabet
+    def gen_rust_entry_structure file, celltype
         celltype.get_port_list.each{ |port|
             if port.get_port_type == :ENTRY then
                 # 受け口構造体の定義を生成
-                file.print"pub struct #{camel_case(snake_case(port.get_name.to_s))}For#{get_rust_celltype_name celltype}"
+                file.print"pub struct #{camel_case(snake_case(port.get_name.to_s))}For#{get_rust_celltype_name(celltype)}"
                 file.print "<'a>"
                 file.print "{\n"
-                # @celltype.get_cell_list.each{ |cell|
-                    # 受け口を持っているセルの参照をフィールドとして生成
-                    file.print "\tpub cell: &'a #{get_rust_celltype_name celltype}"
-                    if check_empty_celltype @celltype then
-                    else
-                        file.print "<'a"
-                        @celltype.get_port_list.each{ |port|
-                            # ジェネリクスの代入を生成
-                            if port.get_port_type == :CALL then
-                                entryport_name = camel_case(snake_case(port.get_real_callee_port.get_name.to_s))
-                                call_cell_name = camel_case(snake_case(port.get_real_callee_cell.get_celltype.get_global_name.to_s))
-                                file.print ", #{entryport_name}For#{call_cell_name}<'a>"
-                            end
-                        }
-                        file.print ">"
-                    end
-                    file.print ",\n"
-                # }
+                # 受け口を持っているセルの参照をフィールドとして生成
+                file.print "\tpub cell: &'a #{get_rust_celltype_name(celltype)}"
+                if check_only_entryport_celltype(celltype) then
+                else
+                    file.print "<'a"
+                    celltype.get_port_list.each{ |port|
+                        # ジェネリクスの代入を生成
+                        if port.get_port_type == :CALL then
+                            entryport_name = camel_case(snake_case(port.get_real_callee_port.get_name.to_s))
+                            call_cell_name = camel_case(snake_case(port.get_real_callee_cell.get_celltype.get_global_name.to_s))
+                            file.print ", #{entryport_name}For#{call_cell_name}<'a>"
+                        end
+                    }
+                    file.print ">"
+                end
+                file.print ",\n"
                 file.print "}\n\n"
-
-                # # 受け口構造体の初期化を生成
-                # # 一つの受け口構造体がもつセルは１つ
-                # file.print "pub static #{port.get_name.to_s.upcase}FOR#{cell.get_global_name.to_s.upcase}: #{camel_case(snake_case(port.get_name.to_s))}For#{get_rust_celltype_name celltype} = #{camel_case(snake_case(port.get_name.to_s))}For#{get_rust_celltype_name celltype} {\n"
-                # celltype.get_cell_list.each{ |cell|
-                #     file.print "\tcell: &#{cell.get_global_name.to_s.upcase},\n"
-                # }
-                # file.print "};\n\n"
-                
             end
         }
     end
 
     # 受け口構造体の初期化を生成
-    def gen_rust_entryport_structure_initialize file, celltype, cell, callport_list, use_jenerics_alphabet
-        @celltype.get_port_list.each{ |port|
+    def gen_rust_entryport_structure_initialize file, celltype, cell
+        celltype.get_port_list.each{ |port|
             if port.get_port_type == :ENTRY then
                 # 受け口構造体の初期化を生成
                 # 一つの受け口構造体がもつセルは１つ
-                file.print "pub static #{port.get_name.to_s.upcase}FOR#{cell.get_global_name.to_s.upcase}: #{camel_case(snake_case(port.get_name.to_s))}For#{get_rust_celltype_name celltype} = #{camel_case(snake_case(port.get_name.to_s))}For#{get_rust_celltype_name celltype} {\n"
-                # celltype.get_cell_list.each{ |cell|
-                    file.print "\tcell: &#{cell.get_global_name.to_s.upcase},\n"
-                # }
+                file.print "pub static #{port.get_name.to_s.upcase}FOR#{cell.get_global_name.to_s.upcase}: #{camel_case(snake_case(port.get_name.to_s))}For#{get_rust_celltype_name(celltype)} = #{camel_case(snake_case(port.get_name.to_s))}For#{get_rust_celltype_name(celltype)} {\n"
+                file.print "\tcell: &#{cell.get_global_name.to_s.upcase},\n"
                 file.print "};\n\n"
             end
         }
     end
 
     # セルタイプに受け口がある場合，受け口関数を生成する
-    def gen_rust_entryport_function file, celltype, callport_list, use_jenerics_alphabet
+    def gen_rust_entryport_function file, celltype
         # セルタイプに受け口がある場合，impl を生成する
-        @celltype.get_port_list.each{ |port|
+        celltype.get_port_list.each{ |port|
             if port.get_port_type == :ENTRY then
-                # cell_name = cell.get_global_name.to_s
                 sig = port.get_signature
-                signature_name = sig.get_global_name.to_s
 
-                file.print "impl #{camel_case(snake_case(port.get_signature.get_global_name.to_s))} for #{camel_case(snake_case(port.get_name.to_s))}For#{get_rust_celltype_name celltype}<'_"
-
-                # # if callport_list.length != 0 then
-                # #     file.print ", "
-                # # end
-
-                # 以下のジェネリクス代入部は要らない可能性あり
-                # # ジェネリクスを代入
-                # callport_list.each_with_index do |callport, index|
-                #     if check_callee_port_celltype_is_itron_object callport then
-                #         entryport_name = camel_case(snake_case(callport.get_real_callee_port.get_name.to_s))
-                #         call_cell_name = camel_case(snake_case(callport.get_real_callee_cell.get_global_name.to_s))
-                #         if index == callport_list.length - 1
-                #             # 最後の要素の処理
-                #             file.print ", #{entryport_name}For#{call_cell_name}"
-                #         else
-                #             # 通常の要素の処理
-                #             file.print ", #{entryport_name}For#{call_cell_name}"
-                #         end
-                #         # next
-                #     else
-                #         entryport_name = camel_case(snake_case(callport.get_real_callee_port.get_name.to_s))
-                #         call_cell_name = camel_case(snake_case(callport.get_real_callee_cell.get_global_name.to_s))
-                #         callee_cell = callport.get_real_callee_cell
-                #         callee_celltype = callee_cell.get_celltype
-                #         if index == callport_list.length - 1
-                #             # 最後の要素の処理
-                #             file.print ", #{entryport_name}For#{call_cell_name}"
-                #             callee_celltype.get_port_list.each do |callee_port|
-                #                 if callee_port.get_port_type == :CALL then
-                #                     file.print "<'_>"
-                #                     break
-                #                 end
-                #             end
-                #         else
-                #             # 通常の要素の処理
-                #             file.print ", #{entryport_name}For#{call_cell_name}"
-                #             callee_celltype.get_port_list.each do |callee_port|
-                #                 if callee_port.get_port_type == :CALL then
-                #                     file.print "<'_>"
-                #                 end
-                #             end
-                #         end
-                #     end
-                # end # port_list.each_with_index
-
+                file.print "impl #{camel_case(snake_case(port.get_signature.get_global_name.to_s))} for #{camel_case(snake_case(port.get_name.to_s))}For#{get_rust_celltype_name(celltype)}<'_"
                 file.print ">"
-                
                 file.print "{\n\n"
 
                 sig_param_str_list, _, lifetime_flag = get_sig_param_str sig
@@ -776,13 +715,14 @@ class RustGenCelltypePlugin < CelltypePlugin
                         file.print "<'a>"
                     end
                     file.print"(&self"
+                    # param_num と sig_param_str_list の要素数が等しいことを前提としている
                     param_num = func_head.get_paramlist.get_items.size
                     param_num.times do
-                        temp = sig_param_str_list.shift
-                        if temp == "ignore" then
+                        current_param = sig_param_str_list.shift
+                        if current_param == "ignore" then
                             next
                         end
-                        file.print "#{temp}"
+                        file.print "#{current_param}"
                     end
                     file.print ") "
 
@@ -793,7 +733,7 @@ class RustGenCelltypePlugin < CelltypePlugin
 
                     file.print "{\n"
 
-                    if check_empty_celltype celltype then
+                    if check_only_entryport_celltype(celltype) then
                     else
                         # get_cell_ref 関数の呼び出しを生成
                         file.print "\t\tlet cell_ref = self.cell.get_cell_ref();\n"
@@ -809,7 +749,7 @@ class RustGenCelltypePlugin < CelltypePlugin
         }
     end
     # セルタイプに受け口以外の要素があるかどうかを判断する
-    def check_empty_celltype celltype
+    def check_only_entryport_celltype celltype
         celltype.get_port_list.each{ |port|
             if port.get_port_type == :CALL then
                 return false
@@ -832,15 +772,16 @@ class RustGenCelltypePlugin < CelltypePlugin
             if port.get_port_type == :ENTRY then
                 jenerics_flag = true
                 file.print "impl"
-                if check_empty_celltype celltype then
+                if check_only_entryport_celltype(celltype) then
                 else
                     file.print "<"
                 end
                 # ライフタイムアノテーションの生成部
                 # TODO：ライフタイムについては，もう少し厳格にする必要がある
-                @celltype.get_var_list.each{ |var|
+                celltype.get_var_list.each{ |var|
+                    # ライフタイムアノテーションが必要な型が変数にあるかどうかを判断
                     var_type_name = var.get_type.get_type_str
-                    if check_lifetime_annotation var_type_name then
+                    if check_lifetime_annotation(var_type_name) then
                         file.print "'a, "
                         break
                     end
@@ -849,27 +790,27 @@ class RustGenCelltypePlugin < CelltypePlugin
                 callport_list.zip(use_jenerics_alphabet).each do |callport, alphabet|
                     if jenerics_flag then
                         jenerics_flag = false
-                        file.print "#{alphabet}: #{get_rust_signature_name callport.get_signature}"
+                        file.print "#{alphabet}: #{get_rust_signature_name(callport.get_signature)}"
                     else
-                        file.print ", #{alphabet}: #{get_rust_signature_name callport.get_signature}"
+                        file.print ", #{alphabet}: #{get_rust_signature_name(callport.get_signature)}"
                     end
                 end
-                if check_empty_celltype @celltype then
+                if check_only_entryport_celltype(celltype) then
                 else
                     file.print ">"
                 end
 
                 # impl する型を生成
-                file.print " #{get_rust_celltype_name celltype}"
-                if check_empty_celltype celltype then
+                file.print " #{get_rust_celltype_name(celltype)}"
+                if check_only_entryport_celltype(celltype) then
                 else
                     file.print "<'"
                     # ライフタイムアノテーションの生成部
                     # TODO：ライフタイムについては，もう少し厳格にする必要がある
-                    if @celltype.get_var_list.length != 0 then
-                        @celltype.get_var_list.each{ |var|
+                    if celltype.get_var_list.length != 0 then
+                        celltype.get_var_list.each{ |var|
                             var_type_name = var.get_type.get_type_str
-                            if check_lifetime_annotation var_type_name then
+                            if check_lifetime_annotation(var_type_name) then
                                 file.print "a"
                                 break
                             else
@@ -894,91 +835,163 @@ class RustGenCelltypePlugin < CelltypePlugin
                 file.print "\tpub fn get_cell_ref"
                 # ライフタイムアノテーションの生成部
                 # TODO：ライフタイムについては，もう少し厳格にする必要がある
-                @celltype.get_var_list.each{ |var|
+                celltype.get_var_list.each{ |var|
                     var_type_name = var.get_type.get_type_str
-                    if check_lifetime_annotation var_type_name then
+                    if check_lifetime_annotation(var_type_name) then
                         file.print "<'a>"
                         break
                     end
                 }
-                file.print "(&self) -> ("
-                # 返り値のタプル型の定義を生成
-                callport_list.zip(use_jenerics_alphabet).each_with_index do |(callport, alphabet), index|
-                    if index == 0 then
-                        file.print "&#{alphabet}"
-                    else
-                        file.print ", &#{alphabet}"
-                    end
+                file.print "(&self) -> "
+
+                # 返り値のタプル型の要素をまとめるための配列
+                return_tuple_type_list = []
+                return_tuple_list = []
+
+                # 呼び口をタプルの配列に追加
+                callport_list.zip(use_jenerics_alphabet).each do |callport, alphabet|
+                    return_tuple_type_list.push("&#{alphabet}")
+                    return_tuple_list.push("&self.#{snake_case(callport.get_name.to_s)}")
                 end
-                @celltype.get_attribute_list.each{ |attr|
+
+                # 属性をタプルの配列に追加
+                celltype.get_attribute_list.each{ |attr|
                     if attr.is_omit? then
                         next
                     end
-                    if callport_list.length == 0 then
-                        file.print "&#{c_type_to_rust_type(attr.get_type)}"
-                    else
-                        file.print ", &#{c_type_to_rust_type(attr.get_type)}"
-                    end
+                    return_tuple_type_list.push("&#{c_type_to_rust_type(attr.get_type)}")
+                    return_tuple_list.push("&self.#{attr.get_name.to_s}")
                 }
 
-                if @celltype.get_var_list.length != 0 then
-                    if callport_list.length == 0 && @celltype.get_attribute_list.length == 0 then
-                        file.print "&Mutex<#{get_rust_celltype_name celltype}Var"
-                        # ライフタイムアノテーションの生成部
-                        # TODO：ライフタイムについては，もう少し厳格にする必要がある
-                        @celltype.get_var_list.each{ |var|
-                            var_type_name = var.get_type.get_type_str
-                            if check_lifetime_annotation var_type_name then
-                                file.print "<'a>"
-                                break
-                            end
-                        }
-                        file.print ">) {\n"
-                    else
-                        file.print ", &Mutex<#{get_rust_celltype_name celltype}Var"
-                        # ライフタイムアノテーションの生成部
-                        # TODO：ライフタイムについては，もう少し厳格にする必要がある
-                        @celltype.get_var_list.each{ |var|
-                            var_type_name = var.get_type.get_type_str
-                            if check_lifetime_annotation var_type_name then
-                                file.print "<'a>"
-                                break
-                            end
-                        }
-                        file.print ">) {\n"
-                    end
-                else
-                    file.print ") {\n"
+                # 変数をタプルの配列に追加
+                if celltype.get_var_list.length != 0 then
+                    return_tuple_type_list.push("&Mutex<#{get_rust_celltype_name(celltype)}Var")
+                    celltype.get_var_list.each{ |var|
+                        var_type_name = var.get_type.get_type_str
+                        if check_lifetime_annotation(var_type_name) then
+                            return_tuple_type_list[-1].concat("<'a>>")
+                            break
+                        end
+                    }
+                    return_tuple_list.push("&self.variable")
+                end
+
+                if return_tuple_type_list.length != 1 then
+                    file.print "("
                 end
 
                 # 返り値のタプル型を生成
-                file.print "\t\t("
-                callport_list.each_with_index do |callport, index|
-                    if index == 0 then
-                        file.print "&self.#{snake_case(callport.get_name.to_s)}"
-                    else
-                        file.print ", &self.#{snake_case(callport.get_name.to_s)}"
+                return_tuple_type_list.each_with_index do |return_tuple_type, index|
+                    if index == return_tuple_type_list.length - 1 then
+                        file.print "#{return_tuple_type}"
+                        break
                     end
+                    file.print "#{return_tuple_type}, "
                 end
-                @celltype.get_attribute_list.each{ |attr|
-                    if attr.is_omit? then
-                        next
-                    end
-                    if callport_list.length == 0 then
-                        file.print "&self.#{attr.get_name.to_s}"
-                    else
-                        file.print ", &self.#{attr.get_name.to_s}"
-                    end
-                }
-                if @celltype.get_var_list.length != 0 then
-                    if callport_list.length == 0 && @celltype.get_attribute_list.length == 0 then
-                        file.print "&self.variable)\n\t}\n}\n\n"
-                    else
-                        file.print ", self.variable)\n\t}\n}\n\n"
-                    end
-                else
-                    file.print ")\n\t}\n}\n\n"
+
+                if return_tuple_type_list.length != 1 then
+                    file.print ")"
                 end
+                file.print " {\n"
+
+                file.print "\t\t"
+                
+                if return_tuple_list.length != 1 then
+                    file.print "("
+                end
+
+                # 返り値のタプルを生成
+                return_tuple_list.each_with_index do |return_tuple, index|
+                    if index == return_tuple_list.length - 1 then
+                        file.print "#{return_tuple}"
+                        break
+                    end
+                    file.print "#{return_tuple}, "
+                end
+
+                if return_tuple_list.length != 1 then
+                    file.print ")"
+                end
+                
+                file.print"\n\t}\n}"
+
+                # # 返り値のタプル型の定義を生成
+                # callport_list.zip(use_jenerics_alphabet).each_with_index do |(callport, alphabet), index|
+                #     if index == 0 then
+                #         file.print "&#{alphabet}"
+                #     else
+                #         file.print ", &#{alphabet}"
+                #     end
+                # end
+                # @celltype.get_attribute_list.each{ |attr|
+                #     if attr.is_omit? then
+                #         next
+                #     end
+                #     if callport_list.length == 0 then
+                #         file.print "&#{c_type_to_rust_type(attr.get_type)}"
+                #     else
+                #         file.print ", &#{c_type_to_rust_type(attr.get_type)}"
+                #     end
+                # }
+
+                # if celltype.get_var_list.length != 0 then
+                #     if callport_list.length == 0 && celltype.get_attribute_list.length == 0 then
+                #         file.print "&Mutex<#{get_rust_celltype_name(celltype)}Var"
+                #         # ライフタイムアノテーションの生成部
+                #         # TODO：ライフタイムについては，もう少し厳格にする必要がある
+                #         @celltype.get_var_list.each{ |var|
+                #             var_type_name = var.get_type.get_type_str
+                #             if check_lifetime_annotation var_type_name then
+                #                 file.print "<'a>"
+                #                 break
+                #             end
+                #         }
+                #         file.print ">) {\n"
+                #     else
+                #         file.print ", &Mutex<#{get_rust_celltype_name(celltype)}Var"
+                #         # ライフタイムアノテーションの生成部
+                #         # TODO：ライフタイムについては，もう少し厳格にする必要がある
+                #         @celltype.get_var_list.each{ |var|
+                #             var_type_name = var.get_type.get_type_str
+                #             if check_lifetime_annotation(var_type_name) then
+                #                 file.print "<'a>"
+                #                 break
+                #             end
+                #         }
+                #         file.print ">) {\n"
+                #     end
+                # else
+                #     file.print ") {\n"
+                # end
+
+                # # 返り値のタプル型を生成
+                # file.print "\t\t("
+                # callport_list.each_with_index do |callport, index|
+                #     if index == 0 then
+                #         file.print "&self.#{snake_case(callport.get_name.to_s)}"
+                #     else
+                #         file.print ", &self.#{snake_case(callport.get_name.to_s)}"
+                #     end
+                # end
+                # celltype.get_attribute_list.each{ |attr|
+                #     if attr.is_omit? then
+                #         next
+                #     end
+                #     if callport_list.length == 0 then
+                #         file.print "&self.#{attr.get_name.to_s}"
+                #     else
+                #         file.print ", &self.#{attr.get_name.to_s}"
+                #     end
+                # }
+                # if celltype.get_var_list.length != 0 then
+                #     if callport_list.length == 0 && celltype.get_attribute_list.length == 0 then
+                #         file.print "&self.variable)\n\t}\n}\n\n"
+                #     else
+                #         file.print ", self.variable)\n\t}\n}\n\n"
+                #     end
+                # else
+                #     file.print ")\n\t}\n}\n\n"
+                # end
                 # get_cell_ref 関数を生成するのは1回だけでいいため，break する
                 break
 
@@ -990,7 +1003,7 @@ class RustGenCelltypePlugin < CelltypePlugin
     def gen_use_for_impl_file file, celltype
         use_list = []
         use_list.push("#{snake_case(celltype.get_global_name.to_s)}")
-        @celltype.get_port_list.each{ |port|
+        celltype.get_port_list.each{ |port|
             use_list.push("#{snake_case(port.get_signature.get_global_name.to_s)}")
         }
         use_list.uniq!
@@ -1091,7 +1104,7 @@ class RustGenCelltypePlugin < CelltypePlugin
 
             # print "gen_rust_entry_structure\n"
             # 受け口構造体の定義と初期化を生成
-            gen_rust_entry_structure file, @celltype, callport_list, use_jenerics_alphabet
+            gen_rust_entry_structure file, @celltype
 
             # print "gen_mod_in_main_lib_rs_for_celltype\n"
             # main.rs もしくは lib.rs に mod を追加する
@@ -1129,11 +1142,11 @@ class RustGenCelltypePlugin < CelltypePlugin
 
                 # print "gen_rust_entryport_structure_initialize\n"
                 # 受け口構造体の初期化を生成
-                gen_rust_entryport_structure_initialize file, @celltype, cell, callport_list, use_jenerics_alphabet
+                gen_rust_entryport_structure_initialize file, @celltype, cell
 
             } # celltype.get_cell_list.each
 
-        if check_empty_celltype @celltype then
+        if check_only_entryport_celltype @celltype then
         else
             # print "gen_rust_get_cell_ref\n"
             # get_cell_ref 関数を生成する
@@ -1154,7 +1167,7 @@ class RustGenCelltypePlugin < CelltypePlugin
                 
                 # print "gen_rust_entryport_function\n"
                 # セルタイプに受け口がある場合，impl を生成する
-                gen_rust_entryport_function file, @celltype, callport_list, use_jenerics_alphabet
+                gen_rust_entryport_function file, @celltype
                 break
             end
         }
