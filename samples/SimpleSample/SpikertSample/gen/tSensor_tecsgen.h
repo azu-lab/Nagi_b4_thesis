@@ -52,11 +52,11 @@ typedef struct tag_tSensor_CB *tSensor_IDX;
 
 /* prototype declaration of entry port function #_EPP_# */
 /* sSensor */
-void         tSensor_eSensor_set_device_ref(tSensor_IDX idx);
-void         tSensor_eSensor_get_distance(tSensor_IDX idx, int32_t* distance);
-void         tSensor_eSensor_light_on(tSensor_IDX idx);
-void         tSensor_eSensor_light_set(tSensor_IDX idx, int32_t bv1, int32_t bv2, int32_t bv3, int32_t bv4);
-void         tSensor_eSensor_light_off(tSensor_IDX idx);
+Inline void         tSensor_eSensor_set_device_ref(tSensor_IDX idx);
+Inline void         tSensor_eSensor_get_distance(tSensor_IDX idx, int32_t* distance);
+Inline void         tSensor_eSensor_light_on(tSensor_IDX idx);
+Inline void         tSensor_eSensor_light_set(tSensor_IDX idx, int32_t bv1, int32_t bv2, int32_t bv3, int32_t bv4);
+Inline void         tSensor_eSensor_light_off(tSensor_IDX idx);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
@@ -71,8 +71,6 @@ void         tSensor_eSensor_light_off(tSensor_IDX idx);
 #ifdef  tSensor_CB_TYPE_ONLY
 #undef TOPPERS_CB_TYPE_ONLY
 #endif /* tSensor_CB_TYPE_ONLY */
-#ifndef TOPPERS_CB_TYPE_ONLY
-
 #define tSensor_ID_BASE             (1)  /* ID Base  #_NIDB_# */
 #define tSensor_N_CELL              (1)  /*  number of cells  #_NCEL_# */
 
@@ -107,8 +105,6 @@ void         tSensor_eSensor_light_off(tSensor_IDX idx);
  (error) )
 
 #endif /* TECSFLOW */
-#endif /* TOPPERS_CB_TYPE_ONLY */
-
 #ifndef TOPPERS_MACRO_ONLY
 
 #ifdef __cplusplus
@@ -117,16 +113,10 @@ extern "C" {
 
 /* prototype declaration of entry port function (referenced when VMT useless optimise enabled) #_EPSP_# */
 
-#ifndef TOPPERS_CB_TYPE_ONLY
-
-#endif /* TOPPERS_CB_TYPE_ONLY */
-
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 #endif /* TOPPERS_MACRO_ONLY */
-
-#ifndef TOPPERS_CB_TYPE_ONLY
 
 /* IDX validation macro (abbrev.) #_CVIA_# */
 #define VALID_IDX(IDX)  tSensor_VALID_IDX(IDX)
@@ -176,10 +166,40 @@ extern "C" {
 #define SET_CB_INIB_POINTER(i,p_that)\
 	(p_that)->_inib = &tSensor_INIB_tab[(i)];
 
-#endif /* TOPPERS_CB_TYPE_ONLY */
-
 #ifndef TOPPERS_MACRO_ONLY
 
+/*  include inline header #_INL_# */
+#include "tSensor_inline.h"
+
 #endif /* TOPPERS_MACRO_ONLY */
+
+#ifdef TOPPERS_CB_TYPE_ONLY
+
+/* undef for inline #_UDF_# */
+#undef VALID_IDX
+#undef GET_CELLCB
+#undef CELLCB
+#undef CELLIDX
+#undef tSensor_IDX
+#undef FOREACH_CELL
+#undef END_FOREACH_CELL
+#undef INITIALIZE_CB
+#undef SET_CB_INIB_POINTER
+#undef ATTR_port
+#undef tSensor_ATTR_port
+#undef tSensor_GET_port
+#undef VAR_ult
+#undef VAR_ult
+#undef tSensor_VAR_ult
+#undef tSensor_GET_ult
+#undef tSensor_SET_ult
+#undef tSensor_cPowerdown_powerdown
+#undef cPowerdown_powerdown
+#undef eSensor_set_device_ref
+#undef eSensor_get_distance
+#undef eSensor_light_on
+#undef eSensor_light_set
+#undef eSensor_light_off
+#endif /* TOPPERS_CB_TYPE_ONLY */
 
 #endif /* tSensor_TECSGENH */

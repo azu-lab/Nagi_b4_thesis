@@ -237,7 +237,9 @@ class RustGenCelltypePlugin < CelltypePlugin
             file.print "use spin::Mutex;\n"
             # file.print "use crate::kernel_obj_ref::*;\n"
         end
-        file.print "use crate::{"
+        if @use_string_list.length != 0 then
+            file.print "use crate::{"
+        end
         @use_string_list.each{ |use_string|
             if use_string != @use_string_list.last then
                 file.print "#{use_string}::*, "
@@ -349,7 +351,6 @@ class RustGenCelltypePlugin < CelltypePlugin
 
             sig.get_function_head_array.each{ |func_head|
                 return_flag = false
-                trait_file.print "\t#[inline]\n"
                 trait_file.print "\tfn #{func_head.get_name}"
                 if lifetime_flag then
                     trait_file.print("<'a>")
@@ -767,7 +768,9 @@ class RustGenCelltypePlugin < CelltypePlugin
                 # 空の関数を生成
                 sig.get_function_head_array.each{ |func_head|
                     # 関数のインライン化
-                    file.print "\t#[inline]\n"
+                    if port.is_inline? then
+                        file.print "\t#[inline]\n"
+                    end
                     file.print "\tfn #{func_head.get_name}"
                     if lifetime_flag then
                         file.print "<'a>"
@@ -884,7 +887,9 @@ class RustGenCelltypePlugin < CelltypePlugin
                 end
                 file.print " {\n"
                 # インライン化
-                file.print "\t#[inline]\n"
+                if port.is_inline? then
+                    file.print "\t#[inline]\n"
+                end
                 # get_cell_ref 関数の定義を生成
                 file.print "\tpub fn get_cell_ref"
                 # ライフタイムアノテーションの生成部

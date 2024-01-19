@@ -1,4 +1,4 @@
-use crate::{pub struct TPowerdown
+pub struct TPowerdown
 {
 }
 

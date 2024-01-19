@@ -39,15 +39,13 @@ typedef int   tPowerdown_IDX;
 
 /* prototype declaration of entry port function #_EPP_# */
 /* sPowerdown */
-void         tPowerdown_ePowerdown1_powerdown(tPowerdown_IDX idx, pbio_error_t error);
+Inline void         tPowerdown_ePowerdown1_powerdown(tPowerdown_IDX idx, pbio_error_t error);
 /* sPowerdown */
-void         tPowerdown_ePowerdown2_powerdown(tPowerdown_IDX idx, pbio_error_t error);
+Inline void         tPowerdown_ePowerdown2_powerdown(tPowerdown_IDX idx, pbio_error_t error);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 #endif /* TOPPERS_MACRO_ONLY */
-
-#ifndef TOPPERS_CB_TYPE_ONLY
 
 #define tPowerdown_ID_BASE          (1)  /* ID Base  #_NIDB_# */
 #define tPowerdown_N_CELL           (1)  /*  number of cells  #_NCEL_# */
@@ -61,8 +59,6 @@ void         tPowerdown_ePowerdown2_powerdown(tPowerdown_IDX idx, pbio_error_t e
 #ifndef TECSFLOW
 #else  /* TECSFLOW */
 #endif /* TECSFLOW */
-#endif /* TOPPERS_CB_TYPE_ONLY */
-
 #ifndef TOPPERS_MACRO_ONLY
 
 #ifdef __cplusplus
@@ -71,16 +67,10 @@ extern "C" {
 
 /* prototype declaration of entry port function (referenced when VMT useless optimise enabled) #_EPSP_# */
 
-#ifndef TOPPERS_CB_TYPE_ONLY
-
-#endif /* TOPPERS_CB_TYPE_ONLY */
-
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 #endif /* TOPPERS_MACRO_ONLY */
-
-#ifndef TOPPERS_CB_TYPE_ONLY
 
 /* IDX validation macro (abbrev.) #_CVIA_# */
 #define VALID_IDX(IDX)  tPowerdown_VALID_IDX(IDX)
@@ -109,10 +99,27 @@ extern "C" {
 #define END_FOREACH_CELL   }
 
 /* CB initialize macro #_CIM_# */
-#endif /* TOPPERS_CB_TYPE_ONLY */
-
 #ifndef TOPPERS_MACRO_ONLY
 
+/*  include inline header #_INL_# */
+#include "tPowerdown_inline.h"
+
 #endif /* TOPPERS_MACRO_ONLY */
+
+#ifdef TOPPERS_CB_TYPE_ONLY
+
+/* undef for inline #_UDF_# */
+#undef VALID_IDX
+#undef GET_CELLCB
+#undef CELLCB
+#undef CELLIDX
+#undef tPowerdown_IDX
+#undef FOREACH_CELL
+#undef END_FOREACH_CELL
+#undef INITIALIZE_CB
+#undef SET_CB_INIB_POINTER
+#undef ePowerdown1_powerdown
+#undef ePowerdown2_powerdown
+#endif /* TOPPERS_CB_TYPE_ONLY */
 
 #endif /* tPowerdown_TECSGENH */

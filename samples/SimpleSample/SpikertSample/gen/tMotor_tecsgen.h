@@ -52,10 +52,10 @@ typedef struct tag_tMotor_CB *tMotor_IDX;
 
 /* prototype declaration of entry port function #_EPP_# */
 /* sMotor */
-void         tMotor_eMotor_set_motor_ref(tMotor_IDX idx);
-void         tMotor_eMotor_setup(tMotor_IDX idx, pup_direction_t positive_direction, bool reset_count);
-void         tMotor_eMotor_set_speed(tMotor_IDX idx, int32_t speed);
-void         tMotor_eMotor_stop(tMotor_IDX idx);
+Inline void         tMotor_eMotor_set_motor_ref(tMotor_IDX idx);
+Inline void         tMotor_eMotor_setup(tMotor_IDX idx, pup_direction_t positive_direction, bool reset_count);
+Inline void         tMotor_eMotor_set_speed(tMotor_IDX idx, int32_t speed);
+Inline void         tMotor_eMotor_stop(tMotor_IDX idx);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
@@ -70,8 +70,6 @@ void         tMotor_eMotor_stop(tMotor_IDX idx);
 #ifdef  tMotor_CB_TYPE_ONLY
 #undef TOPPERS_CB_TYPE_ONLY
 #endif /* tMotor_CB_TYPE_ONLY */
-#ifndef TOPPERS_CB_TYPE_ONLY
-
 #define tMotor_ID_BASE              (1)  /* ID Base  #_NIDB_# */
 #define tMotor_N_CELL               (1)  /*  number of cells  #_NCEL_# */
 
@@ -106,8 +104,6 @@ void         tMotor_eMotor_stop(tMotor_IDX idx);
  (error) )
 
 #endif /* TECSFLOW */
-#endif /* TOPPERS_CB_TYPE_ONLY */
-
 #ifndef TOPPERS_MACRO_ONLY
 
 #ifdef __cplusplus
@@ -116,16 +112,10 @@ extern "C" {
 
 /* prototype declaration of entry port function (referenced when VMT useless optimise enabled) #_EPSP_# */
 
-#ifndef TOPPERS_CB_TYPE_ONLY
-
-#endif /* TOPPERS_CB_TYPE_ONLY */
-
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 #endif /* TOPPERS_MACRO_ONLY */
-
-#ifndef TOPPERS_CB_TYPE_ONLY
 
 /* IDX validation macro (abbrev.) #_CVIA_# */
 #define VALID_IDX(IDX)  tMotor_VALID_IDX(IDX)
@@ -174,10 +164,39 @@ extern "C" {
 #define SET_CB_INIB_POINTER(i,p_that)\
 	(p_that)->_inib = &tMotor_INIB_tab[(i)];
 
-#endif /* TOPPERS_CB_TYPE_ONLY */
-
 #ifndef TOPPERS_MACRO_ONLY
 
+/*  include inline header #_INL_# */
+#include "tMotor_inline.h"
+
 #endif /* TOPPERS_MACRO_ONLY */
+
+#ifdef TOPPERS_CB_TYPE_ONLY
+
+/* undef for inline #_UDF_# */
+#undef VALID_IDX
+#undef GET_CELLCB
+#undef CELLCB
+#undef CELLIDX
+#undef tMotor_IDX
+#undef FOREACH_CELL
+#undef END_FOREACH_CELL
+#undef INITIALIZE_CB
+#undef SET_CB_INIB_POINTER
+#undef ATTR_port
+#undef tMotor_ATTR_port
+#undef tMotor_GET_port
+#undef VAR_motor
+#undef VAR_motor
+#undef tMotor_VAR_motor
+#undef tMotor_GET_motor
+#undef tMotor_SET_motor
+#undef tMotor_cPowerdown_powerdown
+#undef cPowerdown_powerdown
+#undef eMotor_set_motor_ref
+#undef eMotor_setup
+#undef eMotor_set_speed
+#undef eMotor_stop
+#endif /* TOPPERS_CB_TYPE_ONLY */
 
 #endif /* tMotor_TECSGENH */

@@ -41,7 +41,7 @@ typedef int   tTaskbody_IDX;
 
 /* prototype declaration of entry port function #_EPP_# */
 /* sTaskBody */
-void         tTaskbody_eTaskbody_main(tTaskbody_IDX idx);
+Inline void         tTaskbody_eTaskbody_main(tTaskbody_IDX idx);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
@@ -57,8 +57,6 @@ void         tTaskbody_eTaskbody_main(tTaskbody_IDX idx);
 #ifdef  tTaskbody_CB_TYPE_ONLY
 #undef TOPPERS_CB_TYPE_ONLY
 #endif /* tTaskbody_CB_TYPE_ONLY */
-#ifndef TOPPERS_CB_TYPE_ONLY
-
 #define tTaskbody_ID_BASE           (1)  /* ID Base  #_NIDB_# */
 #define tTaskbody_N_CELL            (1)  /*  number of cells  #_NCEL_# */
 
@@ -128,8 +126,6 @@ void         tTaskbody_eTaskbody_main(tTaskbody_IDX idx);
  )
 
 #endif /* TECSFLOW */
-#endif /* TOPPERS_CB_TYPE_ONLY */
-
 #ifndef TOPPERS_MACRO_ONLY
 
 #ifdef __cplusplus
@@ -138,16 +134,10 @@ extern "C" {
 
 /* prototype declaration of entry port function (referenced when VMT useless optimise enabled) #_EPSP_# */
 
-#ifndef TOPPERS_CB_TYPE_ONLY
-
-#endif /* TOPPERS_CB_TYPE_ONLY */
-
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 #endif /* TOPPERS_MACRO_ONLY */
-
-#ifndef TOPPERS_CB_TYPE_ONLY
 
 /* IDX validation macro (abbrev.) #_CVIA_# */
 #define VALID_IDX(IDX)  tTaskbody_VALID_IDX(IDX)
@@ -195,10 +185,44 @@ extern "C" {
 #define END_FOREACH_CELL   }
 
 /* CB initialize macro #_CIM_# */
-#endif /* TOPPERS_CB_TYPE_ONLY */
-
 #ifndef TOPPERS_MACRO_ONLY
 
+/*  include inline header #_INL_# */
+#include "tTaskbody_inline.h"
+
 #endif /* TOPPERS_MACRO_ONLY */
+
+#ifdef TOPPERS_CB_TYPE_ONLY
+
+/* undef for inline #_UDF_# */
+#undef VALID_IDX
+#undef GET_CELLCB
+#undef CELLCB
+#undef CELLIDX
+#undef tTaskbody_IDX
+#undef FOREACH_CELL
+#undef END_FOREACH_CELL
+#undef INITIALIZE_CB
+#undef SET_CB_INIB_POINTER
+#undef tTaskbody_cSensor_set_device_ref
+#undef cSensor_set_device_ref
+#undef tTaskbody_cSensor_get_distance
+#undef cSensor_get_distance
+#undef tTaskbody_cSensor_light_on
+#undef cSensor_light_on
+#undef tTaskbody_cSensor_light_set
+#undef cSensor_light_set
+#undef tTaskbody_cSensor_light_off
+#undef cSensor_light_off
+#undef tTaskbody_cMotor_set_motor_ref
+#undef cMotor_set_motor_ref
+#undef tTaskbody_cMotor_setup
+#undef cMotor_setup
+#undef tTaskbody_cMotor_set_speed
+#undef cMotor_set_speed
+#undef tTaskbody_cMotor_stop
+#undef cMotor_stop
+#undef eTaskbody_main
+#endif /* TOPPERS_CB_TYPE_ONLY */
 
 #endif /* tTaskbody_TECSGENH */

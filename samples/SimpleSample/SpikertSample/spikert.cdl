@@ -29,7 +29,7 @@ signature sPowerdown{
 [generate (RustGenPlugin, "lib")]
 celltype tMotor {
     call sPowerdown cPowerdown;
-    entry sMotor eMotor;
+    [inline] entry sMotor eMotor;
     attr {
         pbio_port_id_t port = C_EXP("pbio_port_id_t::PBIO_PORT_ID_$port$");
     };
@@ -41,7 +41,7 @@ celltype tMotor {
 [generate (RustGenPlugin, "lib")]
 celltype tSensor {
     call sPowerdown cPowerdown;
-    entry sSensor eSensor;
+    [inline] entry sSensor eSensor;
     attr{
         pbio_port_id_t port = C_EXP("pbio_port_id_t::PBIO_PORT_ID_$port$");
     };
@@ -53,15 +53,15 @@ celltype tSensor {
 
 [generate (RustGenPlugin, "lib")]
 celltype tTaskbody {
-    entry sTaskBody eTaskbody;
+    [inline] entry sTaskBody eTaskbody;
     call sSensor cSensor;
     call sMotor cMotor;
 };
 
 [generate (RustGenPlugin, "lib")]
 celltype tPowerdown {
-    entry sPowerdown ePowerdown1;
-    entry sPowerdown ePowerdown2;
+    [inline] entry sPowerdown ePowerdown1;
+    [inline] entry sPowerdown ePowerdown2;
 };
 
 cell tMotor Motor {
