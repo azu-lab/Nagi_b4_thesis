@@ -2,7 +2,7 @@ use crate::kernel_cfg::*;  //特別な生成部
 use itron::abi::*;  //特別な生成部
 use itron::task::TaskRef;  //特別な生成部
 use core::num::NonZeroI32;  //特別な生成部
-use crate::{s_task::*, si_task::*, s_task_body::*, t_taskbody::*, si_notification_handler::*};
+use crate::{s_task_body::*, t_taskbody::*};
 
 pub struct TTaskRs<'a, T>
 where
@@ -28,7 +28,7 @@ pub struct EiWakeUpNotificationHandlerForTTaskRs<'a>{
 	pub cell: &'a TTaskRs<'a, ETaskbodyForTTaskbody<'a>>,
 }
 
-pub static TASK: TTaskRs<ETaskbodyForTaskbody> = TTaskRs {
+pub static TASK: TTaskRs<ETaskbodyForTTaskbody> = TTaskRs {
 	c_task_body: &ETASKBODYFORTASKBODY,
 	task_ref: unsafe{TaskRef::from_raw_nonnull(NonZeroI32::new(TASK1).unwrap())},
 };

@@ -1,5 +1,5 @@
 use spin::Mutex;
-use crate::{s_powerdown::*, t_powerdown::*, s_sensor::*};
+use crate::{s_powerdown::*, t_powerdown::*};
 
 pub struct TSensor<'a, T>
 where
@@ -18,13 +18,13 @@ pub struct ESensorForTSensor<'a>{
 	pub cell: &'a TSensor<'a, EPowerdown2ForTPowerdown<'a>>,
 }
 
-pub static SENSOR: TSensor<EPowerdown2ForPowerdown> = TSensor {
+pub static SENSOR: TSensor<EPowerdown2ForTPowerdown> = TSensor {
 	c_powerdown: &EPOWERDOWN2FORPOWERDOWN,
 	port: pbio_port_id_t::PBIO_PORT_ID_B,
 	variable: &SENSORVAR,
 };
 
-pub static SENSORVAR: Mutex<SensorVar> = Mutex::new(SensorVar {
+pub static SENSORVAR: Mutex<TSensorVar> = Mutex::new(TSensorVar {
 	ult: None,
 });
 

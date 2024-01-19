@@ -1,4 +1,4 @@
-use crate::{s_task_body::*, s_sensor::*, t_sensor::*, s_motor::*, t_motor::*};
+use crate::{s_sensor::*, t_sensor::*, s_motor::*, t_motor::*};
 
 pub struct TTaskbody<'a, T, U>
 where
@@ -13,7 +13,7 @@ pub struct ETaskbodyForTTaskbody<'a>{
 	pub cell: &'a TTaskbody<'a, ESensorForTSensor<'a>, EMotorForTMotor<'a>>,
 }
 
-pub static TASKBODY: TTaskbody<ESensorForSensor, EMotorForMotor> = TTaskbody {
+pub static TASKBODY: TTaskbody<ESensorForTSensor, EMotorForTMotor> = TTaskbody {
 	c_sensor: &ESENSORFORSENSOR,
 	c_motor: &EMOTORFORMOTOR,
 };

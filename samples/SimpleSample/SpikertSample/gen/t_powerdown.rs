@@ -1,6 +1,4 @@
-use crate::{s_powerdown::*};
-
-pub struct TPowerdown
+use crate::{pub struct TPowerdown
 {
 }
 

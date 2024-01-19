@@ -132,8 +132,8 @@ class ItronrsGenCelltypePlugin < RustGenCelltypePlugin
     end
 
     # セル構造体の属性フィールドの定義を生成
-    def gen_rust_cell_structure_attribute file, callport_list, use_jenerics_alphabet
-        @celltype.get_attribute_list.each{ |attr|
+    def gen_rust_cell_structure_attribute file, celltype
+        celltype.get_attribute_list.each{ |attr|
             if attr.is_omit? then
                 next
             else

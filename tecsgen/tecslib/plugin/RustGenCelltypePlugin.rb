@@ -82,74 +82,62 @@ class RustGenCelltypePlugin < CelltypePlugin
         input_string.split('_').map(&:capitalize).join
     end
 
-    def gen_module_header file
-        # すべてのシグニチャ名を mod する
-        Namespace.get_root.get_signature_list.each{ |sig|
-            # next if sig.is_allocator? == true
-            global_sig_name = sig.get_global_name
-            global_sig_name = global_sig_name.to_s
-            global_sig_name = snake_case(global_sig_name)
-            file.print "mod #{global_sig_name};\n"
-        }
-        Celltype.get_celltype_list.each{ |celltype|
-            # すべてのセルタイプのセル名を mod する．
-            celltype.get_cell_list.each{ |cell|
-                global_cell_name = cell.get_global_name
-                global_cell_name = global_cell_name.to_s
-                global_cell_name = snake_case(global_cell_name)
-                file.print "mod #{global_cell_name};\n"
-                # @use_string_list.push(global_cell_name)
-            }
-            # すべてのセルタイプ名を mod する．また，受け口を持たないセルタイプは mod しない.
-            celltype.get_port_list.each{ |port|
-                if port.get_port_type == :ENTRY then
-                    global_celltype_name = celltype.get_global_name
-                    global_celltype_name = global_celltype_name.to_s
-                    global_celltype_name = global_celltype_name[1..-1]
-                    global_celltype_name = snake_case(global_celltype_name)
-                    file.print "mod client_#{global_celltype_name};\n"
-                else
-                end
-            }
-        }
-    end
+    # def gen_module_header file
+    #     # すべてのシグニチャ名を mod する
+    #     Namespace.get_root.get_signature_list.each{ |sig|
+    #         # next if sig.is_allocator? == true
+    #         global_sig_name = sig.get_global_name
+    #         global_sig_name = global_sig_name.to_s
+    #         global_sig_name = snake_case(global_sig_name)
+    #         file.print "mod #{global_sig_name};\n"
+    #     }
+    #     Celltype.get_celltype_list.each{ |celltype|
+    #         # すべてのセルタイプのセル名を mod する．
+    #         celltype.get_cell_list.each{ |cell|
+    #             global_cell_name = cell.get_global_name
+    #             global_cell_name = global_cell_name.to_s
+    #             global_cell_name = snake_case(global_cell_name)
+    #             file.print "mod #{global_cell_name};\n"
+    #             # @use_string_list.push(global_cell_name)
+    #         }
+    #         # すべてのセルタイプ名を mod する．また，受け口を持たないセルタイプは mod しない.
+    #         celltype.get_port_list.each{ |port|
+    #             if port.get_port_type == :ENTRY then
+    #                 global_celltype_name = celltype.get_global_name
+    #                 global_celltype_name = global_celltype_name.to_s
+    #                 global_celltype_name = global_celltype_name[1..-1]
+    #                 global_celltype_name = snake_case(global_celltype_name)
+    #                 file.print "mod client_#{global_celltype_name};\n"
+    #             else
+    #             end
+    #         }
+    #     }
+    # end
 
     def get_sig_param_str sig
-        param_list = []
-        param_list_diff = []
-        param_return = []
+        param_decl_list = []
         lifetime_annotation_flag = false
         # シグニチャの param_decl を取得する
         # 今回は receive が引数に存在していないからうまくいったが，引数にもしある場合は要素数がずれる．
         sig.each_param{ |func_decl, param_decl|
             case param_decl.get_direction
             when :IN, :INOUT, :OUT
-                param_list.push(param_decl)
-            # send, receive の実装は保留.以下は没版
-            # TODO:send, receive の実装
+                param_decl_list.push(param_decl)
             when :SEND
-                param_list.push(param_decl)
-                # param_list_diff.push(param_decl.get_size.to_s)
+                param_decl_list.push(param_decl)
+                # TODO: send 引数への対応
             when :RECEIVE
-                param_list.push(param_decl)
-                # recieve のときは，return として扱うことで，要素をずらさないようにする
-                # param_list.push("return")
-                # param_return.push(param_decl)
-                # param_list_diff.push(param_decl.get_size.to_s)
+                param_decl_list.push(param_decl)
+                # TODO：receive 引数への対応
             end
         }
 
-        # lengthlength2
-        # param_list_diff.each{ |diff|
-        #     file2.print "#{diff}"
-        # }
-
         # [out,string(len)]などのlenを削除する
-        param_list.each{ |param_decl|
+        param_decl_list.each{ |param_decl|
             if param_decl.get_type.kind_of?( PtrType ) && param_decl.get_type.get_string != nil then
-                param_list.each_with_index{ |param_decl2, index|
+                param_decl_list.each_with_index{ |param_decl2, index|
                     if param_decl2.get_name.to_s == param_decl.get_type.get_string.to_s then
-                        param_list.delete_at(index)
+                        param_decl_list.delete_at(index)
                     end
                 }
             end
@@ -157,18 +145,15 @@ class RustGenCelltypePlugin < CelltypePlugin
 
         # param_decl を文字列にする
         param_list_str =[]
-        param_return_str =[]
-        param_list.each{ |param_decl|
+        return_param_str =[]
+        param_decl_list.each{ |param_decl|
             param_type = param_decl.get_type.get_type_str
             if check_lifetime_annotation(param_type) then
                 lifetime_annotation_flag = true
             end
             if param_decl == "return" then
                 next
-            elsif param_list_diff.include?(param_decl.get_name.to_s) then
-                param_list_str.push("ignore")
             else
-                # file2.print "#{param_decl.get_name} "
                 case param_decl.get_direction
                 when :IN
                     param_list_str.push(", #{param_decl.get_name}: &#{c_type_to_rust_type(param_decl.get_type)}")
@@ -177,20 +162,23 @@ class RustGenCelltypePlugin < CelltypePlugin
                 when :OUT
                     param_list_str.push(", #{param_decl.get_name}: &mut #{c_type_to_rust_type(param_decl.get_type)}")
                 when :SEND
+                    # TODO: send 引数への対応
+                    # 引数の数自体を変えないようにするために，ignore を入れる
                     param_list_str.push("ignore")
-                    # param_list_str.push(", #{param_decl.get_name}: mut #{c_type_to_rust_type(param_decl.get_type)}")
                 when :RECEIVE
+                    # TODO： receive 引数への対応
+                    # 引数の数自体を変えないようにするために，ignore を入れる
                     param_list_str.push("ignore")
-                    # param_return_str.push(" -> #{c_type_to_rust_type(param_decl.get_type)}")
                 end
             end
         }
-        return param_list_str, param_return_str, lifetime_annotation_flag
+        return param_list_str, return_param_str, lifetime_annotation_flag
     end
 
     # 正規表現を用いて，Option 型などに変換する
     def convert_rust_type_string(input)
         # 正規表現パターンの配列を定義
+        # yamlファイルなどの外部ファイルを利用して，パターンの追加を簡単にしていく
         patterns = [
           /Option__(\w+)__/,
           /Option_Ref__(\w+)__/,
@@ -257,7 +245,6 @@ class RustGenCelltypePlugin < CelltypePlugin
                 file.print "#{use_string}::*};\n\n"
             end
         }
-        # @use_string_list = []
     end
     # 宣言されている型を Rust の型に変換する
     # 現状として，int8_t, int16_t, int32_t, int64_t のみ対応
@@ -331,7 +318,6 @@ class RustGenCelltypePlugin < CelltypePlugin
                 str = "unknown"
             end
         end
-        # print "c_type_to_rust_type: #{str}\n"
         return str
     end
 
@@ -348,90 +334,70 @@ class RustGenCelltypePlugin < CelltypePlugin
     def gen_trait_files
 
         @celltype.get_port_list.each{ |port|
-            # if port.get_port_type == :CALL then
 
-                sig = port.get_signature
-                sig_name = sig.get_global_name.to_s
+            sig = port.get_signature
+            sig_name = sig.get_global_name.to_s
 
-                gen_mod_in_main_lib_rs_for_signature sig
-                # if File.exist?("#{$gen}/#{snake_case(sig_name)}.rs") then
-                #     return
-                # else
-                    file2 = CFile.open( "#{$gen}/#{snake_case(sig_name)}.rs", "w" )
-                # end
-                print "gen_use_for_trait_files\n"
-                gen_use_for_trait_files file2, @celltype, port
+            gen_mod_in_main_lib_rs_for_signature sig
+            trait_file = CFile.open( "#{$gen}/#{snake_case(sig_name)}.rs", "w" )
+            gen_use_for_trait_files trait_file, @celltype, port
 
-                file2.print "pub trait #{camel_case(snake_case(sig_name))} {\n"
+            trait_file.print "pub trait #{camel_case(snake_case(sig_name))} {\n"
 
-                print "get_sig_param_str\n"
-                # シグニチャの引数の文字列を取得する
-                param_list_str, param_return_str, lifetime_flag = get_sig_param_str sig
+            # シグニチャの引数の文字列を取得する
+            param_list_str, return_param_str, lifetime_flag = get_sig_param_str sig
 
-                sig.get_function_head_array.each{ |func_head|
-                    return_flag = false
-                    file2.print "\t#[inline]\n"
-                    file2.print "\tfn #{func_head.get_name}"
-                    if lifetime_flag then
-                        file2.print("<'a>")
+            sig.get_function_head_array.each{ |func_head|
+                return_flag = false
+                trait_file.print "\t#[inline]\n"
+                trait_file.print "\tfn #{func_head.get_name}"
+                if lifetime_flag then
+                    trait_file.print("<'a>")
+                end
+
+                # 関数の引数部分を生成
+                trait_file.print "(&self"
+                param_list_item = func_head.get_paramlist.get_items
+                num = param_list_item.size
+                num.times do
+                    current_param = param_list_str.shift
+                    if current_param == "ignore" then
+                        next
+                    elsif current_param == "return" then
+                        return_flag = true
+                    else
+                        trait_file.print "#{current_param}"
                     end
-                    file2.print "(&self"
-                    param_list_item = func_head.get_paramlist.get_items
-                    num = param_list_item.size
-                    num.times do
-                        temp = param_list_str.shift
-                        if temp == "ignore" then
-                            next
-                        elsif temp == "return" then
-                            return_flag = true
-                        else
-                            file2.print "#{temp}"
-                        end
-                    end
-                    # if return_flag then
-                    #     temp = param_return_str.shift
-                    #     file2.print ")#{temp};\n\n"
-                    # else
-                    #     file2.print ");\n\n"
-                    # end
-                    file2.print ")"
+                end
+                trait_file.print ")"
 
-                    # 返り値の型がunknown,つまりvoidのときは，-> を生成しない
-                    if c_type_to_rust_type(func_head.get_return_type) != "unknown" then
-                        file2.print "-> #{c_type_to_rust_type(func_head.get_return_type)}"
-                    end
+                # 返り値の型がunknown,つまりvoidのときは，-> を生成しない
+                if c_type_to_rust_type(func_head.get_return_type) != "unknown" then
+                    trait_file.print "-> #{c_type_to_rust_type(func_head.get_return_type)}"
+                end
 
-                    file2.print ";\n"
+                trait_file.print ";\n"
 
-                }
-                file2.print "}\n"
+            }
+            trait_file.print "}\n"
 
-                file2.close
-
-                # lines = File.readlines("#{$gen}/#{snake_case(sig_name)}.rs", chomp: true).uniq!
-                # if lines != nil then
-                #     File.open("#{$gen}/#{snake_case(sig_name)}.rs", 'w') do |file|
-                #         lines.each { |line| file.puts line }
-                #     end
-                # end
-            # end
+            trait_file.close
         }
-
-
     end
 
     def gen_mod_in_main_lib_rs_for_celltype celltype
         plugin_option = @plugin_arg_str.strip
         if plugin_option == "main" || plugin_option == "lib" then
-            tempfile = CFile.open( "#{$gen}/#{plugin_option}.rs", "a" )
-            tempfile.print "mod #{snake_case(celltype.get_global_name.to_s)};\n"
+            lib_file = CFile.open( "#{$gen}/#{plugin_option}.rs", "a" )
+            lib_file.print "mod #{snake_case(celltype.get_global_name.to_s)};\n"
             @celltype.get_port_list.each{ |port|
                 if port.get_port_type == :ENTRY then
-                    tempfile.print "mod #{snake_case(celltype.get_global_name.to_s)}_impl;\n"
+                    lib_file.print "mod #{snake_case(celltype.get_global_name.to_s)}_impl;\n"
                     break
                 end
             }
-            tempfile.close
+            lib_file.close
+            # lib.rsなどのファイルのmod重複を削除する
             lines = File.readlines("#{$gen}/#{plugin_option}.rs", chomp: true).uniq!
             if lines != nil then
                 File.open("#{$gen}/#{plugin_option}.rs", 'w') do |file|
@@ -444,9 +410,10 @@ class RustGenCelltypePlugin < CelltypePlugin
     def gen_mod_in_main_lib_rs_for_signature signature
         plugin_option = @plugin_arg_str.strip
         if plugin_option == "main" || plugin_option == "lib" then
-            tempfile = CFile.open( "#{$gen}/#{plugin_option}.rs", "a" )
-            tempfile.print "mod #{snake_case(signature.get_global_name.to_s)};\n"
-            tempfile.close
+            lib_file = CFile.open( "#{$gen}/#{plugin_option}.rs", "a" )
+            lib_file.print "mod #{snake_case(signature.get_global_name.to_s)};\n"
+            lib_file.close
+            # lib.rsなどのファイルのmod重複を削除する
             lines = File.readlines("#{$gen}/#{plugin_option}.rs", chomp: true).uniq!
             if lines != nil then
                 File.open("#{$gen}/#{plugin_option}.rs", 'w') do |file|
@@ -457,21 +424,14 @@ class RustGenCelltypePlugin < CelltypePlugin
     end
 
     # セルタイプに受け口がある場合，その受け口につながっているシグニチャなどを @use_string_list に追加する
-    def get_use_for_entry_port file
+    def gen_use_for_entry_port file
         # @use_string_list.push("kernel_obj_ref")
         # セルタイプに受け口がある場合，use 文を生成する
         @celltype.get_port_list.each{ |port|
-            # if port.get_real_callee_cell != nil then
+            if port.get_port_type == :CALL then
                 @use_string_list.push(snake_case(port.get_signature.get_global_name.to_s))
-                if port.get_port_type == :ENTRY then
-                    # @use_string_list.push("#{snake_case(@celltype.get_global_name.to_s[1..-1])}_des")
-                else
-                    call_celltype_name = port.get_real_callee_port.get_celltype.get_global_name.to_s
-                    call_cell_name = port.get_real_callee_cell.get_global_name.to_s
-                    @use_string_list.push("#{snake_case(call_celltype_name)}")
-                    # @use_string_list.push("#{snake_case(call_celltype_name[1..-1])}_des")
-                end
-            # end
+                @use_string_list.push("#{snake_case(port.get_real_callee_cell.get_celltype.get_global_name.to_s)}")
+            end
         }
     end
 
@@ -490,18 +450,24 @@ class RustGenCelltypePlugin < CelltypePlugin
     def get_jenerics_alphabet_list callport_list
         jenerics_alphabet = ('T'..'Z').to_a + ('A'..'S').to_a
         use_jenerics_alphabet = []
+        # 呼び口の数と等しくする
         if callport_list.length != 0 then
             use_jenerics_alphabet = jenerics_alphabet[0..callport_list.length-1]
         end
         return use_jenerics_alphabet
     end
 
+    def get_rust_celltype_name celltype
+        return camel_case(snake_case(celltype.get_global_name.to_s))
+    end
+
     # セルの構造体の定義の先頭部を生成
     def gen_rust_cell_structure_header file, celltype, callport_list, use_jenerics_alphabet
-        file.print "pub struct #{camel_case(snake_case(celltype.get_global_name.to_s))}"
-        if check_empty_celltype @celltype then
+        file.print "pub struct #{get_rust_celltype_name(celltype)}"
+        if check_empty_celltype(celltype) then
         else
             file.print "<'a"
+            # use_jenerics_alphabet と callport_list の要素数が等しいことを前提としている
             callport_list.zip(use_jenerics_alphabet).each do |callport, alphabet|
                 file.print ", #{alphabet}"
             end
@@ -510,15 +476,17 @@ class RustGenCelltypePlugin < CelltypePlugin
         file.print "\n"
     end
 
+    def get_rust_signature_name signature
+        return camel_case(snake_case(signature.get_global_name.to_s))
+    end
+
     # セル構造体のジェネリクスの where 句を生成
     def gen_rust_cell_structure_jenerics file, callport_list, use_jenerics_alphabet
-        where_flag = true
+        if callport_list.length != 0 then
+            file.print "where\n"
+        end
         callport_list.zip(use_jenerics_alphabet).each do |callport, alphabet|
-            if where_flag then
-                file.print "where\n"
-                where_flag = false
-            end
-            file.print "\t#{alphabet}: #{camel_case(snake_case(callport.get_signature.get_global_name.to_s))},\n"
+            file.print "\t#{alphabet}: #{get_rust_signature_name(callport.get_signature)},\n"
         end
     end
 
@@ -530,28 +498,25 @@ class RustGenCelltypePlugin < CelltypePlugin
     end
 
     # セル構造体の属性フィールドの定義を生成
-    def gen_rust_cell_structure_attribute file, callport_list, use_jenerics_alphabet
-        @celltype.get_attribute_list.each{ |attr|
+    def gen_rust_cell_structure_attribute file, celltype
+        celltype.get_attribute_list.each{ |attr|
             if attr.is_omit? then
                 next
             else
-                file.print "\tpub #{attr.get_name.to_s}: "
-                # file.print "#{c_type_to_rust_type(attr.get_type)}"
-                str = c_type_to_rust_type(attr.get_type)
-                file.print "#{str},\n"
+                file.print "\tpub #{attr.get_name.to_s}: #{c_type_to_rust_type(attr.get_type)},\n"
             end
         }
     end
 
     # セル構造体の変数フィールドの定義を生成
     def gen_rust_cell_structure_variable file, celltype
-        if @celltype.get_var_list.length != 0 then
-            file.print "\tpub variable: &'a Mutex<#{camel_case(snake_case(celltype.get_global_name.to_s))}Var"
+        if celltype.get_var_list.length != 0 then
+            file.print "\tpub variable: &'a Mutex<#{get_rust_celltype_name(celltype)}Var"
             # ライフタイムアノテーションの生成部
             # TODO：ライフタイムについては，もう少し厳格にする必要がある
-            @celltype.get_var_list.each{ |var|
+            celltype.get_var_list.each{ |var|
                 var_type_name = var.get_type.get_type_str
-                if check_lifetime_annotation var_type_name then
+                if check_lifetime_annotation(var_type_name) then
                     file.print "<'a>"
                     break
                 end
@@ -562,11 +527,11 @@ class RustGenCelltypePlugin < CelltypePlugin
 
     # 変数構造体の定義を生成
     def gen_rust_variable_structure file, celltype
-        if @celltype.get_var_list.length != 0 then
-            file.print "pub struct #{camel_case(snake_case(celltype.get_global_name.to_s))}Var" 
+        if celltype.get_var_list.length != 0 then
+            file.print "pub struct #{get_rust_celltype_name(celltype)}Var" 
             # ライフタイムアノテーションの生成部
             # TODO：ライフタイムについては，もう少し厳格にする必要がある
-            @celltype.get_var_list.each{ |var|
+            celltype.get_var_list.each{ |var|
                 var_type_name = var.get_type.get_type_str
                 if check_lifetime_annotation var_type_name then
                     file.print "<'a>"
@@ -576,7 +541,7 @@ class RustGenCelltypePlugin < CelltypePlugin
             file.print "{\n"
 
             # 変数構造体のフィールドの定義を生成
-            @celltype.get_var_list.each{ |var|
+            celltype.get_var_list.each{ |var|
                 file.print "\tpub #{var.get_name}: #{c_type_to_rust_type(var.get_type)},\n"
             }
 
@@ -586,46 +551,45 @@ class RustGenCelltypePlugin < CelltypePlugin
 
     # セルの構造体の初期化の先頭部を生成
     def gen_rust_cell_structure_header_initialize file, cell
-        file.print "pub static #{cell.get_global_name.to_s.upcase}: #{camel_case(snake_case(cell.get_celltype.get_global_name.to_s))}"
+        file.print "pub static #{cell.get_global_name.to_s.upcase}: #{get_rust_celltype_name(cell.get_celltype)}"
     end
 
     # セル構造体のジェネリクス代入部を生成
     def gen_rust_cell_structure_jenerics_initialize file, cell, callport_list, use_jenerics_alphabet
-        jenerics_flag = true
+        if callport_list.length != 0 then
+            file.print "<"
+        end
         # ジェネリクスを代入
         callport_list.each_with_index do |callport, index|
-            if jenerics_flag then
-                file.print "<"
-                jenerics_flag = false
-            end
-            entryport_name = camel_case(snake_case(callport.get_real_callee_port.get_name.to_s))
-            callee_cell_name = camel_case(snake_case(callport.get_real_callee_cell.get_global_name.to_s))
+            callee_port_name = camel_case(snake_case(callport.get_real_callee_port.get_name.to_s))
+            callee_cell_name = camel_case(snake_case(callport.get_real_callee_cell.get_celltype.get_global_name.to_s))
             if index == callport_list.length - 1
             # 最後の要素の処理
-                file.print "#{entryport_name}For#{callee_cell_name}>"
+                file.print "#{callee_port_name}For#{callee_cell_name}>"
             else
             # 通常の要素の処理
-                file.print "#{entryport_name}For#{callee_cell_name}, "
+                file.print "#{callee_port_name}For#{callee_cell_name}, "
             end
         end # port_list.each_with_index
-        file.print " = #{camel_case(snake_case(cell.get_celltype.get_global_name.to_s))} "
+        file.print " = #{get_rust_celltype_name(cell.get_celltype)} "
     end
 
     # セルの構造体の呼び口フィールドの初期化を生成
-    def gen_rust_cell_structure_callport_initialize file, cell, callport_list, use_jenerics_alphabet
-        @celltype.get_port_list.each{ |port|
+    def gen_rust_cell_structure_callport_initialize file, celltype
+        celltype.get_port_list.each{ |port|
             if port.get_port_type == :CALL then
-                entryport_name = camel_case(snake_case(port.get_real_callee_port.get_name.to_s))
-                call_cell_name = port.get_real_callee_cell.get_global_name.to_s
-                file.print "\t#{snake_case(port.get_name.to_s)}: &#{entryport_name.upcase}FOR#{call_cell_name.upcase},\n"
+                callee_port_name = camel_case(snake_case(port.get_real_callee_port.get_name.to_s))
+                callee_cell_name = port.get_real_callee_cell.get_global_name.to_s
+                file.print "\t#{snake_case(port.get_name.to_s)}: &#{callee_port_name.upcase}FOR#{callee_cell_name.upcase},\n"
             end
         }
     end
 
     # セルの構造体の属性フィールドの初期化を生成
-    def gen_rust_cell_structure_attribute_initialize file, cell
-        @celltype.get_attribute_list.each{ |attr|
+    def gen_rust_cell_structure_attribute_initialize file, celltype, cell
+        celltype.get_attribute_list.each{ |attr|
             if attr.is_omit? then
+                next
             else
                 # セル記述で初期化されていても，反映する
                 attr_symbol = attr.get_name.to_s.to_sym
@@ -649,8 +613,8 @@ class RustGenCelltypePlugin < CelltypePlugin
     end
 
     # セルの構造体の変数フィールドの初期化を生成
-    def gen_rust_cell_structure_variable_initialize file, cell
-        if @celltype.get_var_list.length != 0 then
+    def gen_rust_cell_structure_variable_initialize file, celltype ,cell
+        if celltype.get_var_list.length != 0 then
             file.print "\tvariable: &#{cell.get_global_name.to_s.upcase}VAR,\n"
         end
     end
@@ -658,7 +622,7 @@ class RustGenCelltypePlugin < CelltypePlugin
     # 変数構造体の初期化を生成
     def gen_rust_variable_structure_initialize file, cell
         if @celltype.get_var_list.length != 0 then
-            file.print "pub static #{cell.get_global_name.to_s.upcase}VAR: Mutex<#{camel_case(snake_case(cell.get_global_name.to_s))}Var> = Mutex::new(#{camel_case(snake_case(cell.get_global_name.to_s))}Var {\n"
+            file.print "pub static #{cell.get_global_name.to_s.upcase}VAR: Mutex<#{get_rust_celltype_name(cell.get_celltype)}Var> = Mutex::new(#{get_rust_celltype_name(cell.get_celltype)}Var {\n"
 
             # 変数構造体のフィールドの初期化を生成
             @celltype.get_var_list.each{ |var|
@@ -689,12 +653,12 @@ class RustGenCelltypePlugin < CelltypePlugin
         celltype.get_port_list.each{ |port|
             if port.get_port_type == :ENTRY then
                 # 受け口構造体の定義を生成
-                file.print"pub struct #{camel_case(snake_case(port.get_name.to_s))}For#{camel_case(snake_case(celltype.get_global_name.to_s))}"
+                file.print"pub struct #{camel_case(snake_case(port.get_name.to_s))}For#{get_rust_celltype_name celltype}"
                 file.print "<'a>"
                 file.print "{\n"
                 # @celltype.get_cell_list.each{ |cell|
                     # 受け口を持っているセルの参照をフィールドとして生成
-                    file.print "\tpub cell: &'a #{camel_case(snake_case(celltype.get_global_name.to_s))}"
+                    file.print "\tpub cell: &'a #{get_rust_celltype_name celltype}"
                     if check_empty_celltype @celltype then
                     else
                         file.print "<'a"
@@ -714,7 +678,7 @@ class RustGenCelltypePlugin < CelltypePlugin
 
                 # # 受け口構造体の初期化を生成
                 # # 一つの受け口構造体がもつセルは１つ
-                # file.print "pub static #{port.get_name.to_s.upcase}FOR#{cell.get_global_name.to_s.upcase}: #{camel_case(snake_case(port.get_name.to_s))}For#{camel_case(snake_case(celltype.get_global_name.to_s))} = #{camel_case(snake_case(port.get_name.to_s))}For#{camel_case(snake_case(celltype.get_global_name.to_s))} {\n"
+                # file.print "pub static #{port.get_name.to_s.upcase}FOR#{cell.get_global_name.to_s.upcase}: #{camel_case(snake_case(port.get_name.to_s))}For#{get_rust_celltype_name celltype} = #{camel_case(snake_case(port.get_name.to_s))}For#{get_rust_celltype_name celltype} {\n"
                 # celltype.get_cell_list.each{ |cell|
                 #     file.print "\tcell: &#{cell.get_global_name.to_s.upcase},\n"
                 # }
@@ -730,7 +694,7 @@ class RustGenCelltypePlugin < CelltypePlugin
             if port.get_port_type == :ENTRY then
                 # 受け口構造体の初期化を生成
                 # 一つの受け口構造体がもつセルは１つ
-                file.print "pub static #{port.get_name.to_s.upcase}FOR#{cell.get_global_name.to_s.upcase}: #{camel_case(snake_case(port.get_name.to_s))}For#{camel_case(snake_case(celltype.get_global_name.to_s))} = #{camel_case(snake_case(port.get_name.to_s))}For#{camel_case(snake_case(celltype.get_global_name.to_s))} {\n"
+                file.print "pub static #{port.get_name.to_s.upcase}FOR#{cell.get_global_name.to_s.upcase}: #{camel_case(snake_case(port.get_name.to_s))}For#{get_rust_celltype_name celltype} = #{camel_case(snake_case(port.get_name.to_s))}For#{get_rust_celltype_name celltype} {\n"
                 # celltype.get_cell_list.each{ |cell|
                     file.print "\tcell: &#{cell.get_global_name.to_s.upcase},\n"
                 # }
@@ -748,7 +712,7 @@ class RustGenCelltypePlugin < CelltypePlugin
                 sig = port.get_signature
                 signature_name = sig.get_global_name.to_s
 
-                file.print "impl #{camel_case(snake_case(port.get_signature.get_global_name.to_s))} for #{camel_case(snake_case(port.get_name.to_s))}For#{camel_case(snake_case(celltype.get_global_name.to_s))}<'_"
+                file.print "impl #{camel_case(snake_case(port.get_signature.get_global_name.to_s))} for #{camel_case(snake_case(port.get_name.to_s))}For#{get_rust_celltype_name celltype}<'_"
 
                 # # if callport_list.length != 0 then
                 # #     file.print ", "
@@ -882,9 +846,9 @@ class RustGenCelltypePlugin < CelltypePlugin
                 callport_list.zip(use_jenerics_alphabet).each do |callport, alphabet|
                     if jenerics_flag then
                         jenerics_flag = false
-                        file.print "#{alphabet}: #{camel_case(snake_case(callport.get_signature.get_global_name.to_s))}"
+                        file.print "#{alphabet}: #{get_rust_signature_name callport.get_signature}"
                     else
-                        file.print ", #{alphabet}: #{camel_case(snake_case(callport.get_signature.get_global_name.to_s))}"
+                        file.print ", #{alphabet}: #{get_rust_signature_name callport.get_signature}"
                     end
                 end
                 if check_empty_celltype @celltype then
@@ -893,7 +857,7 @@ class RustGenCelltypePlugin < CelltypePlugin
                 end
 
                 # impl する型を生成
-                file.print " #{camel_case(snake_case(celltype.get_global_name.to_s))}"
+                file.print " #{get_rust_celltype_name celltype}"
                 if check_empty_celltype celltype then
                 else
                     file.print "<'"
@@ -954,7 +918,7 @@ class RustGenCelltypePlugin < CelltypePlugin
 
                 if @celltype.get_var_list.length != 0 then
                     if callport_list.length == 0 && @celltype.get_attribute_list.length == 0 then
-                        file.print "&Mutex<#{camel_case(snake_case(celltype.get_global_name.to_s))}Var"
+                        file.print "&Mutex<#{get_rust_celltype_name celltype}Var"
                         # ライフタイムアノテーションの生成部
                         # TODO：ライフタイムについては，もう少し厳格にする必要がある
                         @celltype.get_var_list.each{ |var|
@@ -966,7 +930,7 @@ class RustGenCelltypePlugin < CelltypePlugin
                         }
                         file.print ">) {\n"
                     else
-                        file.print ", &Mutex<#{camel_case(snake_case(celltype.get_global_name.to_s))}Var"
+                        file.print ", &Mutex<#{get_rust_celltype_name celltype}Var"
                         # ライフタイムアノテーションの生成部
                         # TODO：ライフタイムについては，もう少し厳格にする必要がある
                         @celltype.get_var_list.each{ |var|
@@ -1076,89 +1040,89 @@ class RustGenCelltypePlugin < CelltypePlugin
 
             @use_string_list = []
 
-            print "gen_use_for_entry_port\n"
+            # print "gen_use_for_entry_port\n"
             # セルタイプに受け口がある場合，use 文を生成する
-            get_use_for_entry_port file
+            gen_use_for_entry_port file
 
             @use_string_list.uniq!
-            print "gen_use_header\n"
+            # print "gen_use_header\n"
             gen_use_header file
 
-            print "get_callport_list\n"
+            # print "get_callport_list\n"
             # そのセルタイプの呼び口のリストを取得する
             callport_list = get_callport_list
 
-            print "get_jenerics_alphabet_list\n"
+            # print "get_jenerics_alphabet_list\n"
             # ジェネリクスに使うアルファベットのリストを生成
             use_jenerics_alphabet = get_jenerics_alphabet_list callport_list
 
-            print "gen_rust_cell_structure_header\n"
+            # print "gen_rust_cell_structure_header\n"
             # セルの構造体の定義の先頭部を生成
             gen_rust_cell_structure_header file, @celltype, callport_list, use_jenerics_alphabet
 
-            print "gen_rust_cell_structure_jenerics\n"
+            # print "gen_rust_cell_structure_jenerics\n"
             # セル構造体のジェネリクスの where 句を生成
             gen_rust_cell_structure_jenerics file, callport_list, use_jenerics_alphabet
             
             file.print "{\n"
 
-            print "gen_rust_cell_structure_callport\n"
+            # print "gen_rust_cell_structure_callport\n"
             # セル構造体の呼び口フィールドの定義を生成
             gen_rust_cell_structure_callport file, callport_list, use_jenerics_alphabet
 
-            print "gen_rust_cell_structure_attribute\n"
+            # print "gen_rust_cell_structure_attribute\n"
             # セル構造体の属性フィールドの定義を生成
-            gen_rust_cell_structure_attribute file, callport_list, use_jenerics_alphabet
+            gen_rust_cell_structure_attribute file, @celltype
 
-            print "gen_rust_cell_structure_variable\n"
+            # print "gen_rust_cell_structure_variable\n"
             # セル構造体の変数フィールドの定義を生成
             gen_rust_cell_structure_variable file, @celltype
 
             file.print "}\n\n"
             
-            print "gen_rust_variable_structure\n"
+            # print "gen_rust_variable_structure\n"
             # 変数構造体の定義を生成
             gen_rust_variable_structure file, @celltype
 
-            print "gen_rust_entry_structure\n"
+            # print "gen_rust_entry_structure\n"
             # 受け口構造体の定義と初期化を生成
             gen_rust_entry_structure file, @celltype, callport_list, use_jenerics_alphabet
 
-            print "gen_mod_in_main_lib_rs_for_celltype\n"
+            # print "gen_mod_in_main_lib_rs_for_celltype\n"
             # main.rs もしくは lib.rs に mod を追加する
             gen_mod_in_main_lib_rs_for_celltype @celltype
 
             @celltype.get_cell_list.each{ |cell|
 
-                print "gen_rust_cell_structure_header_initialize\n"
+                # print "gen_rust_cell_structure_header_initialize\n"
                 # セルの構造体の初期化の先頭部を生成
                 gen_rust_cell_structure_header_initialize file, cell
 
-                print "gen_rust_cell_structure_jenerics_initialize\n"
+                # print "gen_rust_cell_structure_jenerics_initialize\n"
                 # セル構造体の初期化ためのジェネリクス代入部を生成
                 gen_rust_cell_structure_jenerics_initialize file, cell, callport_list, use_jenerics_alphabet
 
                 file.print "{\n"
 
-                print "gen_rust_cell_structure_callport_initialize\n"
+                # print "gen_rust_cell_structure_callport_initialize\n"
                 # セルの構造体の呼び口フィールドの初期化を生成
-                gen_rust_cell_structure_callport_initialize file, cell, callport_list, use_jenerics_alphabet
+                gen_rust_cell_structure_callport_initialize file, @celltype
 
-                print "gen_rust_cell_structure_attribute_initialize\n"
+                # print "gen_rust_cell_structure_attribute_initialize\n"
                 # セルの構造体の属性フィールドの初期化を生成
-                gen_rust_cell_structure_attribute_initialize file, cell
+                gen_rust_cell_structure_attribute_initialize file, @celltype, cell
 
-                print "gen_rust_cell_structure_variable_initialize\n"
+                # print "gen_rust_cell_structure_variable_initialize\n"
                 # セルの構造体の変数フィールドの初期化を生成
-                gen_rust_cell_structure_variable_initialize file, cell
+                gen_rust_cell_structure_variable_initialize file, @celltype, cell
 
                 file.print "};\n\n"
 
-                print "gen_rust_variable_structure_initialize\n"
+                # print "gen_rust_variable_structure_initialize\n"
                 # 変数構造体の初期化を生成
                 gen_rust_variable_structure_initialize file, cell
 
-                print "gen_rust_entryport_structure_initialize\n"
+                # print "gen_rust_entryport_structure_initialize\n"
                 # 受け口構造体の初期化を生成
                 gen_rust_entryport_structure_initialize file, @celltype, cell, callport_list, use_jenerics_alphabet
 
@@ -1166,7 +1130,7 @@ class RustGenCelltypePlugin < CelltypePlugin
 
         if check_empty_celltype @celltype then
         else
-            print "gen_rust_get_cell_ref\n"
+            # print "gen_rust_get_cell_ref\n"
             # get_cell_ref 関数を生成する
             gen_rust_get_cell_ref file, @celltype, callport_list, use_jenerics_alphabet
         end
@@ -1179,11 +1143,11 @@ class RustGenCelltypePlugin < CelltypePlugin
 
                 file = CFile.open( "#{$gen}/#{snake_case(@celltype.get_global_name.to_s)}_impl.rs", "w" )
 
-                print "gen_use_for_impl_file\n"
+                # print "gen_use_for_impl_file\n"
                 # implファイルようのuse文を生成
                 gen_use_for_impl_file file, @celltype
                 
-                print "gen_rust_entryport_function\n"
+                # print "gen_rust_entryport_function\n"
                 # セルタイプに受け口がある場合，impl を生成する
                 gen_rust_entryport_function file, @celltype, callport_list, use_jenerics_alphabet
                 break
@@ -1192,7 +1156,7 @@ class RustGenCelltypePlugin < CelltypePlugin
 
         # } # celltype.get_cell_list.each
 
-        print "gen_trait_files\n"
+        # print "gen_trait_files\n"
         # トレイトファイルを生成する
         # これは，各セルタイプの呼び口につながっているシグニチャに対してのみ，トレイトファイルを生成する
         gen_trait_files

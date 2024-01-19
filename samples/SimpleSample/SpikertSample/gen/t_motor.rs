@@ -1,5 +1,5 @@
 use spin::Mutex;
-use crate::{s_powerdown::*, t_powerdown::*, s_motor::*};
+use crate::{s_powerdown::*, t_powerdown::*};
 
 pub struct TMotor<'a, T>
 where
@@ -18,13 +18,13 @@ pub struct EMotorForTMotor<'a>{
 	pub cell: &'a TMotor<'a, EPowerdown1ForTPowerdown<'a>>,
 }
 
-pub static MOTOR: TMotor<EPowerdown1ForPowerdown> = TMotor {
+pub static MOTOR: TMotor<EPowerdown1ForTPowerdown> = TMotor {
 	c_powerdown: &EPOWERDOWN1FORPOWERDOWN,
 	port: pbio_port_id_t::PBIO_PORT_ID_A,
 	variable: &MOTORVAR,
 };
 
-pub static MOTORVAR: Mutex<MotorVar> = Mutex::new(MotorVar {
+pub static MOTORVAR: Mutex<TMotorVar> = Mutex::new(TMotorVar {
 	motor: None,
 });
 
