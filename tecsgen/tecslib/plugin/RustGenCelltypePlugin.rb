@@ -431,7 +431,36 @@ class RustGenCelltypePlugin < CelltypePlugin
         @celltype.get_port_list.each{ |port|
             if port.get_port_type == :CALL then
                 @use_string_list.push(snake_case(port.get_signature.get_global_name.to_s))
-                @use_string_list.push("#{snake_case(port.get_real_callee_cell.get_celltype.get_global_name.to_s)}")
+                @celltype.get_cell_list.each{ |cell|
+                    # cellport = cell.get_real_port(port.get_name)
+                    # print "cellport: #{cellport.get_name}\n"
+                    # callee_cellport = cellport.get_real_callee_port
+                    # print "callee_cellport: #{callee_cellport}\n"
+                    # temp_port = port.get_real_callee_port
+                    # print "temp_port: #{temp_port}\n"
+                    # temp = port.get_real_callee_cell
+                    # print "port: #{port.get_name}\n"
+                    # print "temp: #{temp}\n"
+                    # join_list = cell.get_join_list
+                    # print "join_list: #{join_list}\n"
+                    # item = join_list.get_item(port.get_name)
+                    # print "item: #{item}\n"
+                    # port_name = item.get_port_global_name
+                    # print "port_name: #{port_name}\n"
+                    # join_cell_name = item.get_cell_name
+                    # print "join_cell_name: #{join_cell_name}\n"
+                    # join_name = item.get_name
+                    # print "join_name: #{join_name}\n"
+                    # join_cell_global_name = item.get_cell_global_name
+                    # print "join_cell_global_name: #{join_cell_global_name}\n"
+                    # join_celltype = cell.get_join_list.get_item(port.get_name).get_celltype
+                    # print "join_celltype: #{join_celltype.get_global_name}\n"
+                    # print "join_portname: #{cell.get_join_list.get_item(port.get_name).get_port_name}\n"
+                    # join_cell = item.get_cell
+                    # print "join_cell: #{join_cell.get_name}\n"
+                    # @use_string_list.push("#{snake_case(port.get_real_callee_cell.get_celltype.get_global_name.to_s)}")
+                    @use_string_list.push("#{snake_case(cell.get_join_list.get_item(port.get_name).get_celltype.get_global_name.to_s)}")
+                }
             end
         }
     end
@@ -562,14 +591,14 @@ class RustGenCelltypePlugin < CelltypePlugin
         end
         # ジェネリクスを代入
         callport_list.each_with_index do |callport, index|
-            callee_port_name = camel_case(snake_case(callport.get_real_callee_port.get_name.to_s))
-            callee_cell_name = camel_case(snake_case(callport.get_real_callee_cell.get_celltype.get_global_name.to_s))
+            callee_port_name = camel_case(snake_case(cell.get_join_list.get_item(callport.get_name).get_port_name.to_s))
+            callee_celltype_name = camel_case(snake_case(cell.get_join_list.get_item(callport.get_name).get_celltype.get_global_name.to_s))
             if index == callport_list.length - 1
             # 最後の要素の処理
-                file.print "#{callee_port_name}For#{callee_cell_name}>"
+                file.print "#{callee_port_name}For#{callee_celltype_name}>"
             else
             # 通常の要素の処理
-                file.print "#{callee_port_name}For#{callee_cell_name}, "
+                file.print "#{callee_port_name}For#{callee_celltype_name}, "
             end
         end # port_list.each_with_index
         file.print " = #{get_rust_celltype_name(cell.get_celltype)} "
@@ -579,9 +608,12 @@ class RustGenCelltypePlugin < CelltypePlugin
     def gen_rust_cell_structure_callport_initialize file, celltype
         celltype.get_port_list.each{ |port|
             if port.get_port_type == :CALL then
-                callee_port_name = camel_case(snake_case(port.get_real_callee_port.get_name.to_s))
-                callee_cell_name = port.get_real_callee_cell.get_global_name.to_s
-                file.print "\t#{snake_case(port.get_name.to_s)}: &#{callee_port_name.upcase}FOR#{callee_cell_name.upcase},\n"
+                celltype.get_cell_list.each{ |cell|
+                    callee_port_name = camel_case(snake_case(cell.get_join_list.get_item(port.get_name).get_port_name.to_s))
+                    callee_cell_name = cell.get_join_list.get_item(port.get_name).get_cell_name.to_s
+                    file.print "\t#{snake_case(port.get_name.to_s)}: &#{callee_port_name.upcase}FOR#{callee_cell_name.upcase},\n"
+                    break
+                }
             end
         }
     end
@@ -650,7 +682,7 @@ class RustGenCelltypePlugin < CelltypePlugin
     end
 
     # 受け口構造体の定義を生成
-    def gen_rust_entry_structure file, celltype
+    def gen_rust_entry_structure file, celltype, cell
         celltype.get_port_list.each{ |port|
             if port.get_port_type == :ENTRY then
                 # 受け口構造体の定義を生成
@@ -665,9 +697,11 @@ class RustGenCelltypePlugin < CelltypePlugin
                     celltype.get_port_list.each{ |port|
                         # ジェネリクスの代入を生成
                         if port.get_port_type == :CALL then
-                            entryport_name = camel_case(snake_case(port.get_real_callee_port.get_name.to_s))
-                            call_cell_name = camel_case(snake_case(port.get_real_callee_cell.get_celltype.get_global_name.to_s))
-                            file.print ", #{entryport_name}For#{call_cell_name}<'a>"
+                            # celltype.get_cell_list.each{ |cell|
+                                entryport_name = camel_case(snake_case(cell.get_join_list.get_item(port.get_name).get_port_name.to_s))
+                                call_celltype_name = camel_case(snake_case(cell.get_join_list.get_item(port.get_name).get_celltype.get_global_name.to_s))
+                                file.print ", #{entryport_name}For#{call_celltype_name}<'a>"
+                            # }
                         end
                     }
                     file.print ">"
@@ -1058,89 +1092,91 @@ class RustGenCelltypePlugin < CelltypePlugin
 
             @use_string_list = []
 
-            # print "gen_use_for_entry_port\n"
+            print "#{@celltype.get_global_name.to_s}: gen_use_for_entry_port\n"
             # セルタイプに受け口がある場合，use 文を生成する
             gen_use_for_entry_port file
 
             @use_string_list.uniq!
-            # print "gen_use_header\n"
+            print "#{@celltype.get_global_name.to_s}: gen_use_header\n"
             gen_use_header file
 
-            # print "get_callport_list\n"
+            print "#{@celltype.get_global_name.to_s}: get_callport_list\n"
             # そのセルタイプの呼び口のリストを取得する
             callport_list = get_callport_list
 
-            # print "get_jenerics_alphabet_list\n"
+            print "#{@celltype.get_global_name.to_s}: get_jenerics_alphabet_list\n"
             # ジェネリクスに使うアルファベットのリストを生成
             use_jenerics_alphabet = get_jenerics_alphabet_list callport_list
 
-            # print "gen_rust_cell_structure_header\n"
+            print "#{@celltype.get_global_name.to_s}: gen_rust_cell_structure_header\n"
             # セルの構造体の定義の先頭部を生成
             gen_rust_cell_structure_header file, @celltype, callport_list, use_jenerics_alphabet
 
-            # print "gen_rust_cell_structure_jenerics\n"
+            print "#{@celltype.get_global_name.to_s}: gen_rust_cell_structure_jenerics\n"
             # セル構造体のジェネリクスの where 句を生成
             gen_rust_cell_structure_jenerics file, callport_list, use_jenerics_alphabet
             
             file.print "{\n"
 
-            # print "gen_rust_cell_structure_callport\n"
+            print "#{@celltype.get_global_name.to_s}: gen_rust_cell_structure_callport\n"
             # セル構造体の呼び口フィールドの定義を生成
             gen_rust_cell_structure_callport file, callport_list, use_jenerics_alphabet
 
-            # print "gen_rust_cell_structure_attribute\n"
+            print "#{@celltype.get_global_name.to_s}: gen_rust_cell_structure_attribute\n"
             # セル構造体の属性フィールドの定義を生成
             gen_rust_cell_structure_attribute file, @celltype
 
-            # print "gen_rust_cell_structure_variable\n"
+            print "#{@celltype.get_global_name.to_s}: gen_rust_cell_structure_variable\n"
             # セル構造体の変数フィールドの定義を生成
             gen_rust_cell_structure_variable file, @celltype
 
             file.print "}\n\n"
             
-            # print "gen_rust_variable_structure\n"
+            print "#{@celltype.get_global_name.to_s}: gen_rust_variable_structure\n"
             # 変数構造体の定義を生成
             gen_rust_variable_structure file, @celltype
 
-            # print "gen_rust_entry_structure\n"
+            print "#{@celltype.get_global_name.to_s}: gen_rust_entry_structure\n"
             # 受け口構造体の定義と初期化を生成
-            gen_rust_entry_structure file, @celltype
+            @celltype.get_cell_list.each{ |cell|
+                gen_rust_entry_structure file, @celltype, cell
+            }
 
-            # print "gen_mod_in_main_lib_rs_for_celltype\n"
+            print "#{@celltype.get_global_name.to_s}: gen_mod_in_main_lib_rs_for_celltype\n"
             # main.rs もしくは lib.rs に mod を追加する
             gen_mod_in_main_lib_rs_for_celltype @celltype
 
             @celltype.get_cell_list.each{ |cell|
 
-                # print "gen_rust_cell_structure_header_initialize\n"
+                print "#{@celltype.get_global_name.to_s}: gen_rust_cell_structure_header_initialize\n"
                 # セルの構造体の初期化の先頭部を生成
                 gen_rust_cell_structure_header_initialize file, cell
 
-                # print "gen_rust_cell_structure_jenerics_initialize\n"
+                print "#{@celltype.get_global_name.to_s}: gen_rust_cell_structure_jenerics_initialize\n"
                 # セル構造体の初期化ためのジェネリクス代入部を生成
                 gen_rust_cell_structure_jenerics_initialize file, cell, callport_list, use_jenerics_alphabet
 
                 file.print "{\n"
 
-                # print "gen_rust_cell_structure_callport_initialize\n"
+                print "#{@celltype.get_global_name.to_s}: gen_rust_cell_structure_callport_initialize\n"
                 # セルの構造体の呼び口フィールドの初期化を生成
                 gen_rust_cell_structure_callport_initialize file, @celltype
 
-                # print "gen_rust_cell_structure_attribute_initialize\n"
+                print "#{@celltype.get_global_name.to_s}: gen_rust_cell_structure_attribute_initialize\n"
                 # セルの構造体の属性フィールドの初期化を生成
                 gen_rust_cell_structure_attribute_initialize file, @celltype, cell
 
-                # print "gen_rust_cell_structure_variable_initialize\n"
+                print "#{@celltype.get_global_name.to_s}: gen_rust_cell_structure_variable_initialize\n"
                 # セルの構造体の変数フィールドの初期化を生成
                 gen_rust_cell_structure_variable_initialize file, @celltype, cell
 
                 file.print "};\n\n"
 
-                # print "gen_rust_variable_structure_initialize\n"
+                print "#{@celltype.get_global_name.to_s}: gen_rust_variable_structure_initialize\n"
                 # 変数構造体の初期化を生成
                 gen_rust_variable_structure_initialize file, cell
 
-                # print "gen_rust_entryport_structure_initialize\n"
+                print "#{@celltype.get_global_name.to_s}: gen_rust_entryport_structure_initialize\n"
                 # 受け口構造体の初期化を生成
                 gen_rust_entryport_structure_initialize file, @celltype, cell
 
@@ -1148,7 +1184,7 @@ class RustGenCelltypePlugin < CelltypePlugin
 
         if check_only_entryport_celltype @celltype then
         else
-            # print "gen_rust_get_cell_ref\n"
+            print "#{@celltype.get_global_name.to_s}: gen_rust_get_cell_ref\n"
             # get_cell_ref 関数を生成する
             gen_rust_get_cell_ref file, @celltype, callport_list, use_jenerics_alphabet
         end
@@ -1161,11 +1197,11 @@ class RustGenCelltypePlugin < CelltypePlugin
 
                 file = CFile.open( "#{$gen}/#{snake_case(@celltype.get_global_name.to_s)}_impl.rs", "w" )
 
-                # print "gen_use_for_impl_file\n"
+                print "#{@celltype.get_global_name.to_s}: gen_use_for_impl_file\n"
                 # implファイルようのuse文を生成
                 gen_use_for_impl_file file, @celltype
                 
-                # print "gen_rust_entryport_function\n"
+                print "#{@celltype.get_global_name.to_s}: gen_rust_entryport_function\n"
                 # セルタイプに受け口がある場合，impl を生成する
                 gen_rust_entryport_function file, @celltype
                 break
@@ -1174,7 +1210,7 @@ class RustGenCelltypePlugin < CelltypePlugin
 
         # } # celltype.get_cell_list.each
 
-        # print "gen_trait_files\n"
+        print "#{@celltype.get_global_name.to_s}: gen_trait_files\n"
         # トレイトファイルを生成する
         # これは，各セルタイプの呼び口につながっているシグニチャに対してのみ，トレイトファイルを生成する
         gen_trait_files
