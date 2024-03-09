@@ -1,0 +1,37 @@
+signature sHello {
+    void Hello(void);
+};
+
+[generate(RustGenPlugin,"lib")]
+celltype tAlice {
+    call sHello cPerson;
+    entry sHello eAlice;
+};
+
+[generate(RustGenPlugin,"lib")]
+celltype tBob {
+    call sHello cPerson;
+    entry sHello eBob;
+};
+
+[generate(RustGenPlugin,"lib")]
+celltype tCarol {
+    call sHello cPerson;
+    entry sHello eCarol;
+};
+
+cell tAlice Alice1 {
+    cPerson = Bob.eBob;
+};
+
+cell tAlice Alice2 {
+    cPerson = Carol.eCarol;
+};
+
+cell tBob Bob {
+    cPerson = Alice1.eAlice;
+};
+
+cell tCarol Carol {
+    cPerson = Alice2.eAlice;
+};
